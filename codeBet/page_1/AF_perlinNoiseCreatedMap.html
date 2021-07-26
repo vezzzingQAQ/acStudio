@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>Perlin噪声算法生成地形</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            color: rgb(255, 255, 255);
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var dx=0.01;
+        var dy=0.01;
+        var rtx=0;
+        var rty=0;
+        var rtz=0;
+        function setup() {
+            createCanvas(windowWidth, windowHeight,WEBGL);
+            translate(width/2,height/2,0);
+            noStroke();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            var outPut=document.querySelector(".cet");
+            outPut.innerHTML="currentDx="+dx+";currentDy="+dy;
+            rotateX(rtx);
+            rotateY(rty);
+            rotateZ(rtz);
+            background(0);
+            var tx=3.0;
+            var ty=3.0;
+            dx=Math.sin(frameCount/500);
+            dy=Math.sin(frameCount/500);
+            for(var x=0;x<1000;x+=10){
+                for(var y=0;y<1000;y+=10){
+                    fill(100,100);
+                    stroke(255);
+                    push();
+                    translate(x-500,0,y-500);
+                    box(30,noise(tx,ty)*300,30);
+                    pop();
+                    ty+=dy;
+                }
+                tx+=dx;
+            }
+        }
+        function mouseMoved(){
+            rty=map(mouseX,-500,500,-2*PI,0);
+            rotateY(rty);
+            rtx=map(mouseY,500,-500,-2*PI,0);
+            rotateY(rtx);
+            return false;
+        }
+        
+    </script>
+    </head>
+
+    <body>
+    <p class="cet">currentDx=0.01;currentDy=0.02</p>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>Perlin噪声算法应用于生成地形</h1>
+        <hr>
+        移动鼠标可以改变dx,dy的值
+        <hr>
+        <h2>P5.js中怎么用:</h2>
+        <p>noise(x, [y], [z])</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

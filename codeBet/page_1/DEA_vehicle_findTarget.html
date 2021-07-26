@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>自洽智能体——寻找目标</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var vehicleList=[];
+        var target=null;
+        function Vehicle(positionX,positionY,vx,vy){
+            this.position=createVector(positionX,positionY);
+            this.velocity=createVector(vx,vy);
+            this.acceleration=createVector(0,0);
+            this.size=3;
+            this.maxSpeed=8;
+            this.maxForce=0.07;
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.velocity.limit(this.maxSpeed);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+            this.applyForce=function(force){
+                this.acceleration.add(force);
+            }
+            this.seek=function(target){
+                //计算寻找目标的转向力
+                var desired=p5.Vector.sub(target.position,this.position);
+                desired.normalize();
+                desired.mult(this.maxSpeed);
+                steer=p5.Vector.sub(desired,this.velocity);
+                steer.limit(this.maxForce);
+                this.applyForce(steer);
+            }
+            this.display=function(){
+                push();
+                translate(this.position.x,this.position.y);
+                var angle=atan2(this.velocity.y,this.velocity.x);
+                rotate(angle+PI/2);
+                fill(200);
+                noStroke();
+                beginShape();
+                vertex(0,-this.size*2);
+                vertex(-this.size,this.size*2);
+                vertex(this.size,this.size*2);
+                endShape();
+                pop();
+            }
+        }
+        function Target(positionX,positionY){
+            this.position=createVector(positionX,positionY);
+            this.display=function(){
+                push();
+                translate(this.position.x,this.position.y);
+                strokeWeight(1);
+                stroke(222);
+                noFill();
+                line(-30,0,30,0);
+                line(0,-30,0,30);
+                circle(0,0,15);
+                pop();
+            }
+            this.move=function(x,y){
+                this.position.set(x,y);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            for(var i=0;i<30;i++){
+                vehicleList.push(new Vehicle(random(100,width-100),random(100,height-100),random(-5,5),random(-5,5)));
+            }
+            target=new Target(width/2,height/2);
+        }
+        function windowResized(){
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0);
+            for(var i=0;i<vehicleList.length;i++){
+                vehicleList[i].seek(target);
+                vehicleList[i].update();
+                vehicleList[i].display();
+            }
+            target.move(mouseX,mouseY);
+            target.display();
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>自洽智能体——寻找目标</h1>
+        <hr>
+        <p>施加转向力</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

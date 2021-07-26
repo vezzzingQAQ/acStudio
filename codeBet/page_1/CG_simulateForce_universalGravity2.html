@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>模拟力：万有引力MODE2</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script src="../classes/VezzzingPhysicsClasses.js"></script>
+    <script>
+        //We start using outer libraries from there
+        var moverList=[];
+        var attractorList=[];
+        var gravity=null;
+        var wind=null;
+        
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            for(var i=0;i<980;i++){
+                moverList.push(new GravityObject(random(100,width-100),random(100,height-100),random(-0.5,0.5),random(-0.5,0.5),random(0.3,5),1));
+            }
+            for(var i=0;i<30;i++){
+                attractorList.push(new Attractor(random(100,width-100),random(100,height-100),random(0.3,5)));
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0,30);
+            for(var i=0;i<moverList.length;i++){ 
+                moverList[i].limitVelocity(1.6);
+                moverList[i].applyGravity(attractorList,1);
+                moverList[i].update();
+                moverList[i].display();
+            }
+            for(var i=0;i<attractorList.length;i++){
+                attractorList[i].display();
+            }
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>万有引力</h1>
+        <hr>
+        <p>分为吸引子和环绕者的情况</p>
+        <p>渲染模式1</p>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

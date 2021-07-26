@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>模拟力：重力和风力</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var mover=null;
+        var gravity=null;
+        var wind=null;
+        function Mover(){
+            this.position=createVector(10,height/2);
+            this.velocity=createVector(0,0);
+            this.acceleration=createVector(0,0);
+            this.applyForce=function(force){
+                this.acceleration.add(force);
+            }
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);//加速度每次要清零重新计算
+            }
+            this.checkEdges=function(){
+                if(this.position.x<0 || this.position.x>width){
+                    this.velocity.x*=-1;
+                }
+                if(this.position.y<0 || this.position.y>height){
+                    this.velocity.y*=-1;
+                }
+            }
+            this.display=function(){
+                stroke(0);
+                fill(this.velocity.mag()*100,this.acceleration.mag()*100,100);
+                circle(this.position.x,this.position.y,5);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            gravity=createVector(0,0.12);
+            wind=createVector(0.01,0);
+            noStroke();
+            mover=new Mover;
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            wind.x=map(mouseX,0,width,-0.03,0.03);
+            mover.applyForce(gravity);
+            mover.applyForce(wind);
+            mover.checkEdges();
+            mover.update();
+
+            mover.display();
+            background(0,30);         
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>力的模拟</h1>
+        <hr>
+        <p>横向移动鼠标可以改变水平风力的大小</p>
+        <hr>
+        <h2>applyForce方法的实现</h2>
+        <p>force->acceleration</p>
+        <p>acceleration->velocity</p>
+        <p>velocity->position</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

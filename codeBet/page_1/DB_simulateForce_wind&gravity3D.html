@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>模拟力：重力3D</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script src="../classes/VezzzingPhysicsClasses3D.js"></script>
+    <script>
+        var wind=null;
+        var moverList=[];
+        var boxWidth1=350;
+        var boxWidth2=350;
+        var boxHeight=150;
+        var rtx=0;
+        var rty=0;
+        var rtz=0;
+        function setup() {
+            createCanvas(windowWidth, windowHeight,WEBGL);
+            translate(width/2,height/2,0);
+            noStroke();
+            wind=createVector(0.1,0,0.1);
+            for(var i=0;i<3800;i++){
+                moverList.push(new OnGroundBall3D(random(-boxWidth1+30,boxWidth1-30),random(-boxHeight+30,boxHeight-30),random(-boxWidth2+30,boxWidth2-30),
+                random(-2,2),random(-2,2),random(-2,2),random(1,5),boxWidth1,boxWidth2,boxHeight));
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            rotateX(rtx);
+            rotateY(rty);
+            rotateZ(rtz);
+            background(0);
+
+            stroke(255,140);
+            noFill();
+
+            //box(boxWidth1*2,boxHeight*2,boxWidth2*2);
+            for(var i=0;i<moverList.length;i++){
+                moverList[i].applyGravity(0.6);
+                moverList[i].applyForce(wind);
+                moverList[i].checkEdges();
+                moverList[i].update();
+                moverList[i].display();
+            }
+        }
+        function mouseMoved(){
+            rty=map(mouseX,-500,500,-2*PI,0);
+            rotateY(rty);
+            rtx=map(mouseY,500,-500,-2*PI,0);
+            rotateY(rtx);
+            return false;
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>力的模拟</h1>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

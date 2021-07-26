@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>弹簧振子</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var springList=[];
+        var bob=null;
+        var isDrag=false;
+        function OnGroundBall(mass,xx,yy){
+            this.position=createVector(xx,yy);
+            this.velocity=createVector(0.1,0);
+            this.acceleration=createVector(0,0);
+            this.mass=mass;
+            this.r=46;
+            this.applyForce=function(force){//apply force
+                var f=force.copy();
+                this.acceleration.add(f.div(this.mass));
+            }
+            this.update=function(){//update the state of the ball
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+            this.judgeIn=function(mx,my){
+                if((mx-this.position.x)*(mx-this.position.x)+(my-this.position.y)*(my-this.position.y)<this.r*this.r){
+                    return(true);
+                }else{
+                    return(false);
+                }
+            }
+            this.applyGravity=function(g){//F-g
+                gravity=createVector(0,this.mass*g);
+                this.applyForce(gravity);
+            }
+            this.display=function(){//draw the ball on the canvas
+                noStroke();
+                fill(222);
+                circle(this.position.x,this.position.y,this.r);
+            }
+        }
+
+        function Spring(anchorX,anchorY,len,k){
+            this.anchor=createVector(anchorX,anchorY);
+            this.len=len;
+            this.k=k;
+            this.connectPoint=null;
+            this.connect=function(connectPoint){
+                var force=p5.Vector.sub(connectPoint.position,this.anchor);
+                var d=force.mag();
+                var stretch=d-this.len;
+                force.normalize();
+                force.mult(-1*this.k*stretch);
+                connectPoint.applyForce(force);
+                this.connectPoint=connectPoint;
+            }
+            this.display=function(){
+                fill(200);
+                rectMode(CENTER);
+                rect(this.anchor.x,this.anchor.y,10,10);
+            }
+            this.displayLine=function(){
+                stroke(222);
+                line(this.connectPoint.position.x,this.connectPoint.position.y,this.anchor.x,this.anchor.y)
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            bob=new OnGroundBall(3,width/2,height/2);
+            springList.push(new Spring(width/2-200,height/2-200,100,0.02));
+            springList.push(new Spring(width/2+200,height/2-200,100,0.02));
+            springList.push(new Spring(width/2+200,height/2+200,100,0.02));
+            springList.push(new Spring(width/2-200,height/2+200,100,0.02));
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0)
+            for(var i=0;i<springList.length;i++){
+                springList[i].connect(bob);
+                springList[i].display();
+                springList[i].displayLine();
+            }
+            if(isDrag==false){
+                bob.applyGravity(0.08);
+                bob.update();
+            }
+            bob.display();
+        }
+        function mousePressed(){
+            if(bob.judgeIn(mouseX,mouseY)){
+                isDrag=true;
+            }
+        }
+        function mouseMoved(){
+            if(isDrag){
+                bob.position.set(mouseX,mouseY);
+                bob.display();
+            }
+        }
+        function mouseReleased(){
+            isDrag=false;
+            bob.position.set(mouseX,mouseY);
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>弹簧振子类</h1>
+        <hr>
+        <p>Spring(anchorX,anchorY,len,k)</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

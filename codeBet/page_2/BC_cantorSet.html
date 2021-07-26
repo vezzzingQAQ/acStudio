@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>康托尔集</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        function drawCantor(x,y,len){
+            if(len>1){
+                strokeWeight(1);
+                stroke(222);
+                line(x,y,x+len,y);
+                y+=20;
+                drawCantor(x,y,len/3);
+                drawCantor(x+len*2/3,y,len/3)
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            background(0,30);
+            drawCantor(100,50,width-200);
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>康托尔集</h1>
+        <hr>
+        <hr>
+        <p>递归</p>
+        <a class="back" href="../../mainPage/mainPage_2.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

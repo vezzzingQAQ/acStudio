@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>向量控制的加速运动</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var slocation=null;
+        var svelocity=null;
+        var mover=null;
+        function Mover(){
+            this.position=createVector(width/2,height/2);
+            this.velocity=createVector(3,3);
+            this.acceleration=createVector(0,0.1);
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+            }
+            this.checkEdges=function(){
+                if(this.position.x<0 || this.position.x>width){
+                    this.velocity.x*=-1;
+                }
+                if(this.position.y<0 || this.position.y>height){
+                    this.velocity.y*=-1;
+                }
+            }
+            this.display=function(){
+                fill(190);
+                circle(this.position.x,this.position.y,20);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            noStroke();
+            mover=new Mover;
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0,30);
+            mover.update();
+            mover.checkEdges();
+            mover.display();
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>向量的应用-Mover类-加速度的实现</h1>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>Perlin噪声算法生成纹理</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            color: rgb(255, 255, 255);
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var cellSize=8;
+        var dx=0.001;
+        var dy=0.001;
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            noStroke();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            var outPut=document.querySelector(".cet");
+            outPut.innerHTML="currentDx="+dx+";currentDy="+dy;
+            var tx=0.0;
+            var ty=0.0;
+            dx=map(mouseX,0,width,0.001,0.1);
+            dy=map(mouseY,0,height,0.001,0.1);
+            for(var x=0;x<width;x+=cellSize){
+                for(var y=0;y<height;y+=cellSize){
+                    fill(noise(tx,ty)*255)
+                    rect(x,y,cellSize,cellSize)
+                    ty+=dy;
+                }
+                tx+=dx*height/width;
+            }
+        }
+        
+    </script>
+    </head>
+
+    <body>
+    <p class="cet">currentDx=0.01;currentDy=0.02</p>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>Perlin噪声算法应用于生成纹理图</h1>
+        <hr>
+        移动鼠标可以改变dx,dy的值
+        <hr>
+        <h2>P5.js中怎么用:</h2>
+        <p>noise(x, [y], [z])</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

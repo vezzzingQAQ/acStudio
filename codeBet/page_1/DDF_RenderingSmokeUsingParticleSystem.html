@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>渲染烟雾</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var particleSystem=null;
+        var img=null;
+        var floatForce=null;
+        var wind=null;
+        function Particle(x,y,vx,vy,ax,ay,mass){
+            this.position=createVector(x,y);
+            this.velocity=createVector(vx,vy);
+            this.acceleration=createVector(ax,ay);
+            this.mass=mass;
+            this.lifeSpan=255;
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+                this.lifeSpan-=5;
+            }
+            this.display=function(){
+                imageMode(CENTER);
+                tint(255,this.lifeSpan);
+                image(img,this.position.x,this.position.y);
+            }
+            this.applyForce=function(force){
+                var f=force.copy();
+                f.div(this.mass);
+                this.acceleration.add(f);
+            }
+            this.isDead=function(){
+                if(this.lifeSpan<0){
+                    return(true);
+                }else{
+                    return(false);
+                }
+            }
+        }
+        function ParticleSystem(x,y){
+            this.position=createVector(x,y);
+            this.particleList=[];
+            this.addParticle=function(){
+                this.particleList.push(new Particle(randomGaussian(this.position.x,3),randomGaussian(this.position.y,1),random(-1,1),random(-1,1),0,0,random(1,6)));
+            }
+            this.applyForce=function(force){
+                for(var i=0;i<this.particleList.length;i++){
+                    this.particleList[i].applyForce(force);
+                }
+            }
+            this.run=function(){
+                for(var i=0;i<this.particleList.length;i++){
+                    if(this.particleList[i].isDead()){
+                        this.particleList.splice(i,1);
+                    }else{
+                        this.particleList[i].update();
+                        this.particleList[i].display();
+                    }
+                }
+                this.addParticle();
+                
+                fill(125);
+                text("total number of particle:"+this.particleList.length,10,30);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            img=loadImage("supportPictures/DDF_pngUsed.png");
+            floatForce=createVector(0,-0.6);
+            particleSystem=new ParticleSystem(width/2,height*4/5);
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            blendMode(BLEND);
+            background(0);
+            blendMode(ADD);
+            wind=createVector(map(mouseX,0,width,-0.2,0.2),0);
+            particleSystem.applyForce(wind);
+            particleSystem.applyForce(floatForce);
+            particleSystem.run();
+        }
+        function mousePressed(){
+            particleSystemList.push(new ParticleSystem(mouseX,mouseY));
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>渲染烟雾</h1>
+        <hr>
+        <p>高斯分布描述起始点</p>
+        <p>blendMode指定混合上色方式</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

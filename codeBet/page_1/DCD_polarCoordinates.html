@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>极坐标</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var r=10;
+        var theta=0;
+        function translateCoordinateX(theta){
+            var x=r*cos(theta);
+            return(x);
+        }
+        function translateCoordinateY(theta){
+            var y=r*sin(theta);
+            return(y);
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            noStroke();
+            smooth();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0,1);
+            translate(width/2,height/2);
+            stroke(222);
+            strokeWeight(0.6);
+            var x=translateCoordinateX(theta);
+            var y=translateCoordinateY(theta);
+            line(0,0,x,y);
+            theta+=0.3;
+            r+=0.5;
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>笛卡尔坐标和极坐标的转换</h1>
+        <hr>
+        <p>translateCoordinateX:x=r*cos(theta);</p>
+        <p>translateCoordinateY:y=r*sin(theta);</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

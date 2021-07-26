@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>模拟力：重力和风力和空气阻力</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var movers=[];
+        var gravity=null;
+        var wind=null;
+        function Mover(bmass){
+            this.position=createVector(10,height/3);
+            this.velocity=createVector(0.1,0);
+            this.acceleration=createVector(0,0);
+            this.mass=bmass;
+            this.applyForce=function(force){
+                var f=force.copy();
+                this.acceleration.add(f.div(this.mass));
+            }
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.velocity.limit(10);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);//加速度每次要清零重新计算
+            }
+            this.checkEdges=function(){
+                if(this.position.x<0 || this.position.x>width){
+                    this.velocity.x*=-1;
+                }
+                if(this.position.y<0 || this.position.y>height){
+                    this.velocity.y*=-this.velocity.y-0.2;
+                }
+            }
+            this.display=function(){
+                noStroke();
+                fill(sin(this.acceleration.mag())*120+120,sin(this.velocity.mag())*120+120,sin(this.mass)*120+120,200);
+                circle(this.position.x,this.position.y,this.velocity.mag()*2);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            wind=createVector(0.111,0);
+            noStroke();
+            for(var i=0;i<680;i++){
+                movers.push(new Mover(random(1,5)));
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0,30);
+            for(var i=0;i<movers.length;i++){ 
+                gravity=createVector(0,movers[i].mass*0.122);
+                wind.x=map(mouseX,0,width,-0.3,0.3);
+                var c= 0.0054;
+                var speed=movers[i].velocity.mag();
+                var dragMagnitude=c*speed*speed;
+                var friction=movers[i].velocity.copy();
+                friction.mult(-1);
+                friction.normalize();
+                friction.mult(dragMagnitude);
+                movers[i].applyForce(gravity);
+                movers[i].applyForce(wind);
+                movers[i].applyForce(friction);
+                movers[i].checkEdges();
+                movers[i].update();
+                movers[i].display();
+            }
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>重力和风和空气阻力</h1>
+        <hr>
+        <p>F=v^2*Cd[阻力系数]*|v|*(-1)</p>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

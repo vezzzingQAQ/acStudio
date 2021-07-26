@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>向量控制的弹球</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var slocation=null;
+        var svelocity=null;
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            noStroke();
+            slocation=createVector(100,100);
+            svelocity=createVector(1.5,3);
+            background(0)
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            background(0)
+        }
+        function draw(){
+            slocation.add(svelocity);
+            //background(255,100);
+            if(slocation.x>width || slocation.x<0){
+                svelocity.x*=-1;
+            }
+            if(slocation.y<0 || slocation.y>height){
+                svelocity.y*=-1;
+            }
+            noStroke();
+            fill(190);
+            circle(slocation.x,slocation.y,5);
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>向量的应用</h1>
+        <hr>
+        p5.Vecotr
+        <hr>
+        <h2>P5.js中怎么用:</h2>
+        <p>let v1 = createVector(40, 50);</p>
+        <p>let v2 = createVector(40, 50);</p>
+        <p>ellipse(v1.x, v1.y, 50, 50);</p>
+        <p>v1.add(v2);</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

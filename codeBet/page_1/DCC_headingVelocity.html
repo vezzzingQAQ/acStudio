@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>指向运动方向</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var headingMoverList=[];
+        function HeadingMover(){
+            this.position=createVector(width/2,height/2);
+            this.velocity=createVector(3,3);
+            //this.acceleration=createVector(0,0.1);
+            this.update=function(){
+                this.acceleration=p5.Vector.random2D();
+                this.acceleration.mult(0.5);//mult乘以标量延伸向量
+                this.velocity.add(this.acceleration);
+                this.velocity.limit(10);
+                this.position.add(this.velocity);
+            }
+            this.checkEdges=function(){
+                if(this.position.x<0 || this.position.x>width){
+                    this.velocity.x*=-1;
+                }
+                if(this.position.y<0 || this.position.y>height){
+                    this.velocity.y*=-1;
+                }
+            }
+            this.display=function(){
+                stroke(190);
+                strokeWeight(2);
+                push();
+                rectMode(CENTER);
+                translate(this.position.x,this.position.y);
+                var angle=atan2(this.velocity.y,this.velocity.x);
+                rotate(angle-PI/2);
+                line(0,-30,0,0);
+                line(-10,-10,0,0);
+                line(10,-10,0,0);
+                pop();
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            noStroke();
+            for(var i=0;i<50;i++){
+                headingMoverList.push(new HeadingMover);
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0);
+            for(var i=0;i<headingMoverList.length;i++){
+                headingMoverList[i].update();
+                headingMoverList[i].checkEdges();
+                headingMoverList[i].display();
+            }
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>指向运动的方向</h1>
+        <hr>
+        <h2>random2D</h2>
+        <p>计算方向角度</p>
+        <p>var angle=atan2(this.velocity.y,this.velocity.x);</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>旋转粒子组</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var rotateMoverList=[];
+        function RotateMover(mass,x,y,vx,vy,ax,ay){
+            this.position=createVector(x,y);
+            this.velocity=createVector(vx,vy);
+            this.acceleration=createVector(ax,ay);
+            this.angle=0;
+            this.rVelocity=0;
+            this.rAcceleration=0;
+            this.mass=mass;
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+                this.rAcceleration=this.velocity.y/50;
+                this.rVelocity+=this.rAcceleration;
+                this.rVelocity=constrain(this.rVelocity,-0.2,0.2);
+                this.angle+=this.rVelocity;
+            }
+            this.checkEdges=function(){
+                if(this.position.x<0 || this.position.x>width){
+                    this.velocity.x*=-1;
+                }
+                if(this.position.y<0 || this.position.y>height){
+                    this.velocity.y*=-1;
+                }
+            }
+            this.display=function(){
+                fill(190);
+                push();
+                translate(this.position.x,this.position.y);
+                rotate(this.angle);
+                rectMode(CENTER);
+                rect(0,0,this.mass*3,this.mass*3);
+                pop();
+            }
+        }
+
+        function setup(){
+            createCanvas(windowWidth, windowHeight);
+            noStroke();
+            for(var i=0;i<=100;i++){
+                rotateMoverList.push(new RotateMover(random(1,5),random(100,width-100),random(100,height-100),random(-3,3),random(-0.1,0.1),0,0.1));
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0);
+            for(var i=0;i<rotateMoverList.length;i++){
+                rotateMoverList[i].update();
+                rotateMoverList[i].checkEdges();
+                rotateMoverList[i].display();
+            }
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>旋转的粒子组</h1>
+        <hr>
+        <p>将横向速度和旋转角加速度捆绑</p>
+        <hr>
+        <h2>constrain函数限制数值大小</h2>
+        <p>this.rVelocity=constrain(this.rVelocity,-0.2,0.2);</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

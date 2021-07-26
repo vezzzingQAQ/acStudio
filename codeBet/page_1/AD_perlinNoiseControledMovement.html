@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>Perlin噪声算法控制移动</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            color: rgb(255, 255, 255);
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var walker=null;
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            walker=new Walker;
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            var outPut=document.querySelector(".cet");
+            background(0,10);
+            walker.dx=map(mouseX,0,width,0.001,0.1);
+            walker.dy=map(mouseY,0,height,0.001,0.1);
+            outPut.innerHTML="currentDx="+walker.dx+";currentDy="+walker.dy;
+            walker.move();
+            walker.display();
+        }
+        function Walker(){
+            this.tx=0;
+            this.ty=10000;
+            this.dx=0.01;
+            this.dy=0.01;
+            this.x=map(noise(this.tx),0,1,0,width);
+            this.y=map(noise(this.ty),0,1,0,height);
+            this.move=function(){
+                this.tx+=this.dx;
+                this.ty+=this.dy;
+                this.x=map(noise(this.tx),0,1,0,width);
+                this.y=map(noise(this.ty),0,1,0,height);
+            }
+            this.display=function(){
+                noStroke();
+                fill(255);
+                circle(this.x,this.y,20);
+            }
+        }
+    </script>
+    </head>
+
+    <body>
+    <p class="cet">currentDx=0.01;currentDy=0.02</p>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>Perlin噪声算法应用于物体随机移动</h1>
+        <hr>
+        移动鼠标可以改变dx,dy的值
+        <hr>
+        <p>二维噪声算法</p>
+        <p>this.x=map(noise(this.tx),0,1,0,width);</p>
+        <p>this.y=map(noise(this.ty),0,1,0,height);</p>
+        <hr>
+        <h2>P5.js中怎么用:</h2>
+        <p>noise(x, [y], [z])</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

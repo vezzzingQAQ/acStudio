@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>模拟力：模拟流体产生阻力</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script src="../classes/VezzzingPhysicsClasses.js"></script>
+    <script>
+        //We start using outer libraries from there
+        var moverList=[];
+        var liquidList=[];
+        var gravity=null;
+        var wind=null;
+        
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            wind=createVector(0,0);
+            //liquid=new Liquid(0,height/2,width,height/3,0.1);
+            for(var i=0;i<680;i++){
+                moverList.push(new OnGroundBall(random(1,5)));
+            }
+            for(var i=0;i<10;i++){
+                liquidList.push(new Liquid(random(0,width),random(0,height),random(0,300),random(0,300),0.1));
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0,30);
+            for(var i=0;i<moverList.length;i++){ 
+                wind.x=map(mouseX,0,width,-0.03,0.03);
+                moverList[i].limitVelocity(12);
+                moverList[i].applyGravity(0.06);
+                moverList[i].applyForce(wind);
+                moverList[i].applyLiquidDrag(liquidList);
+                moverList[i].checkEdges();
+                moverList[i].update();
+                moverList[i].display();
+            }
+            for(var i=0;i<liquidList.length;i++){
+                liquidList[i].display();
+            }
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>流体阻力</h1>
+        <hr>
+        <p>左右移动鼠标可以控制风力</p>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="ico/ico1.jpg">
+    <title>随机游走</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var ww=window.innerWidth;
+        var wh=window.innerHeight;
+        var w=new Walker;
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            fill(255);
+            background(0);
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            background(0);
+        }
+        function draw() {
+            for(var i=0;i<2000;i++){
+                w.step();
+                w.display();
+            }
+        }
+        function Walker(){
+            this.x=ww/2;
+            this.y=wh/2;
+            this.i=0;
+            this.display=function(){
+                stroke(sin(this.i/200)*120+120,sin(this.i/330)*120+120,sin(this.i/450)*120+120);
+                point(this.x,this.y);
+            }
+            this.step=function(){
+                var choice=int(random(4));
+                if(choice==0){
+                    this.x++;
+                }else if(choice==1){
+                    this.x--;
+                }else if(choice==2){
+                    this.y++;
+                }else{
+                    this.y--;
+                }
+                this.i+=1;
+            }
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>随机游走</h1>
+        <hr>
+        <p>随机数的使用</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

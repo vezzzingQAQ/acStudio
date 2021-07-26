@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>面向对象二维CA</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var ca=null;
+        function init2Darray(columns,rows){
+            var arrayFinal=[];
+            var temp=[];
+            for(var i=0;i<columns;i++){
+                for(j=0;j<rows;j++){
+                    temp.push([]);
+                }
+                arrayFinal.push(temp);
+                temp=[];
+            }
+            return arrayFinal;
+        }
+        function BasicCA2D(){
+            this.board=null;
+            this.next=null;
+            this.columns=null;
+            this.rows=null;
+            this.w=null;
+            this.createBoard=function(w){
+                this.w=w;
+                var col=int(width/w);
+                var row=int(height/w);
+                this.init(col,row,w);
+            }
+            this.init=function(columns,rows,w){
+                this.w=w;
+                this.board=init2Darray(columns,rows);
+                this.next=init2Darray(columns,rows);
+                this.columns=columns;
+                this.rows=rows;
+                for(var x=0;x<columns;x++){
+                    for(var y=0;y<rows;y++){ 
+                        this.board[x][y]=new Cell(x,y,0,this.w);
+                    }
+                }
+            }
+            this.generate=function(){
+                for(var x=1;x<this.columns-1;x++){
+                    for(var y=1;y<this.rows-1;y++){
+                        var neighbors=0;
+                        for(var i=-1;i<=1;i++){
+                            for(var j=-1;j<=1;j++){
+                                neighbors+=this.board[x+i][y+j].state;
+                            }
+                        }
+                        neighbors-=this.board[x][y].state;
+                        if((this.board[x][y].state==1)&&(neighbors<2)){
+                            this.next[x][y].state=0;
+                        }else if((this.board[x][y].state==1)&&(neighbors>3)){
+                            this.next[x][y].state=0;
+                        }else if((this.board[x][y].state==0)&&(neighbors==3)){
+                            this.next[x][y].state=1;
+                        }else{
+                            this.next[x][y].state=this.board[x][y].state;
+                        }
+                    }
+                }
+                for(var x=1;x<this.columns-1;x++){
+                    for(var y=1;y<this.rows-1;y++){
+                        this.board[x][y].newState(this.next[x][y].state);
+                    }
+                }
+            }
+            this.display=function(){
+                for(var x=1;x<this.columns-1;x++){
+                    for(var y=1;y<this.rows-1;y++){
+                        this.board[x][y].display();
+                    }
+                }
+            }
+        }
+        function Cell(x,y,state,w){
+            this.x=x;
+            this.y=y;
+            this.w=w;
+            this.state=state;
+            this.previous=0;
+            this.preprevious=0;
+            this.newState=function(state){
+                this.preprevious=this.previous;
+                this.previous=this.state;
+                this.state=state;
+            }
+            this.display=function(){
+                noStroke();
+                if(this.preprevious==1){
+                    if(this.previous==1){
+                        if(this.state==1){
+                            fill(200,100,100);
+                        }else{
+                            fill(100,200,100);
+                        }
+                    }else{
+                        if(this.state==1){
+                            fill(200,200,100);
+                        }else{
+                            fill(100,200,200);
+                        }
+                    }
+                }else{
+                    if(this.previous==1){
+                        if(this.state==1){
+                            fill(0,100,100);
+                        }else{
+                            fill(0,200,100);
+                        }
+                    }else{
+                        if(this.state==1){
+                            fill(200,0,100);
+                        }else{
+                            fill(0,0,0);
+                        }
+                    }
+                }
+                rect(this.x*this.w,this.y*this.w,this.w,this.w);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            ca=new BasicCA2D();
+            ca.createBoard(6);
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            background(0);
+            ca.generate();
+            ca.display();
+            var x=int(map(mouseX,0,width,1,ca.columns-1));
+            var y=int(map(mouseY,0,height,1,ca.rows-1));
+            try{
+                ca.board[x][y+1].newState(1);
+                ca.board[x][y-1].newState(1);
+                ca.board[x+1][y].newState(1);
+                ca.board[x-1][y].newState(1);
+            }catch{
+                text("`121223",10,10);
+            }
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>二维CA随机生成</h1>
+        <hr>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_2.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

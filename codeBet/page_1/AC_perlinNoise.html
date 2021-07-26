@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>Perlin噪声算法</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var t=3.00;
+        var dt=0.01;
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            translate(0,height);
+            noStroke();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+            translate(0,height);
+        }
+        function draw(){
+            background(0);
+            var y=noise(t);
+            fill(255)
+            for(var i=0;i<width;i+=width/1350){
+                t+=dt;
+                circle(i,noise(t)*height,noise(t)*10)
+            }
+            dt=map(mouseX,0,width,0.001,0.1);
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>Perlin噪声算法</h1>
+        <hr>
+        <p>移动鼠标可以改变deltT的值</p>
+        <hr>
+        <p>用来生成比random()所能生成更自然及更谐波的随机数字系列</p>
+        <p>p5.js 能计算 1 维、2 维及 3 维噪声，这取决于所给予的坐标数。</p>
+        <p>返回的值一定会在 0.0 至 1.0 之间。噪音值可以通过在噪音空间内移动以制成动画。第二及第三个空间维度也能被解读成时间。</p>
+        <hr>
+        <h2>P5.js中怎么用:</h2>
+        <p>noise(x, [y], [z])</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

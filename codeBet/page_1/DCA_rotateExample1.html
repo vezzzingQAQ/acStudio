@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>旋转</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var angle=0;
+        function setup(){
+            createCanvas(windowWidth, windowHeight);
+            noStroke();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0,20);
+            stroke(255);
+            translate(width/2,height/2);
+            rotate(angle);
+            line(-60,0,60,0);
+            circle(60,0,8,8);
+            circle(-60,0,8,8);
+            angle+=map(mouseX,0,width,0,0.2);
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>最基本的旋转</h1>
+        <hr>
+        <p>横向移动鼠标可以改变转速大小</p>
+        <hr>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_1.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>
