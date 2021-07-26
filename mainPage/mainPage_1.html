@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="ico/ico1.jpg">
+        <title>AC studio</title>
+        <script src="../p5.min.js"></script>
+        <script src="support/support.js"></script>
+        <script type="text/javascript">
+            
+            window.onload=function(){
+                addComponents(1,"AA_randomWalk1",2,"随机游走","随机游走实例化点","P5.js,the nature of code");
+                addComponents(1,"AB_gaussianDistributionShow",2,"展示高斯分布","展示高斯分布图","P5.js,the nature of code");
+                addComponents(1,"AC_perlinNoise",2,"Perlin噪音","一维数值展示","P5.js,the nature of code");
+                addComponents(1,"AD_perlinNoiseControledMovement",2,"Perlin噪音控制移动","二维应用","P5.js,the nature of code");
+                addComponents(1,"AE_perlinNoiseCreatedTexture",2,"Perlin噪音生成纹理","二维应用","P5.js,the nature of code");
+                addComponents(1,"AF_perlinNoiseCreatedMap",2,"Perlin噪音生成地形","二维应用","P5.js,the nature of code");
+                addComponents(1,"BA_bumpingBall",2,"碰撞的球","向量初级应用","P5.js,the nature of code");
+                addComponents(1,"BB_mover",2,"移动者实例化球","面向对象写法","P5.js,the nature of code");
+                addComponents(1,"BC_moverWithAcceleration",2,"带有加速度的移动者","加速度的实现","P5.js,the nature of code");
+                addComponents(1,"BD_moverWithRandomAcceleration",2,"随机加速度","p5.Vector.random2D()的使用","P5.js,the nature of code");
+                addComponents(1,"BE_followMouseMover",2,"向鼠标加速","交互的实现","P5.js,the nature of code");
+                addComponents(1,"CA_simulateForce_gravity&wind1",2,"风中","力的加入","P5.js,the nature of code");
+                addComponents(1,"CB_simulateForce_gravity&wind2",2,"成群的风中粒子","质量的加入","P5.js,the nature of code");
+                addComponents(1,"CC_simulateForce_gravity&wind&friction",2,"重力&风&摩擦力","实现摩擦力","P5.js,the nature of code");
+                addComponents(1,"CD_simulateForce_gravity&wind&airDrag",2,"重力&风&空气阻力","实现空气阻力","P5.js,the nature of code");
+                addComponents(1,"CE_simulateLiquidDrag",2,"流体阻力","成群","P5.js,the nature of code");
+                addComponents(1,"CF_simulateForce_universalGravity",2,"万有引力-轨迹","和吸引子发生作用","P5.js,the nature of code");
+                addComponents(1,"CG_simulateForce_universalGravity2",2,"万有引力-实时","和吸引子发生作用","P5.js,the nature of code");
+                addComponents(1,"CH_simulateForce_universalGravity_AttractEachOther",2,"万有引力-轨迹","相互作用","P5.js,the nature of code");
+                addComponents(1,"CI_simulateForce_universalGravity_AttractEachOther2",2,"万有引力-轨迹","相互作用","P5.js,the nature of code");
+                addComponents(1,"CJ_simulateForce_universalRejection_AttractEachOther",2,"万有斥力","相互作用","P5.js,the nature of code");
+                addComponents(1,"CK_attractByMouse_RejectByEach",2,"万有引力-实时","互相吸引&被鼠标吸引","P5.js,the nature of code");
+                addComponents(1,"DA_simulateForce_gravity3D",2,"3D重力方块","新的实例化文档","P5.js,the nature of code");
+                addComponents(1,"DB_simulateForce_wind&gravity3D",2,"3D方块&风","新的实例化文档","P5.js,the nature of code");
+                addComponents(1,"DCA_rotateExample1",3,"最基本的旋转","带交互","P5.js,the nature of code");
+                addComponents(1,"DCB_rotateGroup",3,"旋转的粒子组","捆绑横向速度和旋转角加速度","P5.js,the nature of code");
+                addComponents(1,"DCC_headingVelocity",3,"指向运动方向","atan计算方向角进行旋转","P5.js,the nature of code");
+                addComponents(1,"DCD_polarCoordinates",3,"极坐标转换","转换笛卡尔坐标和极坐标","P5.js,the nature of code");
+                addComponents(1,"DCE_periodicOscillation",3,"周期振荡","周期振荡函数","P5.js,the nature of code");
+                addComponents(1,"DCF_oscillatorClass",3,"周期振荡类","x,y双向振荡","P5.js,the nature of code");
+                addComponents(1,"DCG_pendulum",3,"钟摆类","可以指定初始角，摆长等等","P5.js,the nature of code");
+                addComponents(1,"DCH_spring",3,"弹簧振子类","可以用来做弹簧质点系","P5.js,the nature of code");
+                addComponents(1,"DDA_basicParticleSystem",3,"基本粒子系统","发射点,生命周期","P5.js,the nature of code");
+                addComponents(1,"DDB_multyParticleSystem",3,"粒子系统的系统","点击增加发射点","P5.js,the nature of code");
+                addComponents(1,"DDC_particleSystemWithBounce",3,"边缘弹射粒子系统","点击增加发射点","P5.js,the nature of code");
+                addComponents(1,"DDD_particleSystemWithForce",3,"受力作用的粒子系统","同时修改了反弹机制","P5.js,the nature of code");
+                addComponents(1,"DDE_particleSystemWithRejectionForce",3,"有排斥子的粒子系统","排斥子对象,粒子系统对象修改","P5.js,the nature of code");
+                addComponents(1,"DDF_RenderingSmokeUsingParticleSystem",3,"渲染烟雾","混合模式的使用","P5.js,the nature of code");
+                addComponents(1,"DEA_vehicle_findTarget",3,"自洽智能体-寻找行为","计算并施加转向力","P5.js,the nature of code");
+                addComponents(1,"DEB_vehicle_arriveTarget",3,"自洽智能体-到达行为","通过与目标距离计算速度","P5.js,the nature of code");
+                addComponents(1,"DEC_vehicle_stayInWall",3,"区域内游走","出界后施加反向向量","P5.js,the nature of code");
+                addComponents(1,"DED_randomFlowField",3,"纯随机流场","流场对象","P5.js,the nature of code");
+                addComponents(1,"DEF_vehicleInFlowField",3,"随机流场里的运动","也是vehicle对象","P5.js,the nature of code");
+                addComponents(1,"DEG_vehicleInFlowField_render",3,"随机流场里的轨迹","chaos","P5.js,the nature of code");
+                addComponents(1,"DEH_straightPathFollow",3,"直线路径跟随","vehicle，path类","P5.js,the nature of code");
+                addComponents(1,"DEI_multyStraightPathFollow",3,"多直线路径跟随","也是vehicle对象","P5.js,the nature of code");
+                addComponents(1,"DEJ_groupActivitySeparate",3,"群组分离","向量平均值","P5.js,the nature of code");
+                addComponents(1,"DEK_followAndSeparate",3,"路径跟随X群组分离","也是vehicle对象","P5.js,the nature of code");
+                addComponents(1,"DEL_findTargetAndSeparate",3,"目标寻找X群组分离","也是vehicle对象","P5.js,the nature of code");
+                addComponents(1,"DEM_groupActivity",3,"群组行为","boid","P5.js,the nature of code");
+                addComponents(1,"DFA_basicCA1D",3,"一维CA","可以改变规则集","P5.js,the nature of code");
+                addComponents(1,"DFB_basicCA1Drotate",3,"一维CA滚动","可以改变规则集","P5.js,the nature of code");
+                addComponents(1,"DFC_basicCA1Drandom",3,"一维CA随机生成","可以改变规则集","P5.js,the nature of code");
+                addComponents(1,"DFD_basicCA2D",3,"二维CA随机","非面向对象","P5.js,the nature of code");
+                addComponents(1,"DFE_basicCA2D3D",3,"二维CA随机轨迹","rotateable","P5.js,the nature of code");
+                addComponents(1,"DFF_ca2DcellClass",3,"面向对象的CA","颜色显示历史","P5.js,the nature of code");
+                //addPage
+                addPages(3,1);
+            }
+        </script>
+        <script src="support/bannerP5_1.js"></script>
+        <link rel="stylesheet" type="text/css" href="support/classicMainPage.css">
+    </head>
+    <body>
+        <main></main>
+        <section class="head_section">
+            <div class="headInnerTitleContainer_div">            
+                <div class="headInnerTitle_div">
+                    AC studio
+                    <p class="headInnerText_p">或者说诗意的实用的东西</p>
+                </div>
+            </div>
+        </section>
+        <section class="content_section">
+            <div class="innerContent_div">
+            </div>
+        </section>
+        <section class="foot_section">
+            <p class="footInnerText_p">AC studio</p>
+            <p class="footInnerApm_p"><span>idolic</span> and <span>practical</span></p>
+            <p class="footInnerApm_p">by VezzzingQAQ</p>
+        </section>
+    </body>
+</html>
