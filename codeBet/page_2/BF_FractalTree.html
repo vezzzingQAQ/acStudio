@@ -20,76 +20,37 @@
     </style>
     <script src="../../p5.min.js"></script>
     <script>
-        var lines=[];
-        function KochLine(a,b){
-            this.start=a.copy();
-            this.end=b.copy();
-            this.display=function(){
-                stroke(222);
-                line(this.start.x,this.start.y,this.end.x,this.end.y);
-            }
-            this.kochA=function(){
-                return(this.start.copy());
-            }
-            this.kochB=function(){
-                var v=p5.Vector.sub(this.end,this.start);
-                v.div(3);
-                v.add(this.start);
-                return(v);
-            }
-            this.kochC=function(){
-                var a=this.start.copy();
-                var v=p5.Vector.sub(this.end,this.start);
-                v.div(3);
-                a.add(v);
-                v.rotate(-radians(60));
-                a.add(v);
-                return(a);
-            }
-            this.kochD=function(){
-                var v=p5.Vector.sub(this.end,this.start);
-                v.mult(2.0/3.0);
-                v.add(this.start);
-                return(v);
-            }
-            this.kochE=function(){
-                return(this.end.copy());
+        function branch(len,theta){
+            stroke(222);
+            strokeWeight(map(len,300,2,5,1));
+            line(0,0,0,-len);
+            translate(0,-len);
+            len*=0.7;
+            if(len>2){
+                push();
+                rotate(theta);
+                branch(len,theta);
+                pop();
+                push();
+                rotate(-theta);
+                branch(len,theta);
+                pop();
             }
         }
-        function generate(){
-                var next=[];
-                for(var i=0;i<lines.length;i++){
-                    a=lines[i].kochA();
-                    b=lines[i].kochB();
-                    c=lines[i].kochC();
-                    d=lines[i].kochD();
-                    e=lines[i].kochE();
-                    next.push(new KochLine(a,b));
-                    next.push(new KochLine(b,c));
-                    next.push(new KochLine(c,d));
-                    next.push(new KochLine(d,e));
-                }
-                lines=next;
-            }
         function setup() {
             createCanvas(windowWidth, windowHeight);
             smooth();
             background(0);
-            var start=createVector(0,height-200);
-            var end=createVector(width,height-200);
-            lines.push(new KochLine(start,end));
-            for(var i=0;i<5;i++){
-                generate();
-            } 
+            translate(width/2,height);
+            branch(height/5);
         }
         function windowResized() {
             resizeCanvas(windowWidth,windowHeight);
         }
         function draw(){
             background(0);
-            for(var i=0;i<lines.length;i++){
-                lines[i].display();
-            }
+            translate(width/2,height);
+            branch(height/5,map(mouseX,0,width,-PI/3,PI/3));
         }
     </script>
     </head>
@@ -98,10 +59,10 @@
     <main>
     </main>
     <div class="cot">
-        <h1>Koch曲线</h1>
+        <h1>分型树</h1>
         <hr>
         <hr>
-        <p>外部函数+内部计算</p>
+        <p>移动鼠标改变旋转角</p>
         <a class="back" href="../../mainPage/mainPage_2.html">退出</a>
         <hr>
     </div>

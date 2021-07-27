@@ -23,7 +23,7 @@
         function drawCircle(x,y,r){
             noFill();
             stroke(222);
-            strokeWeight(0.5);
+            strokeWeight(1);
             circle(x,y,r);
             if(r>2){
                 x+=map(mouseX,0,width,-10,10);
@@ -40,7 +40,7 @@
             resizeCanvas(windowWidth,windowHeight);
         }
         function draw(){
-            background(0,30);
+            background(0);
             //translate(width/2,height/2);
             drawCircle(width/2,height/2,300);
         }
