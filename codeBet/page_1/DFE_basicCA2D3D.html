@@ -105,9 +105,6 @@
                                 push();
                                 noStroke();
                                 fill(map(i,0,this.maxHistory,0,255),map(x,0,this.columns,0,255),map(y,0,this.rows,125,255));
-                                if(i==0 || i==this.maxHistory-1){
-                                    fill(255);
-                                }
                                 translate(x*this.w-this.w*this.columns/2,-i*this.w+(this.maxHistory/2)*this.w,y*this.w-this.w*this.rows/2);
                                 box(this.w);
                                 pop();
