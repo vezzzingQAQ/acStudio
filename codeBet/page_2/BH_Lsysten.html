@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>分形树</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+        .ban{
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.473);
+            padding: 10px;
+        }
+        #init{
+            margin-left: 0;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var outputBox=null;
+        var lsystem=null;
+        window.onload=function(){
+            outputBox=document.querySelector("#output");
+            var buttonGenerate=document.querySelector("#generate");
+            var buttonInit=document.querySelector("#init");
+            buttonGenerate.onclick=function(){
+                var startRule=document.querySelector("#ruleStart");
+                var fromRule=document.querySelector("#ruleFrom");
+                var toRule=document.querySelector("#ruleTo");
+                var ruleFrom=fromRule.value;
+                var ruleTo=toRule.value;
+                var ruleStart=startRule.value;
+
+                background(0);
+                translate(width/2,height);
+                rotate(PI);
+                lsystem.generate(ruleFrom,ruleTo);
+                lsystem.display();
+            }
+            buttonInit.onclick=function(){
+                var startRule=document.querySelector("#ruleStart");
+                var fromRule=document.querySelector("#ruleFrom");
+                var toRule=document.querySelector("#ruleTo");
+                var ruleFrom=fromRule.value;
+                var ruleTo=toRule.value;
+                var ruleStart=startRule.value;
+
+                lsystem.init(ruleStart);
+                background(0);
+                outputBox.innerHTML="";
+            }
+        }
+        function Lsysten(start){
+            this.table="FG+-[]";
+            this.generation=0;
+            this.start=start;
+            this.currentString=start;
+            this.len=6;
+            this.theta=PI/6;
+            this.init=function(currentStart){
+                this.start=currentStart;
+                this.currentString=currentStart;
+            }
+            this.generate=function(fromRule,toRule){
+                var textTemp="";//存放新的规则集
+                for(var i=0;i<this.currentString.length+1-fromRule.length;i++){
+                    if(this.currentString.substr(i,fromRule.length)==fromRule){
+                        textTemp+=toRule;
+                    }else{
+                        textTemp+=this.currentString.substr(i,1);
+                    }
+                }
+                this.currentString=textTemp;
+                outputBox.innerHTML="规则集:"+this.currentString;
+            }
+            this.display=function(){
+                stroke(222);
+                for(var i=0;i<this.currentString.length;i++){
+                   var currentChar=this.currentString.substr(i,1);
+                   if(currentChar=="F"){
+                       line(0,0,0,this.len);
+                       translate(0,this.len);
+                   }else if(currentChar=="G"){
+                       translate(this.len,0);
+                   }else if(currentChar=="+"){
+                       rotate(this.theta);
+                   }else if(currentChar=="-"){
+                       rotate(-this.theta);
+                   }else if(currentChar=="["){
+                       push();
+                   }else if(currentChar=="]"){
+                       pop();
+                   }
+                }
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            background(0);
+            translate(width/2,0);
+            lsystem=new Lsysten("F");
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>L系统</h1>
+        <hr>
+        <div class="ban">
+            <p>起始集合： <input id="ruleStart" value="F"></p>
+            <p>输入规则： <input id="ruleFrom" value="F"></p>
+            <p>输出规则： <input id="ruleTo" value="FF+[+F-F-F]-[-F+F+F]"></p>
+            <button id="init">init</button><button id="generate">generate</button><br>
+        </div>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_2.html">退出</a>
+        <p id="output"></p>
+
+        <hr>
+    </div>
+    </body>
+</html>
