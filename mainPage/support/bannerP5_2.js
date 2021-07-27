@@ -1,12 +1,12 @@
 var moverList=[];
 var attractorList=[];
 var gravity=null;
-function GravityObject(x,y,vx,vy,mass,mode){//balls influence by gravity of the attractor
+function GravityObject(x,y,vx,vy,mass){//balls influence by gravity of the attractor
     this.position=createVector(x,y);
     this.velocity=createVector(vx,vy);
     this.acceleration=createVector(0,0);
     this.mass=mass;
-    this.mode=mode;
+    this.size=4;
     this.applyForce=function(force){//apply force
         var f=force.copy();
         this.acceleration.add(f.div(this.mass));
@@ -69,9 +69,19 @@ function GravityObject(x,y,vx,vy,mass,mode){//balls influence by gravity of the 
         }
     }
     this.display=function(){
-        noStroke();
+        push();
+        translate(this.position.x,this.position.y);
+        var angle=atan2(this.velocity.y,this.velocity.x);
+        rotate(angle+PI/2);
         fill(map(this.velocity.mag(),0,1.6,120,255),120,220);
-        circle(this.position.x,this.position.y,9);
+        noStroke();
+        beginShape();
+        vertex(0,-this.size*2);
+        vertex(-this.size,this.size*2);
+        vertex(0,this.size*1);
+        vertex(this.size,this.size*2);
+        endShape();
+        pop();
     }
 }
 function Attractor(x,y,mass){//objects create gravity
@@ -82,8 +92,9 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     smooth();
     for(var i=0;i<70;i++){
-        moverList.push(new GravityObject(random(100,width-100),random(100,height-100),random(-0.5,0.5),random(-0.5,0.5),random(0.3,5),1));
+        moverList.push(new GravityObject(random(100,width-100),random(100,height-100),random(-0.5,0.5),random(-0.5,0.5),random(0.3,5)));
     }
+    attractorList.push(new Attractor(random(100,width-100),random(100,height-100),11));
     for(var i=0;i<20;i++){
         attractorList.push(new Attractor(random(100,width-100),random(100,height-100),random(0.3,5)));
     }
@@ -92,13 +103,13 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function draw(){
-    background(222,60);
+    background(222,160);
     attractorList[0].position.x=mouseX;
     attractorList[0].position.y=mouseY;
     for(var i=0;i<moverList.length;i++){ 
         moverList[i].applyGravity(attractorList,1);
         moverList[i].checkEdges();
-        moverList[i].limitVelocity(2.6);
+        moverList[i].limitVelocity(22.6);
         moverList[i].update();
         moverList[i].display();
     }
