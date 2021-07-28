@@ -42,7 +42,7 @@
                 var v=p5.Vector.sub(this.end,this.start);
                 v.div(3);
                 a.add(v);
-                v.rotate(-radians(60));
+                v.rotate(map(mouseX,0,width,-PI,0));
                 a.add(v);
                 return(a);
             }
@@ -87,6 +87,13 @@
         }
         function draw(){
             background(0);
+            var start=createVector(0,height-200);
+            var end=createVector(width,height-200);
+            lines=[];
+            lines.push(new KochLine(start,end));
+            for(var i=0;i<5;i++){
+                generate();
+            } 
             for(var i=0;i<lines.length;i++){
                 lines[i].display();
             }
