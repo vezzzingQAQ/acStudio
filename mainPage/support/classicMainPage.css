@@ -21,6 +21,7 @@ components:
 *foot_section
     *footInnerText_p
     *footInnerApm_p
+        *aboutAuthor_a
 public components:
 *color_white
 *text_large
@@ -213,7 +214,7 @@ main{
 }
 .content_section .pages_div .bottomButton:hover{
     background-color: rgb(67, 223, 223);
-    box-shadow: 0 4px 8px 0 rgba(250, 2, 217, 0.219), 0 6px 20px 0 rgba(195, 0, 255, 0.19);
+    box-shadow: 0 4px 8px 0 rgba(2, 118, 250, 0.219), 0 6px 20px 0 rgba(195, 0, 255, 0.19);
 }
 #currentPage{
     background-color: rgb(67, 223, 223);
@@ -251,4 +252,8 @@ main{
     text-align: center;
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 1.5em;
+}
+.foot_section .aboutAuthor_a{
+    text-decoration: none;
+    color: blueviolet;
 }

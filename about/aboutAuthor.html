@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="ico/ico1.jpg">
+        <title>vezzzingQAQ</title>
+        <style>
+            body{
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+            }
+            .bottomPicture{
+                position: fixed;
+                right: 20px;
+                bottom: -500px;
+                z-index: -1;
+            }
+            .content .plan{
+                color: rgb(150, 150, 150);
+            }
+            .stage2{
+                display: none;
+            }
+            .return{
+                display: none;
+            }
+        </style>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>        
+        <script type="text/javascript" class="231">
+            $(function(){
+                $(".stage2").slideDown(1000);
+                $(".return").fadeIn(1000);
+                $(".bottomPicture").animate({
+                    bottom:-10
+                },1000);
+            });
+        </script>
+    </head>
+    <body>
+        <section class="header">
+        </section>
+        <section class="content">
+            <div class="aboutMain">
+                <h2 class="stage1">vezzzingQAQ</h2>
+                <p class="stage2">现就读于中国美术学院,大二,平时写一些小项目练练手(●ˇ∀ˇ●)</p>
+                <p class="stage2">立志做一个全栈+UI的设计师/程序猿/异术家?</p>
+                <p class="stage2">俺的秃头之路</p>
+                <h3 class="stage1">开发端</h3>
+                <p class="stage2">
+                    vb->processing.py->python->javaSE->android->python:pyqt5;python:matplotlib;python:openCV->html5->css3->
+                    javascript->p5.js->jQuery->ajax+(php)
+                </p>
+                <p class="plan stage2">->python:django->Vue3->BootSpring?</p>
+                <h3 class="stage1">设计端</h3>
+                <p class="stage2">ps->ai->ae->pr->C4D->id->procreate</p>
+                <p class="plan stage2">->blender->unity3D->ue4</p>
+                <h3 class="stage1">课业</h3>
+                <p class="stage2">格物->人文调研->造型?->界面设计->形式->人文调研->运动->空间营造</p>
+            </div>
+        </section>
+        <a href="../mainPage/mainPage_1.html" class="return">←回主页</a>
+        <img class="bottomPicture" src="pictures/bottom.jpg">
+    </body>
+</html>
+ 

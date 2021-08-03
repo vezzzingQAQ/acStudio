@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDBonline</title>
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        }
+        .parat{
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            z-index: 10000;
+        }
+        .parat p{
+            display: inline;
+        }
+        .parat p b{
+            display: inline;
+            background-color: rgba(255,255,255,0.5);
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
+        }
+        .pa{
+            color: cyan;
+            padding: 3px;
+            border-radius: 3px;
+            z-index: 10001;
+        }
+        .btn{
+            position: absolute;
+            left: 20px;
+            bottom: 60px;
+            z-index: 10000;
+        }
+        .btn .btnSave{
+            background-color: rgba(11, 47, 248, 0.7);
+            color: #fff;
+            padding: 3px;
+            border-radius: 3px;
+        }
+        a{
+            background-color: rgba(255,255,255,0.5);
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
+            text-decoration: none;
+            color: yellow;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var i=0;
+        var di=0;
+        var dj=0;
+        var fn1=0.1;
+        var fn2=0.5;
+        var fn3=2;
+        var f=10;
+        var zmx1=0;
+        var zmx2=0;
+        var zmy1=0;
+        var zmy2=0;
+        var count=1;
+        var totalCount=800;
+        function centerCanvas() {
+            var x = (windowWidth - width) / 2;
+            var y = (windowHeight - height) / 2;
+            cnv.position(x, y);
+        }
+        function setup(){
+            cnv=createCanvas(Math.max(windowHeight,windowWidth),Math.max(windowHeight,windowWidth));
+            zmx1=Math.floor(width/4);
+            zmx2=2;
+            zmy1=Math.floor(height/4);
+            zmy2=2;
+            centerCanvas();
+        }
+        function windowResized() {
+            centerCanvas();
+        }
+        function draw(){
+            colorMode(HSB,100);
+            frameRate(1300);
+            if(i<=width){
+                i+=1;
+            }
+            var x=parseFloat(i+di)/zmx1-zmx2;
+            for(var j=0;j<height+1;j++){
+                var y = zmy2 - float(j + dj) / zmy1;
+                var zr=0;
+                var zi=0; 
+                var zr2=0;
+                var zi2=0;
+
+                var db=0;
+                var da=0;
+                var sda=0;
+                var sdb=0;
+
+                var cr=x;
+                var ci=y;
+                var n = 1;
+                let pd=true;
+                while(n<totalCount){
+                    zi2 = zi * zi;
+                    zr2 = zr * zr;
+                    zi = 2 * zi * zr + ci;
+                    zr = zr2 - zi2 + cr;
+
+                    sda = 2 * zr * da - 2 * zi * db + 1
+                    sdb = 2 * zr * db + 2 * zi * da
+                    da = sda
+                    db = sdb
+
+                    n += 1;
+                    if((zr2+zi2)>=4){
+                        pd=false;
+                        break;
+                    }
+                }
+                if(pd){
+                    stroke(0,0,0);
+                }else{
+                    /*var re = cos(n * fn1)*120+120;
+                    var gr = sin(n * fn2)*120+120;
+                    var bl = sin(n * fn3)*120+120;*/
+                    var z = sqrt(zi*zi + zr*zr);
+                    var dz =  sqrt(da*da + db *db);
+                    var result = log(z * z) * z / dz;
+
+                    var h=(n/totalCount)*100;
+                    var s=(n/totalCount)*100;
+                    var b=((Math.sin(Math.log(Math.abs(result)))+1)/2)*100;
+                    stroke(h,s,b);
+                }
+                point(i, j);
+            }
+        }
+        function mouseMoved(){
+            var cx=document.querySelector(".cx");
+            var cy=document.querySelector(".cy");
+            var xtt=mouseX;
+            var ytt=mouseY;
+            var dit = di + xtt - width / 2.0;
+            var djt = dj + ytt - height / 2.0;
+            var x=parseFloat(mouseX+dit)/zmx1-zmx2;
+            var y = zmy2 - float(mouseY+djt) / zmy1;
+            cx.innerHTML=x;
+            cy.innerHTML=y;
+        }
+        function mousePressed(){
+            var num=document.querySelector(".numc");
+            var rag=document.querySelector(".rage");
+        
+            if (mouseButton === LEFT) {
+                count+=1;
+                background(25);
+                var xt=mouseX;
+                var yt=mouseY;
+                di = di + xt - width / 2.0;
+                dj = dj + yt - height / 2.0;
+                zmx1 = zmx1 * f;
+                zmx2 = zmx2 * (1.0 / f);
+                zmy1 = zmy1 * f;
+                zmy2 = zmy2 * (1.0 / f);
+                di= di * f;
+                dj= dj * f;
+                i = 0;
+                j = 0;   
+                console.log(zmx1,zmx2,zmy1,zmy2,1/di,1/dj);
+                num.innerHTML=count-1;
+                rag.innerHTML=1/(zmx1-zmx2)+","+1/(zmy1-zmy2)
+            }
+        }
+        function touchStarted(){
+            count+=1;
+            background(25);
+            var xt=touchX;
+            var yt=touchY;
+            di = di + xt - width / 2.0;
+            dj = dj + yt - height / 2.0;
+            zmx1 = zmx1 * f;
+            zmx2 = zmx2 * (1.0 / f);
+            zmy1 = zmy1 * f;
+            zmy2 = zmy2 * (1.0 / f);
+            di= di * f;
+            dj= dj * f;
+            i = 0;
+            j = 0;    
+        }
+        function keyPressed(){
+            if(keyCode==RETURN){
+                save("iveOnline"+(Math.random())+".png");
+            }
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="parat">
+        <p><b>累计放大次数:</b><p class="pa numc">0</p></p>
+        <p><b>范围:</b><p class="pa rage">###</p></p>
+        <br>
+        <br>
+        <p><b>currentX=</b><p class="pa cx"></p></p>
+        <p><b>currentY=</b><p class="pa cy"></p></p>
+        <br>
+        <br>
+        <p><b>按下回车键保存图像,鼠标左键点击放大</b></p>
+        <br>
+        <br>
+        <p><b>Engine1:HSB-z</b></p><br><br>
+        <a href="../../mainPage/mainPage_2.html">返回</a>
+    </div>
+    
+    </body>
+</html>
