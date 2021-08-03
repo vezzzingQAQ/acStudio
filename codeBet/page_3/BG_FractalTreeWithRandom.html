@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>分形树</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        function branch(len){
+            stroke(map(len,300,2,255,120),map(len,300,2,132,255),map(len,300,2,0,255));
+            var theta=PI/6;
+            strokeWeight(map(len,300,2,5,1));
+            line(0,0,0,-len);
+            translate(0,-len);
+            len*=0.7;
+            if(len>2){
+                push();
+                rotate(theta+random(-0.3,0.3));
+                branch(len);
+                pop();
+                push();
+                rotate(-theta+random(-0.3,0.3));
+                branch(len);
+                pop();
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            background(0);
+            translate(width/2,height);
+            branch(height/5);
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            frameRate(1);
+            background(0);
+            translate(width/2,height);
+            branch(height/5);
+
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>分形树</h1>
+        <hr>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

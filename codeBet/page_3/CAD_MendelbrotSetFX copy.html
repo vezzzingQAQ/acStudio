@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDBonlineDisplay</title>
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        }
+        .parat{
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            z-index: 10000;
+        }
+        .parat p{
+            display: inline;
+        }
+        .parat p b{
+            display: inline;
+            background-color: rgba(255,255,255,0.5);
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
+        }
+        .pa{
+            color: rgb(51, 0, 48);
+            padding: 3px;
+            border-radius: 3px;
+            z-index: 10001;
+        }
+        .btn{
+            position: absolute;
+            left: 20px;
+            bottom: 60px;
+            z-index: 10000;
+        }
+        .btn .btnSave{
+            background-color: rgba(11, 47, 248, 0.7);
+            color: #fff;
+            padding: 3px;
+            border-radius: 3px;
+        }
+        a{
+            background-color: rgba(255,255,255,0.5);
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
+            text-decoration: none;
+            color: rgb(128, 0, 117);
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var currentScreenX=0;
+        var currentScreenY=0;
+        function Complex(real,imaginary){
+            this.real=real;
+            this.imaginary=imaginary;
+            this.add=function(complex){
+                return(new Complex(complex.real+this.real,complex.imaginary+this.imaginary));
+            }
+            this.mult=function(complex){
+                return(new Complex(this.real*complex.real-this.imaginary*complex.imaginary,this.imaginary*complex.real+this.real*complex.imaginary));
+            }
+            this.div=function(complex){
+                return(new Complex((this.real*complex.real+this.imaginary*complex.imaginary)/(complex.real*complex.real+complex.imaginary*complex.imaginary),
+                    (this.imaginary*complex.real-this.real*complex.imaginary)/(complex.real*complex.real+complex.imaginary*complex.imaginary)))
+            }
+            this.len=function(){
+                return(sqrt(this.real*this.real+this.imaginary*this.imaginary));
+            }
+            this.printOut=function(){
+                if(this.imaginary>=0){
+                    return(this.real+"+"+this.imaginary+"i");
+                }else{
+                    return(this.real+""+this.imaginary+"i");
+                }
+            }
+        }
+        function iterate(complex,c){
+            return((complex.mult(complex)).add(c));
+        }
+        function calculateSquence(x,y){
+            var isin=true;
+            var codHeight=2;
+            var codWidth=(width/height)*codHeight;
+            var cx=map(x,0,width,-codWidth,codWidth);
+            var cy=map(y,0,height,codHeight,-codHeight);
+            var c=new Complex(cx,cy);//tow start parameters
+            var z=new Complex(0,0);
+            rectMode(CENTER);
+            for(var i=0;i<500;i++){
+                z=iterate(z,c);
+                if(z.len()>2){
+                    isin=false;
+                    break;
+                }
+            }
+            if(isin==true){
+                noStroke()
+                fill(0);
+                rect(x,y,1);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            currentScreenX+=5;
+            for(var currentScreenY=0;currentScreenY<height;currentScreenY+=5){
+                calculateSquence(currentScreenX,currentScreenY);
+            }
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="parat">
+        <p><b>Engine1:complex class</b></p><br><br>
+        <a href="../../mainPage/mainPage_3.html">返回</a>
+    </div>
+    
+    </body>
+</html>

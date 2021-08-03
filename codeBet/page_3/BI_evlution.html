@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>进化算法</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+            background-color: rgb(27,27,27);    
+        }
+        ::-webkit-scrollbar{
+            display: none;
+        }
+        .cot{
+            background-color: rgb(27, 27, 27);
+            display: block;
+            padding-left: 20px;
+            padding-top: 10px;
+            z-index: 10000;
+            padding-bottom: 30px;
+        }
+        .cot h2,.cot h1,.cot p{
+            color: rgb(255,255,255);
+        }
+        .cot hr{
+            display: none;
+        }
+        .cot a{
+            color: chartreuse;
+        }
+        
+        
+        .output{
+            padding: 0;
+            margin: 0;
+            column-count: 8;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: rgb(0, 0, 0);
+        }
+        .output p{
+            display: block;
+        }
+        .output .cur{
+            font-size: 1px;
+            color: rgb(0, 0, 0);
+            background-color: rgb(251, 255, 0);
+        }
+        .output .ind{
+            font-size: 1px;
+        }
+
+        .total{
+            position: absolute;
+            width: 30vw;
+            height: 30vh;
+            margin-top: 35vh;
+            margin-left: 35vw;
+            font-size: 30vh;
+            line-height: 30vh;
+            text-align: center;
+            color: rgb(251, 255, 0);
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        //jhgjhgjhgjhg
+        var population=[];
+        var matingPool=[];
+        var target="";
+        var outputBox=null;
+        var totalBox=null;
+        window.onload=function(){
+            outputBox=document.querySelector(".output");
+            totalBox=document.querySelector(".total");
+        }
+        function DNA(){
+            this.genes=new Array(18);
+            this.fitness=0;
+            this.mutationRate=0.01;//突变率
+            this.init=function(){
+                for(var i=0;i<this.genes.length;i++){
+                    this.genes[i]=char(random(32,128));
+                }
+            }
+            this.setGenes=function(i,geneset){
+                //设定基因型
+                this.genes[i]=geneset;
+            }
+            this.calculateFitness=function(target){
+                //计算适合度
+                var score=0;
+                for(var i=0;i<this.genes.length;i++){
+                    if(this.genes[i]==target[i]){
+                        score+=1;
+                    }
+                }
+                var fitnessPoint=score/target.length;
+                this.fitness=fitnessPoint;
+                return(fitnessPoint);
+            }
+            this.crossover=function(partner){
+                //交配【拼接基因型】
+                var child=new DNA;
+                var midpoint=int(random(this.genes.length));
+                for(var i=0;i<this.genes.length;i++){
+                    if(i>midpoint){
+                        child.setGenes(i,this.genes[i]);
+                    }else{
+                        child.setGenes(i,partner.genes[i]);
+                    }
+                }
+                return(child);
+            }
+            this.mutate=function(){
+                //突变
+                for(var i=0;i<this.genes.length;i++){
+                    if(random(1)<this.mutationRate){
+                        this.genes[i]=char(random(32,128));
+                    }
+                }
+            }
+            this.getString=function(){
+                var tempString="";
+                for(var i=0;i<this.genes.length;i++){
+                    tempString+=this.genes[i];
+                }
+                return(tempString);
+            }
+        }
+        function setup() {
+            target="vezzzingQAQ y y ds"
+            for(var i=0;i<640;i++){
+                population.push(new DNA);
+                population[i].init();
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            frameRate(66);
+            for(var i=0;i<population.length;i++){
+                population[i].calculateFitness(target);
+            }
+            //交配池
+            matingPool=[];
+            for(var i=0;i<population.length;i++){
+                var n=int(population[i].fitness*100);
+                for(var j=0;j<n;j++){
+                    matingPool.push(population[i]);
+                }
+            }
+            //繁殖
+            for(var i=0;i<population.length;i++){
+                var a=int(random(matingPool.length));
+                var b=int(random(matingPool.length));
+                var parentA=matingPool[a];
+                var parentB=matingPool[b];
+                var child=parentA.crossover(parentB);
+                //突变
+                child.mutate();
+                population[i]=child;
+            }
+            //显示
+            var temp="";
+            var total=0;
+            for(var i=0;i<population.length;i++){
+                if(population[i].getString()==target){
+                    temp+=("<p class=\"cur\">"+population[i].getString()+"</p>");
+                    total+=1;
+                }else{
+                    temp+=("<p class=\"ind\">"+population[i].getString()+"</p>");
+                }
+            }
+            totalBox.innerHTML=total;
+            outputBox.innerHTML=temp;
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <div class="total"></div>
+    <div class="cot">
+        <div class="output"></div>
+        <h1>进化算法</h1>
+        <p>黄色的表明进化完成</p>
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+    </div>
+    </body>
+</html>

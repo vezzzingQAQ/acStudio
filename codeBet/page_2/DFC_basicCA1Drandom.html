@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>一维CA</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var ca=null;
+        var ruleBox=null;
+        var button=null;
+        window.onload=function(){
+            ruleBox=document.querySelector("#ruleSet");
+            button=document.querySelector("#redo");
+            button.onclick=function(){
+                ca.setRule(ruleBox.value);
+                ca.redo();
+            }
+        }
+        function CAoneDem(ruleSet,w){//规则集，宽度[像素]
+            this.cells=new Array(int(width/w));
+            this.w=w;
+            this.generation=0;
+            this.ruleSet=ruleSet;
+            for(var i=0;i<this.cells.length;i++){
+                this.cells[i]=int(random(0,2));
+            }
+            this.setRule=function(rule){
+                this.ruleSet=[];
+                eval("this.ruleSet="+rule);
+            }
+            this.redo=function(){
+                background(0);
+                for(var i=0;i<this.cells.length;i++){
+                    this.cells[i]=int(random(0,2));
+                }
+                this.generation=0;
+            }
+            this.generate=function(){
+                var nextGenerate=new Array(this.cells.length);
+                for(var i=1;i<this.cells.length-1;i++){
+                    var leftNeighbor=this.cells[i-1];
+                    var middleMe=this.cells[i];
+                    var rightNeighbor=this.cells[i+1];
+                    nextGenerate[i]=this.rules(leftNeighbor,middleMe,rightNeighbor);
+                }
+                this.cells=nextGenerate;
+                this.generation+=1;
+            }
+            this.display=function(){
+                for(var i=0;i<this.cells.length;i++){
+                    noStroke();
+                    if(this.cells[i]==1){
+                        fill(222);
+                    }else{
+                        fill(0);
+                    }
+                    rect(i*this.w,this.generation*this.w,this.w,this.w);
+                }
+            }
+            this.rules=function(leftNeighbor,middleMe,rightNeighbor){
+                if(leftNeighbor==1 && middleMe==1 && rightNeighbor==1){
+                    return this.ruleSet[0];
+                }else if(leftNeighbor==1 && middleMe==1 && rightNeighbor==0){
+                    return this.ruleSet[1];
+                }else if(leftNeighbor==1 && middleMe==0 && rightNeighbor==1){
+                    return this.ruleSet[2];
+                }else if(leftNeighbor==1 && middleMe==0 && rightNeighbor==0){
+                    return this.ruleSet[3];
+                }else if(leftNeighbor==0 && middleMe==1 && rightNeighbor==1){
+                    return this.ruleSet[4];
+                }else if(leftNeighbor==0 && middleMe==1 && rightNeighbor==0){
+                    return this.ruleSet[5];
+                }else if(leftNeighbor==0 && middleMe==0 && rightNeighbor==1){
+                    return this.ruleSet[6];
+                }else if(leftNeighbor==0 && middleMe==0 && rightNeighbor==0){
+                    return this.ruleSet[7];
+                }
+                return(0);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            ca=new CAoneDem([0,1,0,1,1,0,1,0],1.0);
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            //background(0,13)
+            ca.generate();
+            ca.display();
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>一维CA随机生成</h1>
+        <hr>
+        <p>规则集  <input id="ruleSet" value="[0,0,0,1,1,1,1,0]"><button id="redo">redo</button></p> <br>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_2.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

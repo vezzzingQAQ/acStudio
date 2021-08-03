@@ -10,27 +10,39 @@
         <script type="text/javascript">
             
             window.onload=function(){
-                addComponents(2,"AAA_ca2DcellClassInteractMouse",3,"可交互的GOF","移动鼠标生成Cell","P5.js,the nature of code");
-                addComponents(2,"BA_fractalCircle1",2,"分形圆","递归应用","P5.js,the nature of code");
-                addComponents(2,"BB_fractalCircle2",2,"分形圆2","递归应用","P5.js,the nature of code");
-                //addComponents(2,"BC_cantorSet",2,"康托尔集","递归应用","P5.js,the nature of code");
-                addComponents(2,"BD_kochLine",2,"Koch曲线","递归+外部函数","P5.js,the nature of code");
-                addComponents(2,"BF_FractalTree",2,"分形树","移动鼠标改变旋转角","P5.js,the nature of code");
-                addComponents(2,"BG_FractalTreeWithRandom",2,"分形树","带有随机性的","P5.js,the nature of code");
-                addComponents(2,"BH_Lsysten",2,"L系统","可定制规则集","P5.js,the nature of code");
-                addComponents(2,"BI_evlution",2,"进化算法","generation1","P5.js,the nature of code");
-                addComponents(2,"CAA_MandelbrotSet",3,"曼德博集合基本","导函数上色","P5.js");
-                addComponents(2,"CAB_MandelbrotSetDisplay",3,"复数逃逸","曼德博集合的底层原理","P5.js");
-                addComponents(2,"CAC_MendelbrotSetFX",3,"佛像分型","曼德博集合保留路径","P5.js");
-
-                //addComponents(2,"AAA_ca2DcellClassInteractMouse",3,"可交互的GOF","移动鼠标生成Cell","P5.js,the nature of code");
-                //addComponents(2,"AAA_ca2DcellClassInteractMouse",3,"可交互的GOF","移动鼠标生成Cell","P5.js,the nature of code");
-                //exp
+                addComponents(2,"DCE_periodicOscillation",3,"周期振荡","周期振荡函数","P5.js,the nature of code");
+                addComponents(2,"DCF_oscillatorClass",3,"周期振荡类","x,y双向振荡","P5.js,the nature of code");
+                addComponents(2,"DCG_pendulum",3,"钟摆类","可以指定初始角，摆长等等","P5.js,the nature of code");
+                addComponents(2,"DCH_spring",3,"弹簧振子类","可以用来做弹簧质点系","P5.js,the nature of code");
+                addComponents(2,"DDA_basicParticleSystem",3,"基本粒子系统","发射点,生命周期","P5.js,the nature of code");
+                addComponents(2,"DDB_multyParticleSystem",3,"粒子系统的系统","点击增加发射点","P5.js,the nature of code");
+                addComponents(2,"DDC_particleSystemWithBounce",3,"边缘弹射粒子系统","点击增加发射点","P5.js,the nature of code");
+                addComponents(2,"DDD_particleSystemWithForce",3,"受力作用的粒子系统","同时修改了反弹机制","P5.js,the nature of code");
+                addComponents(2,"DDE_particleSystemWithRejectionForce",3,"有排斥子的粒子系统","排斥子对象,粒子系统对象修改","P5.js,the nature of code");
+                addComponents(2,"DDF_RenderingSmokeUsingParticleSystem",3,"渲染烟雾","混合模式的使用","P5.js,the nature of code");
+                addComponents(2,"DEA_vehicle_findTarget",3,"自洽智能体-寻找行为","计算并施加转向力","P5.js,the nature of code");
+                addComponents(2,"DEB_vehicle_arriveTarget",3,"自洽智能体-到达行为","通过与目标距离计算速度","P5.js,the nature of code");
+                addComponents(2,"DEC_vehicle_stayInWall",3,"区域内游走","出界后施加反向向量","P5.js,the nature of code");
+                addComponents(2,"DED_randomFlowField",3,"纯随机流场","流场对象","P5.js,the nature of code");
+                addComponents(2,"DEF_vehicleInFlowField",3,"随机流场里的运动","也是vehicle对象","P5.js,the nature of code");
+                addComponents(2,"DEG_vehicleInFlowField_render",3,"随机流场里的轨迹","chaos","P5.js,the nature of code");
+                addComponents(2,"DEH_straightPathFollow",3,"直线路径跟随","vehicle，path类","P5.js,the nature of code");
+                addComponents(2,"DEI_multyStraightPathFollow",3,"多直线路径跟随","也是vehicle对象","P5.js,the nature of code");
+                addComponents(2,"DEJ_groupActivitySeparate",3,"群组分离","向量平均值","P5.js,the nature of code");
+                addComponents(2,"DEK_followAndSeparate",3,"路径跟随X群组分离","也是vehicle对象","P5.js,the nature of code");
+                addComponents(2,"DEL_findTargetAndSeparate",3,"目标寻找X群组分离","也是vehicle对象","P5.js,the nature of code");
+                addComponents(2,"DEM_groupActivity",3,"群组行为","boid","P5.js,the nature of code");
+                addComponents(2,"DFA_basicCA1D",3,"一维CA","可以改变规则集","P5.js,the nature of code");
+                addComponents(2,"DFB_basicCA1Drotate",3,"一维CA滚动","可以改变规则集","P5.js,the nature of code");
+                addComponents(2,"DFC_basicCA1Drandom",3,"一维CA随机生成","可以改变规则集","P5.js,the nature of code");
+                addComponents(2,"DFD_basicCA2D",3,"二维CA随机","非面向对象","P5.js,the nature of code");
+                addComponents(2,"DFE_basicCA2D3D",3,"二维CA随机轨迹","rotateable","P5.js,the nature of code");
+                addComponents(2,"DFF_ca2DcellClass",3,"面向对象的CA","颜色显示历史","P5.js,the nature of code");
                 //addPage
-                addPages(3,2);
+                addPages(4,2);
             }
         </script>
-        <script src="support/bannerP5_2.js"></script>
+        <script src="support/bannerP5_1.js"></script>
         <link rel="stylesheet" type="text/css" href="support/classicMainPage.css">
     </head>
     <body>
@@ -54,4 +66,3 @@
         </section>
     </body>
 </html>
- 

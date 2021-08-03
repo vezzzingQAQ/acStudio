@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>有排斥对象的粒子系统</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var particleSystemList=[];
+        repeller=null;
+        var gravity=null;
+        function Particle(x,y,vx,vy,ax,ay,mass,colorR,colorG,colorB){
+            this.position=createVector(x,y);
+            this.velocity=createVector(vx,vy);
+            this.acceleration=createVector(ax,ay);
+            this.mass=mass;
+            this.lifeSpan=255;
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+                this.lifeSpan-=1;
+            }
+            this.display=function(){
+                noStroke();
+                fill(colorR,colorG,colorB,this.lifeSpan);
+                circle(this.position.x,this.position.y,6);
+            }
+            this.applyForce=function(force){
+                var f=force.copy();
+                f.div(this.mass);
+                this.acceleration.add(f);
+            }
+            this.checkEdges=function(){//check if the ball hit the edge
+                if(this.position.x<0 || this.position.x>width){
+                    if(this.position.x<0){
+                        this.position.x=0;
+                    }else if(this.position.x>width){
+                        this.position.x=width;
+                    }
+                    this.velocity.x*=-0.5;
+                }
+                if(this.position.y<0 || this.position.y>height){
+                    if(this.position.y<0){
+                        this.position.y=0;
+                    }else if(this.position.y>height){
+                        this.position.y=height;
+                    }
+                    this.velocity.y*=-0.5;
+                }
+            }
+            this.isDead=function(){
+                if(this.lifeSpan<0){
+                    return(true);
+                }else{
+                    return(false);
+                }
+            }
+        }
+        function Repeller(strength,positionX,positionY){
+            //强度，x,y
+            this.strength=strength;
+            this.position=createVector(positionX,positionY);
+            this.repel=function(particle){
+                dir=p5.Vector.sub(this.position,particle.position);
+                d=dir.mag();
+                dir.normalize();
+                //d=constrain(d,5,100);
+                var force=-1*this.strength/(d*d);
+                dir.mult(force);
+                return(dir);
+            }
+            this.display=function(){
+                fill(255,255,0,50);
+                noStroke();
+                circle(this.position.x,this.position.y,this.strength/10);
+            }
+        }
+        function ParticleSystem(x,y){
+            this.position=createVector(x,y);
+            this.particleList=[];
+            this.colorR=int(random(125,255));
+            this.colorG=int(random(125,255));
+            this.colorB=int(random(125,255));
+
+            this.addParticle=function(){
+                this.particleList.push(new Particle(this.position.x,this.position.y,random(-8,8),random(-8,8),0,0,random(1,6),this.colorR,this.colorG,this.colorB));
+            }
+            this.applyForce=function(force){
+                for(var i=0;i<this.particleList.length;i++){
+                    this.particleList[i].applyForce(force);
+                }
+            }
+            this.applyRepeller=function(repeller){
+                for(var i=0;i<this.particleList.length;i++){
+                    var force=repeller.repel(this.particleList[i]);
+                    this.particleList[i].applyForce(force);
+                }
+            }
+            this.run=function(){
+                for(var i=0;i<this.particleList.length;i++){
+                    if(this.particleList[i].isDead()){
+                        this.particleList.splice(i,1);
+                    }else{
+                        this.particleList[i].update();
+                        this.particleList[i].checkEdges();
+                        this.particleList[i].display();
+                    }
+                }
+                this.addParticle();
+                fill(125);
+                text("total number of particle:"+this.particleList.length*particleSystemList.length,10,30);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            repeller=new Repeller(1000,width/2,height*2/3)
+            gravity=createVector(0,3);
+            particleSystemList.push(new ParticleSystem(width/2,height/2));
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0);
+            repeller.display();
+            for(var i=0;i<particleSystemList.length;i++){
+                particleSystemList[i].applyForce(gravity);
+                particleSystemList[i].applyRepeller(repeller);
+                particleSystemList[i].run();
+            }
+        }
+        function mousePressed(){
+            particleSystemList.push(new ParticleSystem(mouseX,mouseY));
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>有排斥对象的粒子系统</h1>
+        <hr>
+        <p>Repeller(strength,positionX,positionY)</p>
+        <p>//强度，x,y</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_2.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

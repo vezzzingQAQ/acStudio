@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>分形圆1</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        function drawCircle(x,y,r){
+            noFill();
+            stroke(222);
+            strokeWeight(1);
+            circle(x,y,r);
+            if(r>2){
+                x+=map(mouseX,0,width,-10,10);
+                y+=map(mouseY,0,height,-10,10);
+                r*=0.95;
+                drawCircle(x,y,r);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            background(0);
+            //translate(width/2,height/2);
+            drawCircle(width/2,height/2,300);
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>分形圆1</h1>
+        <hr>
+        <hr>
+        <p>递归</p>
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

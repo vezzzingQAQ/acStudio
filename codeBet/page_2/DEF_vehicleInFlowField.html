@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>随机流场</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var vehicleList=[];
+        var flowField=null;
+        function Vehicle(positionX,positionY,vx,vy){
+            this.position=createVector(positionX,positionY);
+            this.velocity=createVector(vx,vy);
+            this.acceleration=createVector(0,0);
+            this.size=6;
+            this.maxSpeed=8;
+            this.maxForce=0.07;
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.velocity.limit(this.maxSpeed);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+            this.applyForce=function(force){
+                this.acceleration.add(force);
+            }
+            this.seek=function(target){
+                desired=p5.Vector.sub(target.position,this.position);
+                var d=desired.mag();
+                desired.normalize();
+                if(d<target.desiredR){
+                    var m=map(d,0,target.desiredR,0,this.maxSpeed);
+                    desired.mult(m);
+                }else{
+                    desired.mult(this.maxSpeed);
+                }
+                steer=p5.Vector.sub(desired,this.velocity);
+                steer.limit(this.maxForce);
+                this.applyForce(steer);
+            }
+            this.flow=function(flowField){
+                var desired=flowField.calculateDesired(this.position.x,this.position.y);
+                desired.mult(this.maxSpeed);
+                var steer=p5.Vector.sub(desired,this.velocity);
+                steer.limit(this.maxForce);
+                this.applyForce(steer);
+            }
+            this.checkEdges=function(){
+                if(this.position.x<100 || this.position.x>width-100){
+                    if(this.position.x<100){
+                        this.position.x=100;
+                    }else if(this.position.x>width-100){
+                        this.position.x=width-100;
+                    }
+                    this.velocity.x*=-1;
+                }
+                if(this.position.y<100 || this.position.y>height-100){
+                    if(this.position.y<100){
+                        this.position.y=100;
+                    }else if(this.position.y>height-100){
+                        this.position.y=height-100;
+                    }
+                    this.velocity.y*=-1;
+                }
+            }
+            this.display=function(){
+                push();
+                translate(this.position.x,this.position.y);
+                var angle=atan2(this.velocity.y,this.velocity.x);
+                rotate(angle+PI/2);
+                fill(200);
+                noStroke();
+                beginShape();
+                vertex(0,-this.size*2);
+                vertex(-this.size,this.size*2);
+                vertex(this.size,this.size*2);
+                endShape();
+                pop();
+            }
+        }
+        function FlowField(cols,rows){
+            this.field=[];
+            this.cols=cols;
+            this.rows=rows;
+            this.createRandomField=function(){
+                var temp=[];
+                for(var i=0;i<this.cols;i++){
+                    for(var j=0;j<this.rows;j++){
+                        temp.push(p5.Vector.random2D());
+                    }
+                    this.field.push(temp);
+                    temp=[];
+                }
+            }
+            this.display=function(){
+                var blockWidth=width/this.rows;
+                var blockHeight=height/this.cols;
+                for(var i=0;i<this.cols;i++){
+                    for(var j=0;j<this.rows;j++){
+                        push();
+                        translate(j*blockWidth+blockWidth/2,i*blockHeight+blockHeight/2);
+                        rotate(-atan2(this.field[i][j].x,this.field[i][j].y))
+                        strokeWeight(1);
+                        stroke(125,30);
+                        line(0,-10,0,10);
+                        line(0,10,4,3);
+                        line(0,10,-4,3);
+                        pop();
+                    }
+                }
+            }
+            this.calculateDesired=function(x,y){
+                var column=int(map(y,0,height,0,this.cols));
+                var row=int(map(x,0,width,0,this.rows));
+                
+                var blockWidth=width/this.rows;
+                var blockHeight=height/this.cols;
+                push();
+                translate(row*blockWidth+blockWidth/2,column*blockHeight+blockHeight/2);
+                noFill();
+                strokeWeight(0.1);
+                stroke(255,255,0);
+                rect(-blockWidth/2,-blockHeight/2,blockWidth,blockHeight)
+                rotate(-atan2(this.field[column][row].x,this.field[column][row].y))
+                strokeWeight(1);
+                line(0,-10,0,10);
+                line(0,10,4,3);
+                line(0,10,-4,3);
+                pop();
+                return(this.field[column][row].copy());
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            var fieldWidth=40;
+            var fieldHeight=int(fieldWidth*(windowHeight/windowWidth));
+            for(var i=0;i<100;i++){
+                vehicleList.push(new Vehicle(random(350,width-350),random(300,height-300),0,0));
+            }
+            flowField=new FlowField(fieldHeight,fieldWidth);
+            flowField.createRandomField();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(0,30);
+            flowField.display();
+            for(var i=0;i<vehicleList.length;i++){
+                vehicleList[i].checkEdges();
+                vehicleList[i].flow(flowField);
+                vehicleList[i].update();
+                vehicleList[i].display();
+            }
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>随机流场</h1>
+        <hr>
+        <p>修改流场类</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_2.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>
