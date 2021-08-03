@@ -98,12 +98,13 @@ function setup() {
     for(var i=0;i<20;i++){
         attractorList.push(new Attractor(random(100,width-100),random(100,height-100),random(0.3,5)));
     }
+    background(232);
 }
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function draw(){
-    background(222,160);
+    background(232,160);
     attractorList[0].position.x=mouseX;
     attractorList[0].position.y=mouseY;
     for(var i=0;i<moverList.length;i++){ 

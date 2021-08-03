@@ -106,7 +106,7 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function draw(){
-    background(222);
+    background(232);
     for(var i=0;i<vehicleList.length;i++){
         vehicleList[i].checkEdges();
         vehicleList[i].seek(mouseX,mouseY,200);
