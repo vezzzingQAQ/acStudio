@@ -35,7 +35,7 @@ public components:
 body{
     padding: 0;
     margin: 0;
-    background-color: rgb(21,21,21);
+    background-color: rgb(232,232,232);
 }
 ::-webkit-scrollbar{
     display: none;
@@ -49,6 +49,7 @@ main{
     z-index: -1;
     margin: 0;
     padding: 0;
+    opacity: 0.8;
 }
 .head_section{
     width: 100vw;

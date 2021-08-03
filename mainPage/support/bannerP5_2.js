@@ -1,117 +1,145 @@
-var moverList=[];
-var attractorList=[];
-var gravity=null;
-function GravityObject(x,y,vx,vy,mass){//balls influence by gravity of the attractor
-    this.position=createVector(x,y);
-    this.velocity=createVector(vx,vy);
-    this.acceleration=createVector(0,0);
-    this.mass=mass;
-    this.size=4;
-    this.applyForce=function(force){//apply force
-        var f=force.copy();
-        this.acceleration.add(f.div(this.mass));
-    }
-    this.update=function(){//update the state of the ball
-        this.velocity.add(this.acceleration);
-        this.position.add(this.velocity);
-        this.acceleration.mult(0);
-    }
-    this.limitVelocity=function(value){
-        this.velocity.limit(value);
-    }
-    this.limitAcceleration=function(value){
-        this.acceleration.limit(value);
-    }
-    //apply universal gravity
-    this.applyGravityMutual=function(attractor,g){
-        var force=p5.Vector.sub(this.position,attractor.position);
-        var distance=force.mag();
-        var strength=(g*attractor.mass*attractor.mass)/(distance*distance);
-        force.normalize();
-        force.mult(-strength);
-        this.applyForce(force);
-    }
-    this.applyGravity=function(attracotrList,g){
-        for(i=0;i<attracotrList.length;i++){
-            this.applyGravityMutual(attracotrList[i],g);
+var ca=null;
+function init2Darray(columns,rows){
+    var arrayFinal=[];
+    var temp=[];
+    for(var i=0;i<columns;i++){
+        for(j=0;j<rows;j++){
+            temp.push([]);
         }
+        arrayFinal.push(temp);
+        temp=[];
     }
-    //apply universal rejection
-    this.applyRejectionMutual=function(attractor,g){
-        var force=p5.Vector.sub(this.position,attractor.position);
-        var distance=force.mag();
-        var strength=(g*attractor.mass*attractor.mass)/(distance*distance);
-        force.normalize();
-        force.mult(strength);
-        this.applyForce(force);
+    return arrayFinal;
+}
+function BasicCA2D(){
+    this.board=null;
+    this.next=null;
+    this.columns=null;
+    this.rows=null;
+    this.w=null;
+    this.createBoard=function(w){
+        this.w=w;
+        var col=int(width/w);
+        var row=int(height/w);
+        this.init(col,row,w);
     }
-    this.applyRejection=function(attracotrList,g){
-        for(i=0;i<attracotrList.length;i++){
-            this.applyRejectionMutual(attracotrList[i],g);
-        }
-    }
-    this.checkEdges=function(){//check if the ball hit the edge
-        if(this.position.x<0 || this.position.x>width){
-            if(this.position.x<0){
-                this.position.x=0;
-            }else if(this.position.x>width){
-                this.position.x=width;
+    this.init=function(columns,rows,w){
+        this.w=w;
+        this.board=init2Darray(columns,rows);
+        this.next=init2Darray(columns,rows);
+        this.columns=columns;
+        this.rows=rows;
+        for(var x=0;x<columns;x++){
+            for(var y=0;y<rows;y++){
+                this.board[x][y]=new Cell(x,y,0,this.w);
+                this.next[x][y]=new Cell(x,y,0,this.w)
             }
-            this.velocity.x*=-0.5;
         }
-        if(this.position.y<0 || this.position.y>height){
-            if(this.position.y<0){
-                this.position.y=0;
-            }else if(this.position.y>height){
-                this.position.y=height;
+    }
+    this.generate=function(){
+        for(var x=1;x<this.columns-1;x++){
+            for(var y=1;y<this.rows-1;y++){
+                var neighbors=0;
+                for(var i=-1;i<=1;i++){
+                    for(var j=-1;j<=1;j++){
+                        neighbors+=this.board[x+i][y+j].state;
+                    }
+                }
+                neighbors-=this.board[x][y].state;
+                if((this.board[x][y].state==1)&&(neighbors<2)){
+                    this.next[x][y].state=0;
+                }else if((this.board[x][y].state==1)&&(neighbors>3)){
+                    this.next[x][y].state=0;
+                }else if((this.board[x][y].state==0)&&(neighbors==3)){
+                    this.next[x][y].state=1;
+                }else{
+                    this.next[x][y].state=this.board[x][y].state;
+                }
             }
-            this.velocity.y*=-0.5;
+        }
+        for(var x=1;x<this.columns-1;x++){
+            for(var y=1;y<this.rows-1;y++){
+                this.board[x][y].newState(this.next[x][y].state);
+            }
         }
     }
     this.display=function(){
-        push();
-        translate(this.position.x,this.position.y);
-        var angle=atan2(this.velocity.y,this.velocity.x);
-        rotate(angle+PI/2);
-        fill(map(this.velocity.mag(),0,1.6,120,255),120,220);
-        noStroke();
-        beginShape();
-        vertex(0,-this.size*2);
-        vertex(-this.size,this.size*2);
-        vertex(0,this.size*1);
-        vertex(this.size,this.size*2);
-        endShape();
-        pop();
+        for(var x=1;x<this.columns-1;x++){
+            for(var y=1;y<this.rows-1;y++){
+                this.board[x][y].display();
+            }
+        }
     }
 }
-function Attractor(x,y,mass){//objects create gravity
-    this.position=createVector(x,y);
-    this.mass=mass;
+function Cell(x,y,state,w){
+    this.x=x;
+    this.y=y;
+    this.w=w;
+    this.state=state;
+    this.previous=0;
+    this.preprevious=0;
+    this.newState=function(state){
+        this.preprevious=this.previous;
+        this.previous=this.state;
+        this.state=state;
+    }
+    this.display=function(){
+        noStroke();
+        if(this.preprevious==1){
+            if(this.previous==1){
+                if(this.state==1){
+                    fill(0, 119, 182,200);
+                }else{
+                    fill(0, 150, 199,200);
+                }
+            }else{
+                if(this.state==1){
+                    fill(0, 180, 216,200);
+                }else{
+                    fill(72, 202, 228,200);
+                }
+            }
+        }else{
+            if(this.previous==1){
+                if(this.state==1){
+                    fill(144, 224, 239,200);
+                }else{
+                    fill(173, 232, 244,200);
+                }
+            }else{
+                if(this.state==1){
+                    fill(202, 240, 248,200);
+                }else{
+                    fill(0,0,0,0);
+                }
+            }
+        }
+        circle(this.x*this.w,this.y*this.w,this.w-1,this.w-1);
+    }
 }
 function setup() {
     createCanvas(windowWidth, windowHeight);
     smooth();
-    for(var i=0;i<70;i++){
-        moverList.push(new GravityObject(random(100,width-100),random(100,height-100),random(-0.5,0.5),random(-0.5,0.5),random(0.3,5)));
-    }
-    attractorList.push(new Attractor(random(100,width-100),random(100,height-100),11));
-    for(var i=0;i<20;i++){
-        attractorList.push(new Attractor(random(100,width-100),random(100,height-100),random(0.3,5)));
-    }
-    background(232);
+    ca=new BasicCA2D();
+    ca.createBoard(10);
 }
 function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
+    resizeCanvas(windowWidth,windowHeight);
 }
 function draw(){
-    background(232,160);
-    attractorList[0].position.x=mouseX;
-    attractorList[0].position.y=mouseY;
-    for(var i=0;i<moverList.length;i++){ 
-        moverList[i].applyGravity(attractorList,1);
-        moverList[i].checkEdges();
-        moverList[i].limitVelocity(22.6);
-        moverList[i].update();
-        moverList[i].display();
+    background(232);
+    ca.generate();
+    ca.display();
+}
+function mouseMoved(){
+    var x=int(map(mouseX,0,width,1,ca.columns-1));
+    var y=int(map(mouseY,0,height,1,ca.rows-1));
+    try{
+        ca.board[x][y+1].newState(1);
+        ca.board[x][y-1].newState(1);
+        ca.board[x+1][y].newState(1);
+        ca.board[x-1][y].newState(1);
+    }catch{
+        text("error,2333",10,10);
     }
 }

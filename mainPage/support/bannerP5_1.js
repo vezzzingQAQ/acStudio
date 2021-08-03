@@ -11,7 +11,7 @@ function Vehicle(positionX,positionY,vx,vy){
     this.position=createVector(positionX,positionY);
     this.velocity=createVector(vx,vy);
     this.acceleration=createVector(0,0);
-    this.size=3;
+    this.size=5;
     this.maxSpeed=8;
     this.maxForce=0.7;
 
@@ -85,7 +85,7 @@ function Vehicle(positionX,positionY,vx,vy){
         translate(this.position.x,this.position.y);
         var angle=atan2(this.velocity.y,this.velocity.x);
         rotate(angle+PI/2);
-        fill(255,this.velocity.mag()*20,125,120);
+        fill(255,this.velocity.mag()*20,map(this.velocity.mag(),0,this.maxSpeed,232,120),120);
         noStroke();
         beginShape();
         vertex(0,-this.size*2);
@@ -98,7 +98,7 @@ function Vehicle(positionX,positionY,vx,vy){
 function setup() {
     createCanvas(windowWidth, windowHeight);
     smooth();
-    for(var i=0;i<300;i++){
+    for(var i=0;i<width/11;i++){
         vehicleList.push(new Vehicle(random(350,width-350),random(300,height-300),random(-3,3),random(-3,3)));
     }
 }
