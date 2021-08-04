@@ -85,7 +85,7 @@ function Vehicle(positionX,positionY,vx,vy){
         translate(this.position.x,this.position.y);
         var angle=atan2(this.velocity.y,this.velocity.x);
         rotate(angle+PI/2);
-        fill(255,this.velocity.mag()*20,map(this.velocity.mag(),0,this.maxSpeed,232,120),120);
+        fill(255,this.velocity.mag()*20,map(this.velocity.mag(),0,this.maxSpeed,232,120),150);
         noStroke();
         beginShape();
         vertex(0,-this.size*2);

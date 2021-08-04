@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDBonlineDisplay</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            padding-bottom: 40px;
+        }
+        .return{  
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            background-color: rgba(255,255,255,0.5);
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
+            text-decoration: none;
+            color: rgb(128, 0, 117);
+        }
+        main{
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .contain{
+            text-align: center;
+        }
+        .contain a{
+            margin-top: 10px;
+            display: inline-block;
+            background-color: rgb(165, 100, 240);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 30px;
+            line-height: 50px;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+    <script type="text/javascript">
+        function stop() {
+            return false;
+        }
+        document.oncontextmenu = stop;
+    </script>
+    <script src="../../../p5.min.js"></script>
+    <script>
+        var vehicleList=[];
+        var target=null;
+        function Vehicle(positionX,positionY,vx,vy){
+            this.position=createVector(positionX,positionY);
+            this.velocity=createVector(vx,vy);
+            this.acceleration=createVector(0,0);
+            this.size=6;
+            this.maxSpeed=8;
+            this.maxForce=0.07;
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.velocity.limit(this.maxSpeed);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+            this.applyForce=function(force){
+                this.acceleration.add(force);
+            }
+            this.seek=function(target){
+                //计算寻找目标的转向力，根据距离圆确定速度
+                desired=p5.Vector.sub(target.position,this.position);
+                var d=desired.mag();
+                desired.normalize();
+                if(d<target.desiredR){
+                    var m=map(d,0,target.desiredR,0,this.maxSpeed);
+                    desired.mult(m);
+                }else{
+                    desired.mult(this.maxSpeed);
+                }
+                steer=p5.Vector.sub(desired,this.velocity);
+                steer.limit(this.maxForce);
+                this.applyForce(steer);
+            }
+            this.display=function(){
+                fill(0,200);
+                noStroke();
+                circle(this.position.x,this.position.y,50);
+            }
+        }
+        function Target(positionX,positionY){
+            this.position=createVector(positionX,positionY);
+            this.desiredR=200;
+            this.display=function(){
+                push();
+                translate(this.position.x,this.position.y);
+                strokeWeight(1);
+                stroke(222);
+                noFill();
+                line(-30,0,30,0);
+                line(0,-30,0,30);
+                circle(0,0,15);
+                pop();
+            }
+            this.move=function(x,y){
+                this.position.set(x,y);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            for(var i=0;i<1;i++){
+                vehicleList.push(new Vehicle(random(100,width-100),random(100,height-100),random(-5,5),random(-5,5)));
+            }
+            target=new Target(width/2,height/2);
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function draw(){
+            background(255);
+            for(var i=0;i<vehicleList.length;i++){
+                vehicleList[i].seek(target);
+                vehicleList[i].update();
+                vehicleList[i].display();
+            }
+            target.move(mouseX,mouseY);
+            //target.display();
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="parat">
+        <div class="contain">
+            <p>它最后明白,最可怕的,是自己的同类......</p>
+            <p>但是它又与它们有着道不清的联系......</p>
+            <br>
+            <p>它想逃离它们,太难了</p>
+            <p>它明明看到自己与它们之间数不清的联系</p>
+            <p>这个结构太可怕了,它像是落入蛛网的虫儿</p>
+            <p>但是它想着,当他挣脱一切联系之后的生活</p>
+            <p>那片空间,无限大......</p>
+            <br>
+            <p>作为纯粹的几何,它不能移动自己</p>
+            <p>但它掌握了改变力场方向的大法</p>
+            <p>它的心中燃起希望</p>
+            <br>
+            <p>当它做出逃离的决定的时候</p>
+            <p>它已经成为了异类</p>
+            <p>于是它走投无路</p>
+            <p>回避所谓的同类</p>
+            <p>从此踏上征程</p>
+            <br>
+            <p>但它结识了所谓的异类</p>
+            <p>它们愿意帮助它</p>
+            <p>它幻想着新的生活......</p>
+            <p></p>
+        </div>
+        <div class="contain">
+            <br><br>
+            <p>帮助它</p>
+            <p>鼠标左右键改变力场方向</p>
+            <p>躲避同类</p>
+            <p>在被称为异类的方块中汲取能量</p>
+        </div>
+        <div class="contain">
+            <a href="CCA_escape1.html">始</a>
+        </div>
+        <a class="return" href="../../../mainPage/mainPage_3.html">返回</a>
+    </div>
+    
+    </body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDBonlineDisplay</title>
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        }
+        a{  
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            background-color: rgba(255,255,255,0.5);
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
+            text-decoration: none;
+            color: rgb(128, 0, 117);
+        }
+        main{
+            pointer-events: none;
+        }
+        .over{
+            position: fixed;
+            width: 100%;
+            height: min-content;
+            left: 0;
+            top: 40%;
+            text-align: center;
+            background-color: rgba(33, 32, 34, 0.459);
+            transition: 0.4s ease-in-out;
+            display: none;
+            z-index: 11111;
+        }
+        .over h1{
+            color: yellow;
+        }
+        .over p{
+            color: yellow;
+        }
+        .over p span{
+            color: white;
+        }
+
+        .win{
+            position: fixed;
+            width: 100%;
+            height: min-content;
+            left: 0;
+            top: 40%;
+            text-align: center;
+            background-color: rgba(33, 32, 34, 0.459);
+            transition: 0.4s ease-in-out;
+            display: none;
+            z-index: 11111;
+        }
+        .win h1{
+            color: yellow;
+        }
+        .win p{
+            color: yellow;
+        }
+        .win p span{
+            color: white;
+        }
+    </style>
+    <script type="text/javascript">
+        function stop() {
+            return false;
+        }
+        document.oncontextmenu = stop;
+    </script>
+    <script src="../../../p5.min.js"></script>
+    <script>
+        var scoreBox=null;
+        var overBox=null;
+        var winBox=null;
+        var scoreBox2=null;
+        var player=null;
+        var gameControler=null;
+        window.onload=function(){
+            scoreBox=document.querySelector(".over p span");
+            overBox=document.querySelector(".over");
+            scoreBox2=document.querySelector(".win p span");
+            winBox=document.querySelector(".win");
+        }
+        function Player(){
+            this.position=createVector(width/2,height/2);
+            this.velocity=createVector(0,0);
+            this.acceleration=createVector(0,0);
+            this.size=50;
+            this.score=0;
+            this.addAcceleration=function(type){
+                if(type=="LEFT"){
+                    this.acceleration=createVector(-0.5,0);
+                }else{
+                    this.acceleration=createVector(0.5,0);
+                }
+            }
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+            }
+            this.checkEdges=function(){
+                if(this.position.x-this.size/2<=0){
+                    this.position.x=1+this.size/2;
+                    this.velocity.x*=-1;
+                }else if(this.position.x+this.size/2>=width){
+                    this.position.x=width-1-this.size/2;
+                    this.velocity.x*=-1;
+                }
+            }
+            this.display=function(){
+                fill(0,0,0,200);
+                noStroke();
+                circle(this.position.x,this.position.y,this.size);
+            }
+        }        
+        function Blocker(x,y){
+            this.position=createVector(x,y);
+            this.size=random(40,110);
+            this.velocity=createVector(random(-2,2),0);
+            this.color=[random(100,200),random(100,200),random(100,200)];
+            this.move=function(speed){
+                this.position.add(this.velocity);
+                this.position.y+=speed;
+            }
+            this.checkEdges=function(){
+                if(this.position.x-this.size/2<=0){
+                    this.position.x=1+this.size/2;
+                    this.velocity.x*=-1;
+                }else if(this.position.x+this.size/2>=width){
+                    this.position.x=width-1-this.size/2;
+                    this.velocity.x*=-1;
+                }
+            }
+            this.display=function(){
+                fill(this.color[0],this.color[1],this.color[2]);
+                strokeWeight(5);
+                stroke(0,200);
+                circle(this.position.x,this.position.y,this.size);
+            }
+            this.checkBump=function(player){
+                if(dist(this.position.x,this.position.y,player.position.x,player.position.y)<this.size/2+player.size/2){
+                    return(true);
+                }else{
+                    return(false);
+                }
+            }
+            this.checkBelow=function(){
+                if(this.position.y>player.position.y){
+                    return(true);
+                }else{
+                    return(false);
+                }
+            }
+            this.checkInScreen=function(){
+                if(this.position.y<height && this.position.y>0){
+                    return(true);
+                }else{
+                    return(false);
+                }
+            }
+            this.lineEach=function(x,y){
+                stroke(100,150);
+                strokeWeight(1);
+                line(this.position.x,this.position.y,x,y);
+            }
+        }
+        function Coin(x,y){
+            this.position=createVector(x,y);
+            this.size=30;
+            this.velocity=createVector(random(-2,2),0);
+            this.color=[222,125,211];
+            this.angle=random(-5,5);
+            this.effects=false;
+            this.delAble=false;
+            this.circler=0;
+            this.move=function(speed){
+                if(this.effects){
+                    this.bumping();
+                }
+                this.position.add(this.velocity);
+                this.angle+=0.02;
+                this.position.y+=speed;
+            }
+            this.checkEdges=function(){
+                if(this.position.x-this.size/2<=0){
+                    this.position.x=1+this.size/2;
+                    this.velocity.x*=-1;
+                }else if(this.position.x+this.size/2>=width){
+                    this.position.x=width-1-this.size/2;
+                    this.velocity.x*=-1;
+                }
+            }
+            this.display=function(){
+                push();
+                    translate(this.position.x,this.position.y);
+                    rotate(this.angle);
+                    fill(this.color[0],this.color[1],this.color[2]);
+                    noStroke();
+                    rectMode(CENTER);
+                    rect(0,0,this.size);
+                pop();
+            }
+            this.checkBump=function(player){
+                if(dist(this.position.x,this.position.y,player.position.x,player.position.y)<this.size/2+player.size/2){
+                    this.effects=true;
+                    return(true);
+                }else{
+                    return(false);
+                }
+            }
+            this.checkInScreen=function(){
+                if(this.position.y<height && this.position.y>0){
+                    return(true);
+                }else{
+                    return(false);
+                }
+            }
+            this.lineEach=function(x,y){
+                stroke(125,125,0,150);
+                strokeWeight(1);
+                line(this.position.x,this.position.y,x,y);
+            }
+            this.bumping=function(){
+                this.circler+=5;
+                if(this.circler>200){
+                    this.delAble=true;
+                }
+                push();
+                    translate(this.position.x,this.position.y);
+                    fill(255,11,121,map(this.circler,0,200,150,0));
+                    strokeWeight(0);
+                    stroke(255,255,0);
+                    circle(0,0,this.circler);
+                pop();
+            }
+        }
+        function drawScore(player,stage){
+            textSize(200);
+            var cwidth=textWidth(player.score);
+            fill(0,30);
+            text(player.score,width/2-cwidth/2,height/2+100);
+            textSize(15);
+            fill(0);
+            text("score:"+player.score,10,90);
+            text("frame:"+frameCount,10,130);
+            text("stage:"+stage,10,170);
+        }
+        function over(player){
+            scoreBox.innerHTML="得分"+player.score+" ";
+            overBox.style.display="block";
+        }
+        function win(player){
+            scoreBox2.innerHTML="得分"+player.score+" ";
+            winBox.style.display="block";
+        }
+        function GamrControler(sizeBlock,sizeCoin,player){
+            this.blockList=[];
+            this.coinList=[];
+            this.sizeBlock=sizeBlock;
+            this.sizeCoin=sizeCoin;
+            this.player=player;
+            this.isShaking=false;
+            this.shakingTime=0;
+            this.stage=0;
+            this.init=function(){
+                var y=0;
+                for(var i=0;i<this.sizeBlock;i++){
+                    this.blockList.push(new Blocker(random(100,width-100),y));
+                    y-=50;
+                }
+                y=0;
+                for(var i=0;i<this.sizeCoin;i++){
+                    this.coinList.push(new Coin(random(100,width-100),y));
+                    y-=30;
+                }
+            }
+            this.shaking=function(){
+                translate(random(-5,5),random(-5,5));
+                this.shakingTime+=1;
+                if(this.shakingTime>20){
+                    this.isShaking=false;
+                    return
+                }
+            }
+            this.run=function(){
+                if(this.isShaking){
+                    this.shaking();
+                }
+                if (mouseIsPressed) {
+                    if (mouseButton === LEFT) {
+                        this.player.addAcceleration("LEFT");
+                    }
+                    if (mouseButton === RIGHT) {
+                        this.player.addAcceleration("RIGHT");
+                    }
+                }
+                drawScore(this.player,this.stage);
+                this.player.update();
+                this.player.checkEdges();
+                for(var i=0;i<this.coinList.length;i++){
+                    this.coinList[i].checkEdges();
+                    this.coinList[i].move(6);
+                    if(this.coinList[i].checkBump(this.player)){
+                        player.score+=1;
+                    }
+                    if(this.coinList[i].delAble==false){
+                        if(this.coinList[i].checkInScreen()){
+                            //this.coinList[i].lineEach(this.player.position.x,this.player.position.y);
+                        }
+                        this.coinList[i].display();
+                    }
+                }
+                var count=0;
+                for(var i=0;i<this.blockList.length;i++){
+                    this.blockList[i].checkEdges();
+                    this.blockList[i].move(4);
+                    if(this.blockList[i].checkInScreen()){
+                        this.blockList[i].lineEach(this.player.position.x,this.player.position.y);
+                    }
+                    if(this.blockList[i].checkBelow()){
+                        count+=1;
+                    }
+                    this.blockList[i].display();
+                    if(this.blockList[i].checkBump(this.player)){
+                        if(this.player.score>=1){
+                            this.player.score-=1;
+                            this.shakingTime=0;
+                            this.isShaking=true;
+                        }else{
+                            over(this.player);
+                            noLoop();
+                        }
+                    }
+                }
+                this.stage=(round((count/this.blockList.length)*100,2))+"%";
+                if(round((count/this.blockList.length)*100,2)>=100){
+                    win(this.player);
+                }
+                this.player.display();
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            player=new Player;
+            gameControler=new GamrControler(620,1220,player);
+            gameControler.init();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            background(255);
+            gameControler.run();
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="parat">
+        <div class="over">
+            <h1>宁最终还是挂了(っ°Д°;)っ</h1>
+            <p><span>得分</span>F5一键重生</p>
+        </div>
+        <div class="win">
+            <h1>终于v(●'◡'●)...</h1>
+            <p><span>得分</span>它去往了它的桃花源</p>
+        </div>
+        <a href="about.html">返回</a>
+    </div>
+    
+    </body>
+</html>
