@@ -98,7 +98,7 @@ function Vehicle(positionX,positionY,vx,vy){
 function setup() {
     createCanvas(windowWidth, windowHeight);
     smooth();
-    for(var i=0;i<width/11;i++){
+    for(var i=0;i<30;i++){
         vehicleList.push(new Vehicle(random(350,width-350),random(300,height-300),random(-3,3),random(-3,3)));
     }
 }
@@ -106,7 +106,7 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function draw(){
-    background(232);
+    background(235);
     for(var i=0;i<vehicleList.length;i++){
         vehicleList[i].checkEdges();
         vehicleList[i].seek(mouseX,mouseY,200);

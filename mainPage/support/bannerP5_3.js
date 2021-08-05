@@ -6,7 +6,7 @@ function GravityObject(x,y,vx,vy,mass){//balls influence by gravity of the attra
     this.velocity=createVector(vx,vy);
     this.acceleration=createVector(0,0);
     this.mass=mass;
-    this.size=4.7;
+    this.size=6.7;
     this.applyForce=function(force){//apply force
         var f=force.copy();
         this.acceleration.add(f.div(this.mass));
@@ -91,20 +91,20 @@ function Attractor(x,y,mass){//objects create gravity
 function setup() {
     createCanvas(windowWidth, windowHeight);
     smooth();
-    for(var i=0;i<width/17;i++){
+    for(var i=0;i<9;i++){
         moverList.push(new GravityObject(random(100,width-100),random(100,height-100),random(-0.5,0.5),random(-0.5,0.5),random(0.3,5)));
     }
     attractorList.push(new Attractor(random(100,width-100),random(100,height-100),11));
     for(var i=0;i<20;i++){
         attractorList.push(new Attractor(random(100,width-100),random(100,height-100),random(0.3,5)));
     }
-    background(232);
+    background(255);
 }
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function draw(){
-    background(232,160);
+    background(235,160);
     attractorList[0].position.x=mouseX;
     attractorList[0].position.y=mouseY;
     for(var i=0;i<moverList.length;i++){ 

@@ -127,7 +127,7 @@ function windowResized() {
     resizeCanvas(windowWidth,windowHeight);
 }
 function draw(){
-    background(232);
+    background(235);
     ca.generate();
     ca.display();
 }

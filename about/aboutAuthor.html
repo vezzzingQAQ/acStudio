@@ -7,15 +7,28 @@
         <title>vezzzingQAQ</title>
         <style>
             body{
+                margin: 0 auto;
+                line-height: 1.75;
+                padding: 4em 1em;
+                max-width: 50em;
+                font-family: Arial, 微软雅黑，"Microsoft yahei", "Hiragino Sans GB", "冬青黑体简体中文 w3", STXihei, 华文细黑, SimSun, 宋体, Heiti, 黑体, sans-serif;
                 width: 100vw;
-                height: 100vh;
-                overflow: hidden;
+                background-color: rgb(235,235,235);
             }
-            .bottomPicture{
-                position: fixed;
-                right: 20px;
-                bottom: -500px;
-                z-index: -1;
+            h2,h3{
+                margin-top: 1em;
+                background-color: white;
+                position: relative;
+                border-left:5px blueviolet solid;
+                padding-left: 5px;
+            }
+            a{
+                color: blueviolet;
+            }
+            .PictureSmall{
+                width: 100px;
+                height: 100px;
+                background-size: cover;
             }
             .content .plan{
                 color: rgb(150, 150, 150);
@@ -32,9 +45,6 @@
             $(function(){
                 $(".stage2").slideDown(1000);
                 $(".return").fadeIn(1000);
-                $(".bottomPicture").animate({
-                    bottom:-10
-                },1000);
             });
         </script>
     </head>
@@ -43,7 +53,7 @@
         </section>
         <section class="content">
             <div class="aboutMain">
-                <h2 class="stage1">vezzzingQAQ</h2>
+                <h2 class="stage1">VezzzingQAQ</h2>
                 <p class="stage2">现就读于中国美术学院,大二,平时写一些小项目练练手(●ˇ∀ˇ●)</p>
                 <p class="stage2">立志做一个全栈+UI的设计师/程序猿/异术家?</p>
                 <p class="stage2">俺的秃头之路</p>
@@ -61,10 +71,15 @@
                 <p class="stage2">......</p>
                 <p class="stage2">俺的github账号:<a href="https://github.com/vezzzingQAQ" target="_blank">https://github.com/vezzzingQAQ</a></p>
                 <p class="stage2">欢迎来点个小星星\(￣︶￣*\))</p>
+                <img class="Picture stage2" src="pictures/bottom1.jpg">
+                <h3 class="stage1">怎么联系俺</h3>
+                <p class="stage2">扫这个加我好友↓</p>
+                <img class="PictureSmall stage2" src="pictures/add.jpg">
+                <p class="stage2">扫这个请我吃饭↓</p>
+                <img class="PictureSmall stage2" src="pictures/pay.jpg">
             </div>
         </section>
         <a href="../mainPage/mainPage_1.html" class="return">←回主页</a>
-        <img class="bottomPicture" src="pictures/bottom.jpg">
     </body>
 </html>
  

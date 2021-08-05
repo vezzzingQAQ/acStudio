@@ -88,10 +88,10 @@
             var isin=true;
             var codHeight=2;
             var codWidth=(width/height)*codHeight;
-            var cx=map(x,0,width,-codWidth,codWidth);
-            var cy=map(y,0,height,codHeight,-codHeight);
+            var cx=map(mouseX,0,width,-codWidth,codWidth);
+            var cy=map(mouseY,0,height,codHeight,-codHeight);
             var c=new Complex(cx,cy);//tow start parameters
-            var z=new Complex(0,0);
+            var z=new Complex(x,y);
             rectMode(CENTER);
             for(var i=0;i<500;i++){
                 z=iterate(z,c);
