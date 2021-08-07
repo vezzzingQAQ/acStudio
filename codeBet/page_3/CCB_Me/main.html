@@ -33,6 +33,50 @@
     </script>
     <script src="../../../p5.min.js"></script>
     <script>
+        function Player(){
+            this.position=createVector(width/2,height/2);
+            this.maxSpeed=2;
+            this.velocity=createVector(0,0);
+            this.gunpodList=[];
+            this.move=function(direction){
+                if(direction=="UP"){
+                    this.velocity=createVector(0,-this.maxSpeed);
+                }else if(direction="Down"){
+                    this.velocity=createVector(0,this.maxSpeed);
+                }else if(direction="LEFT"){
+                    this.velocity=(-this.maxSpeed,0);
+                }else if(direction="RIGHT"){
+                    this.velocity=(this.maxSpeed,0);
+                }else{
+                    console.log("error");
+                }
+            }
+            this.shot=function(type){
+                if(type=="NORMALE1"){
+                    
+                }
+            }
+        }
+        function Gunpod(x,y,vx,vy){
+            this.size=8;
+            this.position=createVector(x,y);
+            this.velocity=createVector(vx,vy);
+            this.update=function(){
+                this.position.add(this.velocity);
+            }
+            this.checkBump=function(target){
+                if(dist(this.position.x,this.position.y,target.position.x,target.position.y)<this.size/2+target.size/2){
+                    return(true);
+                }else{
+                    return(false);
+                }
+            }
+            this.display=function(){
+                fill(200,100,100);
+                noStroke();
+                circle(this.position.x,this.position.y,this.size);
+            }
+        }
         function setup() {
             createCanvas(windowWidth, windowHeight);
             smooth();
