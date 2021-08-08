@@ -97,24 +97,25 @@ main{
     padding-top: 30px;
     padding-bottom: 30px;
     margin: 0;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
 }
 .content_section .innerContent_div{
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 15%;
+    margin-right: 15%;
     padding: 0;
-    width: 80%;
+    width: 70%;
     display: flex;
     flex-wrap: wrap;
 }
 .content_section .innerContent_div .innerComponent_div{
     display: flexbox;
     height: 350px;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(245, 245, 245);
     border-radius: 8px;
     overflow: hidden;
-    -webkit-filter: grayscale(50%); /* Chrome, Safari, Opera */
-    filter: grayscale(50%);
     transition: 0.5s ease-in-out;
+
 }
 .content_section .innerContent_div .innerComponent_div:hover{
     -webkit-filter: grayscale(0%); /* Chrome, Safari, Opera */
@@ -199,7 +200,7 @@ main{
 }
 .content_section .pages_div .bottomButton{
     display: flexbox;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(245, 245, 245);
     border: none;
     margin-left: 10px;
     margin-right: 10px;
@@ -245,7 +246,10 @@ main{
     display: block;
     height: 250px;
     width: 100%;
-    background-color: rgb(199, 199, 199);
+    background-color: rgb(243, 243, 243);
+}
+.foot_section p:nth-child(1){
+    margin-top: 0;
 }
 .foot_section .footInnerText_p{
     color: rgb(19, 19, 19);
@@ -266,4 +270,14 @@ main{
 .foot_section .aboutAuthor_a{
     text-decoration: none;
     color: blueviolet;
+}
+.footfoot_section{
+    width: 100%;
+    background-color: rgb(218, 218, 218);
+}
+.footfoot_section p{
+    margin: 0;
+    padding: 5px;
+    text-align: center;
+    color: white;
 }

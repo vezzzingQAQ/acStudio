@@ -33,7 +33,7 @@ function Mover(){
 function setup() {
     createCanvas(windowWidth, windowHeight);
     noStroke();
-    for(var i=0;i<100;i++){
+    for(var i=0;i<30;i++){
         movers.push(new Mover)
     }
 }
@@ -41,7 +41,7 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function draw(){
-    background(235);         
+    background(251);         
     for(var i=0;i<movers.length;i++){
         movers[i].update();
         movers[i].checkEdges();
