@@ -98,7 +98,6 @@ main{
     padding-bottom: 30px;
     margin: 0;
     background-color: rgb(255, 255, 255);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
 }
 .content_section .innerContent_div{
     margin-left: 15%;
@@ -246,7 +245,7 @@ main{
     display: block;
     height: 250px;
     width: 100%;
-    background-color: rgb(243, 243, 243);
+    background-color: rgba(243, 243, 243, 0.747);
 }
 .foot_section p:nth-child(1){
     margin-top: 0;
