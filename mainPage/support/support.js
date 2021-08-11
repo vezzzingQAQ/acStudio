@@ -50,15 +50,13 @@ function getClientHeight(){
 function scrollAnimate(){
     //blockText
     var animateBlock1=document.querySelectorAll(".content_section .innerContent_div .innerComponent_div .textArea_div");
-    console.log(animateBlock1.length);
-
     for(var i=0;i<animateBlock1.length;i++){
         animateBlock1[i].style.marginTop="200px";
     }
     window.addEventListener("scroll",function(){
         var value=window.scrollY;
         for(var i=0;i<animateBlock1.length;i++){
-            if(animateBlock1[i].offsetTop-getClientHeight()-animateBlock1[i].offsetLeft/4<=value){
+            if(animateBlock1[i].offsetTop-getClientHeight()-animateBlock1[i].offsetLeft/9<=value){
                 animateBlock1[i].style.marginTop="2px";
             }
         }
@@ -69,7 +67,7 @@ function scrollAnimate(){
         var value=window.scrollY;
         var currentValue=value-mainBackground.offsetTop;
         if(currentValue<=255*3){
-            mainBackground.style.backgroundColor="rgb("+currentValue/3+","+currentValue/3+","+currentValue/3+")"
+            mainBackground.style.backgroundColor="rgb("+currentValue/3+","+currentValue/3+","+currentValue/3+")";
         }
     })
 }

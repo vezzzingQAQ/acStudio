@@ -13,7 +13,9 @@ function Oscillator(velocityX,velocityY,velocityZ,ampitudeX,ampitudeY,ampitudeZ)
         var x=sin(this.angle.x)*this.ampitude.x;
         var y=sin(this.angle.y)*this.ampitude.y;
         var z=sin(this.angle.z)*this.ampitude.z;
-        stroke(1);
+        strokeWeight(0.3);
+        stroke(255);
+        noFill();
         //line(0,0,0,x,y,z);
         push();
         translate(x,y,z);
@@ -36,7 +38,7 @@ function draw(){
     rotateX(rtx);
     rotateY(rty);
     rotateZ(rtz);
-    background(255)
+    background(0)
     for(var i=0;i<oscillatorList.length;i++){
         oscillatorList[i].oscillate();
         oscillatorList[i].display();
