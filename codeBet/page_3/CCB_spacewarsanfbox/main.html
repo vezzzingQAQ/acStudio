@@ -672,7 +672,7 @@
             }
             this.player.addEnemylist(this.enemyList);
             this.run=function(){
-                if(frameCount%60==0){
+                if(frameCount%160==0){
                     this.enemyList.push(new Enemy(this.player));
                 }
                 this.player.run();

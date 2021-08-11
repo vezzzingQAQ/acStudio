@@ -43,7 +43,7 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function draw(){
-    background(249,22);
+    background(0,122);
     for(var i=0;i<headingMoverList.length;i++){
         headingMoverList[i].update();
         headingMoverList[i].checkEdges();

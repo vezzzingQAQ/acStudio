@@ -91,7 +91,7 @@ function Attractor(x,y,mass){//objects create gravity
 function setup() {
     createCanvas(windowWidth, windowHeight);
     smooth();
-    for(var i=0;i<1119;i++){
+    for(var i=0;i<19;i++){
         moverList.push(new GravityObject(random(100,width-100),random(100,height-100),random(-0.5,0.5),random(-0.5,0.5),random(0.3,5)));
     }
     attractorList.push(new Attractor(random(100,width-100),random(100,height-100),11));
@@ -104,7 +104,7 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function draw(){
-    background(251,160);
+    background(0,160);
     attractorList[0].position.x=mouseX;
     attractorList[0].position.y=mouseY;
     for(var i=0;i<moverList.length;i++){ 

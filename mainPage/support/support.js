@@ -36,3 +36,12 @@ function addPages(all,current){
     textTemp+="</div>";
     box.innerHTML+=textTemp;
 }
+function scrollWelcomePage(){
+    var animateBlock1=document.querySelectorAll(".content_section .innerContent_div .innerComponent_div .textArea_div");
+    for(var i=0;i<animateBlock1.length;i++){
+        //animateBlock1[i].
+    }
+    window.addEventListener("scroll",function(){
+
+    })
+}

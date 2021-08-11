@@ -36,7 +36,7 @@ function draw(){
     rotateX(rtx);
     rotateY(rty);
     rotateZ(rtz);
-    background(249,1)
+    background(255)
     for(var i=0;i<oscillatorList.length;i++){
         oscillatorList[i].oscillate();
         oscillatorList[i].display();
