@@ -112,7 +112,7 @@ main{
     height: 350px;
     background-color: rgb(250, 250, 250);
     box-shadow: 0 0 1px rgba(0,0,0,0.1);
-    border-radius: 8px;
+    border-radius: 0 0 8px 8px;
     overflow: hidden;
 }
 @media only screen and (min-width: 1200px) {
@@ -139,7 +139,13 @@ main{
         width: 100%;
     }
 }
-
+.content_section .innerContent_div .innerComponent_div:hover .textArea_div{
+    position: relative;
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    padding-top: 0;
+}
 .content_section .innerContent_div .innerComponent_div .jumpLink_a{
     display: block;
     height: 70%;
@@ -157,9 +163,10 @@ main{
     transition: 0.25s ease-in-out;
     border: none;
     outline: none;
+    z-index: -1;
 }
 .content_section .innerContent_div .innerComponent_div .jumpLink_a .image_img:hover{
-    transform: scale(200%);
+    transform: scale(150%);
 }
 
 .content_section .innerContent_div .innerComponent_div .textArea_div{
@@ -167,7 +174,8 @@ main{
     position: absolute;
     padding-left: 10px;
     padding-top: 5px;
-    margin-top: 0;
+    margin-top: 200px;
+    transition: 0.5s ease-in-out;
 }
 .content_section .innerContent_div .innerComponent_div .textArea_div .contentInnerTitle_h2{
     margin: 0;
