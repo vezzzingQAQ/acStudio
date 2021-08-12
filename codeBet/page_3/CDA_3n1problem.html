@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="ico/ico1.jpg">
+    <title>3N+1 problem</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+        .parat{
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            z-index: 10000;
+        }
+        a{
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
+            text-decoration: none;
+            color: rgb(255, 255, 255);
+        }
+        .rightPan{
+            position: fixed;
+            width: 25vw;
+            height: 100vh;
+            right: 0;
+            top: 0;
+            background-color: rgb(0, 0, 0);
+            z-index: 99;
+            padding-left: 20px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            overflow: hidden;
+            column-count: 3;
+        }
+        .rightPan .title{
+            color: yellow;
+            font-size: 30px;
+        }
+        .rightPan .sub{
+            color: white;
+            font-size: 10px;
+            line-height: 12px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var rp=null;
+        window.onload=function(){
+            rp=document.querySelector(".rightPan");
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            background(0);
+            var currentNumber=frameCount+1;
+            var preNumber=currentNumber;
+            rp.innerHTML="";
+            rp.innerHTML+="<p class=\"title\">"+currentNumber+"</p>";
+            for(var i=0;i<width;i+=6){
+                preNumber=currentNumber;
+                if(currentNumber%2==0){
+                    currentNumber/=2;
+                }else{
+                    currentNumber=currentNumber*3+1;
+                }
+                rp.innerHTML+="<p class=\"sub\">x="+i+"y="+currentNumber+"</p>";
+                stroke(sin(currentNumber/100)*120+120,sin(currentNumber/200)*120+120,200);
+                strokeWeight(1);
+                line(i-6,height-log(preNumber)*(height/18),i,height-log(currentNumber)*(height/18));
+                if(currentNumber==1){
+                    break;
+                }
+            }
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="parat">
+        <a href="../../mainPage/mainPage_3.html">返回</a>
+    </div>
+    <div class="rightPan">
+        
+    </div>
+    </body>
+</html>
