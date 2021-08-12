@@ -193,9 +193,14 @@ main{
 .content_section .innerContent_div .innerComponent_div .textArea_div .contentInnerType_p{
     margin: 0;
     padding: 0;
-    padding-top: 5px;
+    padding-top: 15px;
     font-size: 0.5em;
     color: rgb(131, 131, 131);
+}
+.content_section .innerContent_div .innerComponent_div .textArea_div .contentInnerType_p .innerBox_span{
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 3px;
+    margin-right: 4px;
 }
 .content_section .pages_div{
     margin-top: 60px;
@@ -212,7 +217,7 @@ main{
     height: 50px;
     text-align: center;
     text-decoration: none;
-    transition: 0.25s ease-in-out;
+    transition: 0.15s ease-in-out;
 }
 .content_section .pages_div .bottomButton p{
     position: relative;

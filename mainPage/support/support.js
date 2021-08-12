@@ -2,6 +2,12 @@ function addComponents(page,fullName,nameNumber,title,text,type){
     var box=document.querySelector(".content_section .innerContent_div");
     var nameTag=fullName.slice(0,nameNumber);
     var currentUrl="../codeBet/page_"+page+"/"+fullName+".html";
+    var currentType=type.split(",");
+    var currentTypeHTML="";
+    for(var i=0;i<currentType.length;i++){
+        currentTypeHTML+="<span class='innerBox_span'>"+currentType[i]+"</span>";
+    }
+    console.log(currentType);
     var textTemp="";
     var SIG='"';
     textTemp+="<div class='innerComponent_div' id='"+nameTag+"'>";
@@ -11,7 +17,7 @@ function addComponents(page,fullName,nameNumber,title,text,type){
     textTemp+="<div class='textArea_div'>";
     textTemp+="<h2 class='contentInnerTitle_h2'>"+title+"</h2>";
     textTemp+="<p class='contentInnerText_p'>"+text+"</p>";
-    textTemp+="<p class='contentInnerType_p'>type:"+type+"</p>";
+    textTemp+="<p class='contentInnerType_p'>type: "+currentTypeHTML+"</p>";
     textTemp+="</div>";
     textTemp+="</div>";
     box.innerHTML+=textTemp;
