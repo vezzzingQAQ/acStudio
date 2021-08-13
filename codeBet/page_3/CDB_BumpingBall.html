@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="ico/ico1.jpg">
+    <title>bumpingBall</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var ballsList=[];
+        function BumpingBall(x,y,vx,vy,mass,r,id){
+            this.position=createVector(x,y);
+            this.velocity=createVector(vx,vy);
+            this.acceleration=createVector(0,0);
+            this.mass=mass;
+            this.radius=r;
+            this.id=id;
+            this.applyForce=function(force){
+                var f=force.copy();
+                this.acceleration.add(f.div(this.mass));
+            }
+            this.applyGravity=function(g){
+                gravity=createVector(0,this.mass*g);
+                this.applyForce(gravity);
+            }
+
+            this.checkEdges=function(){
+                if(this.position.x-this.radius<0 || this.position.x+this.radius>width){
+                    if(this.position.x-this.radius<0){
+                        this.position.x=this.radius;
+                    }else{
+                        this.position.x=width-this.radius;
+                    }
+                    this.velocity.x*=-1;
+                }
+                if(this.position.y-this.radius<0 || this.position.y+this.radius>height){
+                    if(this.position.y-this.radius<0){
+                        this.position.y=this.radius;
+                    }else{
+                        this.position.y=height-this.radius;
+                    }
+                    this.velocity.y*=-1;
+                }
+            }
+
+            this.checkBump=function(targetBall){
+                if(dist(this.position.x,this.position.y,targetBall.position.x,targetBall.position.y)<=this.radius+targetBall.radius){
+                    var tempVector=p5.Vector.sub(this.position,targetBall.position);
+                    tempVector.normalize();
+                    tempVector.mult(this.radius+targetBall.radius+0.2);
+                    this.position=tempVector.add(targetBall.position);
+                    return(true);
+                }else{
+                    return(false);
+                }
+            }
+
+            this.applyBumpForce=function(targetBall){
+                var v1=this.velocity.copy();
+                var v2=targetBall.velocity.copy();
+                var m1=this.mass;
+                var m2=targetBall.mass;
+                this.velocity=(((v1.mult(m1-m2)).add(v2.mult(2*m2))).div(m1+m2).div(2));
+                targetBall.velocity=(((v2.mult(m2-m1)).add(v1.mult(2*m1))).div(m1+m2).div(2));
+            }
+
+            this.bumpCheacker=function(ballsList){
+                for(var i=0;i<ballsList.length;i++){
+                    if(this.id!=i){
+                        if(this.checkBump(ballsList[i])){
+                            this.applyBumpForce(ballsList[i]);
+                        }
+                    }
+                }
+            }
+
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.velocity.limit(10);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+
+            this.display=function(){//draw the ball on the canvas
+                noStroke();
+                fill(sin(this.acceleration.mag())*120+120,sin(this.velocity.mag())*120+120,sin(this.mass)*120+120,200);
+                circle(this.position.x,this.position.y,this.radius*2);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            for(var i=0;i<50;i++){
+                var mass=random(1,16);
+                ballsList.push(new BumpingBall(random(200,width-200),random(200,height-200),random(-1,1),random(-1,1),mass,mass*5,i));
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            background(0);
+            for(var i=0;i<ballsList.length;i++){
+                ballsList[i].applyGravity(0.3);
+                ballsList[i].bumpCheacker(ballsList);
+                ballsList[i].checkEdges();
+                ballsList[i].update();
+                ballsList[i].display();
+            }
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="cot">
+        <h1>碰撞的球</h1>
+        <hr>
+        <p>速度方向是对的,大小还在完善</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

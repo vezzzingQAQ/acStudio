@@ -1,52 +1,58 @@
-var headingMoverList=[];
-function HeadingMover(){
-    this.position=createVector(width/2,height/2);
-    this.velocity=createVector(0,0);
-    //this.acceleration=createVector(0,0.1);
-    this.update=function(){
-        this.acceleration=p5.Vector.random2D();
-        this.acceleration.mult(0.5);//mult乘以标量延伸向量
-        this.velocity.add(this.acceleration);
-        this.velocity.limit(10);
-        this.position.add(this.velocity);
-    }
-    this.checkEdges=function(){
-        if(this.position.x<0 || this.position.x>width){
-            this.velocity.x*=-1;
-        }
-        if(this.position.y<0 || this.position.y>height){
-            this.velocity.y*=-1;
-        }
-    }
-    this.display=function(){
-        stroke(sin(this.velocity.mag())*120+120,cos(this.velocity.mag()*2)*120+120,sin(this.velocity.mag()*3)*120+120,100);
-        strokeWeight(2);
-        push();
-        rectMode(CENTER);
-        translate(this.position.x,this.position.y);
-        var angle=atan2(this.velocity.y,this.velocity.x);
-        rotate(angle-PI/2);
-        line(0,-30,0,0);
-        line(-10,-10,0,0);
-        line(10,-10,0,0);
-        pop();
-    }
-}
+var rtx=0;
+var rty=0;
+var rtz=0;
+var sizer=200;
+var wordT=0;
+
 function setup() {
-    createCanvas(windowWidth, windowHeight);
-    noStroke();
-    for(var i=0;i<50;i++){
-        headingMoverList.push(new HeadingMover);
-    }
+    createCanvas(windowWidth, windowHeight,WEBGL);
+    translate(width/2,height/2-80,0);
+    background(0);
 }
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
-function draw(){
-    background(0,122);
-    for(var i=0;i<headingMoverList.length;i++){
-        headingMoverList[i].update();
-        headingMoverList[i].checkEdges();
-        headingMoverList[i].display();
+function draw() {
+    rtx+=0.005;
+    rty+=0.005;
+    rtz+=0.005;
+    //lights();
+    pointLight(255,255,180,100,100,100);
+    rotateX(rtx);
+    rotateY(rty);
+    rotateZ(rtz);
+    background(0);
+
+    var index=0;
+    var r=300;
+    wordT+=0.005;
+    for(i=0;i<2*PI;i+=2*PI/200){
+        rotateX(i)//天女撒花版;
+        push();
+        //rotateX(i)//无限螺旋板;
+        textSize(50);
+        //rectMode(SHAPE);
+        rotateY(wordT);
+        fill(sin(wordT*10+index)*120+120,sin(wordT*30+index)*120+120,sin(wordT*20+index)*120+120,200);
+        push();
+        translate(sin(i+wordT)*r,0,cos(i+wordT)*r);
+        box(10);
+        pop();
+        pop();
+        index+=1;
     }
+}
+function mouseMoved(){
+    rty=map(mouseX,-500,500,-2*PI,0);
+    rotateY(rty);
+    rtx=map(mouseY,500,-500,-2*PI,0);
+    rotateY(rtx);
+    return false;
+}
+function touchMoved(){
+    rty=map(touchX,-500,500,-2*PI,0);
+    rotateY(rty);
+    rtx=map(touchY,500,-500,-2*PI,0);
+    rotateY(rtx);
+    return false;
 }

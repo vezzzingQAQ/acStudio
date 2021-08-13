@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="ico/ico1.jpg">
     <title>MDBonlineDisplay</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
     <style>
         body {
         padding: 0;
         margin: 0;
-        overflow: hidden;
         }
         .parat{
             position: absolute;
@@ -45,7 +45,7 @@
             padding: 3px;
             border-radius: 3px;
         }
-        a{
+        .parat a{
             background-color: rgba(255,255,255,0.5);
             z-index: 10001;
             border-radius: 3px;
@@ -53,6 +53,12 @@
             text-decoration: none;
             color: rgb(128, 0, 117);
         }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+
     </style>
     <script src="../../p5.min.js"></script>
     <script>
@@ -140,6 +146,31 @@
         <br>
         <p><b>Engine1:complex class</b></p><br><br>
         <a href="../../mainPage/mainPage_3.html">返回</a>
+    </div>
+    <div class="cot">
+        <p class="li">关于曼德博集合</p>
+        <p class="li">Mandelbrot set</p>
+        <p class="li"><b>数学上的定义:</b></p>
+        <p class="li"><b>f<sub>c</sub>(z)=z<sup>2</sup>+c</b></p>
+        <p class="li">c一个复数参数</p>
+        <p class="li">从<b>z=0</b>开始对f<sub>c</sub>(z)进行迭代</p>
+        <p class="li">得到如下序列</p>
+        <br>
+        <p class="li"><b>z<sub>0</sub></b></p>
+        <p class="li"><b>f<sub>c</sub>(z<sub>0</sub>)</b></p>
+        <p class="li"><b>f<sub>c</sub>(f<sub>c</sub>(z<sub>0</sub>))</b></p>
+        <p class="li"><b>f<sub>c</sub>(f<sub>c</sub>(f<sub>c</sub>(z<sub>0</sub>)))</b></p>
+        <p class="li"><b>...</b></p>                        <p class="li">不同的c可能使迭代值的模发散到无限大,也可能收敛在有限的区域内</p>
+        <p class="li">曼德博集合就是使其不扩散的所有复数c的集合</p>
+        <p class="li"><b>性质定理:</b></p>
+        <p class="li">1.若|c|≤1/4,则c∈M</p>
+        <p class="li">2.若c∈M,则|c|≤2</p>
+        <p class="li">3.若c∈M,则|z<sub>n</sub>|≤2(n=1,2,3...)</p>
+        <p class="li">这个外国的网站有关于这个东西较为详细的介绍,不过<b>可能需要梯子</b></p>
+        <p class="li"><a href="http://www.mrob.com/pub/muency.html" target="_blank">www.mrob.com/pub/muency.html</a></p>
+
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+
     </div>
     
     </body>
