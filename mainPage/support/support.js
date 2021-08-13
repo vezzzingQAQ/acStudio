@@ -29,11 +29,13 @@ function addPages(all,current){
     if(current!=1){
         textTemp+="<a class='bottomButton prev_button' href='mainPage_"+(current-1)+".html'><p>上一页</p></button>";
     }
-    for(var i=1;i<=all;i++){
-        if(i!=current){
-            textTemp+="<a class='bottomButton page_button' href='mainPage_"+i+".html'><p>"+i+"</p></button>";
-        }else{
-            textTemp+="<a class='bottomButton page_button' id='currentPage' href='#'><p>"+i+"</p></button>";
+    if(document.body.clientWidth >=800){
+        for(var i=1;i<=all;i++){
+            if(i!=current){
+                textTemp+="<a class='bottomButton page_button' href='mainPage_"+i+".html'><p>"+i+"</p></button>";
+            }else{
+                textTemp+="<a class='bottomButton page_button' id='currentPage' href='#'><p>"+i+"</p></button>";
+            }
         }
     }
     if(current!=all){
