@@ -202,53 +202,106 @@ main{
     border-radius: 3px;
     margin-right: 4px;
 }
-.content_section .pages_div{
-    margin-top: 60px;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 50px;
+@media only screen and (min-width: 1000px) {
+    .content_section .pages_div{
+        margin-top: 60px;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 50px;
+    }
+    .content_section .pages_div .bottomButton{
+        display: flexbox;
+        background-color: rgb(245, 245, 245);
+        border: none;
+        margin-left: 10px;
+        margin-right: 10px;
+        height: 50px;
+        text-align: center;
+        text-decoration: none;
+        transition: 0.15s ease-in-out;
+    }
+    .content_section .pages_div .bottomButton p{
+        position: relative;
+        height: 50%;
+        margin-top: 25%;
+        width: 100%;
+        text-align: center;
+        font-size: 100%;
+        pointer-events: none;
+        color: rgb(26, 26, 26);
+    }
+    .content_section .pages_div .bottomButton:hover{
+        background-color: blueviolet;
+    }
+    .content_section .pages_div .bottomButton:hover p{
+        color: white;
+    }
+    #currentPage{
+        background-color: blueviolet;
+    }
+    #currentPage p{
+        color: white;
+    }
+    .content_section .pages_div .page_button{
+        width: 50px;
+        border-radius: 50%;
+    }
+    .content_section .pages_div .next_button,.prev_button{
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 4px;
+    }
 }
-.content_section .pages_div .bottomButton{
-    display: flexbox;
-    background-color: rgb(245, 245, 245);
-    border: none;
-    margin-left: 10px;
-    margin-right: 10px;
-    height: 50px;
-    text-align: center;
-    text-decoration: none;
-    transition: 0.15s ease-in-out;
-}
-.content_section .pages_div .bottomButton p{
-    position: relative;
-    height: 50%;
-    margin-top: 25%;
-    width: 100%;
-    text-align: center;
-    font-size: 100%;
-    pointer-events: none;
-    color: rgb(26, 26, 26);
-}
-.content_section .pages_div .bottomButton:hover{
-    background-color: blueviolet;
-}
-.content_section .pages_div .bottomButton:hover p{
-    color: white;
-}
-#currentPage{
-    background-color: blueviolet;
-}
-#currentPage p{
-    color: white;
-}
-.content_section .pages_div .page_button{
-    width: 50px;
-    border-radius: 50%;
-}
-.content_section .pages_div .next_button,.prev_button{
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 4px;
+@media only screen and (max-width: 1000px) {
+    .content_section .pages_div{
+        margin-top: 60px;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 50px;
+    }
+    .content_section .pages_div .bottomButton{
+        display: flexbox;
+        background-color: rgb(245, 245, 245);
+        border: none;
+        margin-left: 10px;
+        margin-right: 10px;
+        height: 30px;
+        text-align: center;
+        text-decoration: none;
+        transition: 0.15s ease-in-out;
+    }
+    .content_section .pages_div .bottomButton p{
+        position: relative;
+        height: 100%;
+        margin-top: 0;
+        
+        width: 100%;
+        text-align: center;
+        line-height: 30px;
+        pointer-events: none;
+        color: rgb(26, 26, 26);
+    }
+    .content_section .pages_div .bottomButton:hover{
+        background-color: blueviolet;
+    }
+    .content_section .pages_div .bottomButton:hover p{
+        color: white;
+    }
+    #currentPage{
+        background-color: blueviolet;
+    }
+    #currentPage p{
+        color: white;
+    }
+    .content_section .pages_div .page_button{
+        width: 30px;
+        border-radius: 10%;
+    }
+    .content_section .pages_div .next_button,.prev_button{
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 4px;
+    }
 }
 
 .foot_section{
