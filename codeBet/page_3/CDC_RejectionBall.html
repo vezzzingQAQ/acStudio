@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="ico/ico1.jpg">
+    <title>rejectionBall</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var ballsList=[];
+        function RejectionBall(x,y,vx,vy,mass,r,id){
+            this.position=createVector(x,y);
+            this.velocity=createVector(vx,vy);
+            this.acceleration=createVector(0,0);
+            this.mass=mass;
+            this.radius=r;
+            this.id=id;
+            this.applyForce=function(force){
+                var f=force.copy();
+                this.acceleration.add(f.div(this.mass));
+            }
+            this.applyGravity=function(g){
+                gravity=createVector(0,this.mass*g);
+                this.applyForce(gravity);
+            }
+
+            this.checkEdges=function(){
+                if(this.position.x-this.radius<0 || this.position.x+this.radius>width){
+                    if(this.position.x-this.radius<0){
+                        this.position.x=this.radius;
+                    }else{
+                        this.position.x=width-this.radius;
+                    }
+                    this.velocity.x*=-1;
+                }
+                if(this.position.y-this.radius<0 || this.position.y+this.radius>height){
+                    if(this.position.y-this.radius<0){
+                        this.position.y=this.radius;
+                    }else{
+                        this.position.y=height-this.radius;
+                    }
+                    this.velocity.y*=-1;
+                }
+            }
+
+            this.applyRepel=function(targetBall){
+                var dir=p5.Vector.sub(this.position,targetBall.position);
+                var d=dir.mag();
+                dir.normalize();
+                var force=this.mass*map(mouseX,0,width,0,2000)/(d*d);
+                dir.mult(force);
+                this.applyForce(dir);
+            }
+
+            this.repelManager=function(ballsList){
+                for(var i=0;i<ballsList.length;i++){
+                    if(this.id!=i){
+                        this.applyRepel(ballsList[i]);
+                    }
+                }
+            }
+
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.velocity.limit(10);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+
+            this.display=function(){//draw the ball on the canvas
+                noStroke();
+                fill(sin(this.acceleration.mag())*120+120,sin(this.velocity.mag())*120+120,cos(this.mass)*120+120,200);
+                circle(this.position.x,this.position.y,this.velocity.mag()*3);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            for(var i=0;i<210;i++){
+                var mass=random(1,16);
+                ballsList.push(new RejectionBall(random(200,width-200),random(200,height-200),random(-1,1),random(-1,1),mass,10,i));
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            background(0);
+            for(var i=0;i<ballsList.length;i++){
+                ballsList[i].applyGravity(0.3);
+                ballsList[i].repelManager(ballsList);
+                ballsList[i].checkEdges();
+                ballsList[i].update();
+                ballsList[i].display();
+            }
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="cot">
+        <h1>互相排斥的球</h1>
+        <hr>
+        <p>移动鼠标的横坐标改变排斥力的大小</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

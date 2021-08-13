@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="ico/ico1.jpg">
+    <title>动力流体</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var ballsList=[];
+        var replersList=[];
+        function Repler(x,y){
+            this.position=createVector(x,y);
+            this.display=function(){
+                fill(255,255,0);
+                noStroke();
+                circle(this.position.x,this.position.y,10);
+            }
+        }
+        function RABall(x,y,vx,vy,mass,r,id){
+            this.position=createVector(x,y);
+            this.velocity=createVector(vx,vy);
+            this.acceleration=createVector(0,0);
+            this.mass=mass;
+            this.radius=r;
+            this.id=id;
+            this.size=3;
+            this.applyForce=function(force){
+                var f=force.copy();
+                this.acceleration.add(f.div(this.mass));
+            }
+            this.checkEdges=function(){
+                if(this.position.x-this.radius<0 || this.position.x+this.radius>width){
+                    if(this.position.x-this.radius<0){
+                        this.position.x=this.radius;
+                    }else{
+                        this.position.x=width-this.radius;
+                    }
+                    this.velocity.x*=-1;
+                }
+                if(this.position.y-this.radius<0 || this.position.y+this.radius>height){
+                    if(this.position.y-this.radius<0){
+                        this.position.y=this.radius;
+                    }else{
+                        this.position.y=height-this.radius;
+                    }
+                    this.velocity.y*=-1;
+                }
+            }
+
+            this.applyRA=function(targetBall,rdo){
+                var dir=p5.Vector.sub(this.position,targetBall.position);
+                var d=dir.mag();
+                dir.normalize();
+                if(d<rdo){
+                    var force=this.mass*1200/(d*d);
+                }else{
+                    var force=-this.mass*700/(d*d);
+                }
+                dir.mult(force);
+                this.applyForce(dir);
+            }
+            this.applyRepel=function(repeler){
+                var dir=p5.Vector.sub(this.position,repeler.position);
+                var d=dir.mag();
+                dir.normalize();
+                var force=this.mass*2000/(d*d);
+                dir.mult(force);
+                this.applyForce(dir);
+            }
+
+            this.repelManager=function(ballsList,rdo){
+                for(var i=0;i<ballsList.length;i++){
+                    if(this.id!=i){
+                        this.applyRA(ballsList[i],rdo);
+                    }
+                }
+                for(var i=0;i<replersList.length;i++){
+                    this.applyRepel(replersList[i]);
+                }
+            }
+
+            this.update=function(){
+                this.velocity.add(this.acceleration);
+                this.velocity.limit(10);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+
+            this.display=function(){
+                push();
+                translate(this.position.x,this.position.y);
+                var angle=atan2(this.velocity.y,this.velocity.x);
+                rotate(angle+PI/2);
+                fill(sin(this.acceleration.mag())*120+120,sin(this.velocity.mag())*120+120,222,200);
+                noStroke();
+                beginShape();
+                vertex(0,-this.size*2);
+                vertex(-this.size,this.size*2);
+                vertex(0,this.size*1);
+                vertex(this.size,this.size*2);
+                endShape();
+                pop();
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            for(var i=0;i<310;i++){
+                var mass=random(1,16);
+                ballsList.push(new RABall(random(200,width-200),random(200,height-200),random(-1,1),random(-1,1),mass,8,i));
+            }
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            background(0);
+            for(var i=0;i<ballsList.length;i++){
+                ballsList[i].repelManager(ballsList,136);
+                ballsList[i].checkEdges();
+                ballsList[i].update();
+                ballsList[i].display();
+            }
+            for(var i=0;i<replersList.length;i++){
+                replersList[i].display();
+            }
+        }
+        function mousePressed(){
+            replersList.push(new Repler(mouseX,mouseY));
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="cot">
+        <h1>动力流体</h1>
+        <hr>
+        <p>鼠标点击放置障碍物</p>
+        <p>距离大于一定的值就吸引,距离小于一定的值就排斥</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>
