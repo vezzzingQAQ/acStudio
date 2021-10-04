@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>box2DHELLOWORLD</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script src="../../box2d-html5.js"></script>
+    <script src="../../box2d-helper.js"></script>
+    <script>
+        let world;
+
+        //储存所有的box对象
+        let boxes = [];
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            //创建box2D对象
+            world = createWorld(new box2d.b2Vec2(0, 0));
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+
+        function draw() {
+            background(0);
+
+            //往下走一步
+            let timeStep = 1.0 / 30;
+            world.Step(timeStep, 10, 10);
+
+            //创建box
+            if (mouseIsPressed) {
+                let b = new Box(mouseX, mouseY);
+                boxes.push(b);
+            }
+            //显示所有的box
+            for (let i = 0; i < boxes.length; i++) {
+                boxes[i].display();
+            }
+        }
+
+        class Box {
+            constructor(x, y) {
+                this.w = 16;
+                this.h = 16;
+
+                //定义一个box
+                let bd = new box2d.b2BodyDef();
+                bd.type = box2d.b2BodyType.b2_dynamicBody;
+                bd.position = scaleToWorld(x, y);
+
+                //定义一个夹具
+                let fd = new box2d.b2FixtureDef();
+
+                //定义一个形状
+                fd.shape = new box2d.b2PolygonShape();
+                fd.shape.SetAsBox(scaleToWorld(this.w / 2), scaleToWorld(this.h / 2));//坐标转换
+
+                //在夹具中设置物理参数
+                fd.density = 1.0;
+                fd.friction = 0.5;
+                fd.restitution = 0.2;
+
+                //创建物体
+                this.body = world.CreateBody(bd);
+                //绑定物体和夹具
+                this.body.CreateFixture(fd);
+            }
+
+            // Drawing the box
+            display() {
+                // Get the body's position
+                let pos = scaleToPixels(this.body.GetPosition());
+                // Get its angle of rotation
+                let a = this.body.GetAngleRadians();
+
+                // Draw it!
+                rectMode(CENTER);
+                push();
+                translate(pos.x, pos.y);
+                rotate(a);
+                noFill();
+                stroke(200);
+                strokeWeight(2);
+                rect(0, 0, this.w, this.h);
+                pop();
+            }
+        }    
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="cot">
+        <h1>box2D初识</h1>
+        <hr>
+        <p>鼠标点击放置box</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>box2D弯曲边界</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script src="../../box2d-html5.js"></script>
+    <script src="../../box2d-helper.js"></script>
+    <script src="../classes/VezzzingP2DClasses.js"></script>
+    <script>
+        let world;
+
+        //储存所有的box对象
+        let bodies = [];
+        let surfaceList = [];
+
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            //创建box2D对象
+            world = createWorld(new box2d.b2Vec2(0, 0));
+            //创建曲线
+            for(var i=0;i<width;i+=10){
+                surfaceList.push(new box2d.b2Vec2(i, height / 2+sin(i/100)*250+100));
+            }
+            surface = new Surface(surfaceList);
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+
+        function draw() {
+            background(0);
+
+            //往下走一步
+            let timeStep = 1.0 / 30;
+            world.Step(timeStep, 10, 10);
+
+            //创建box
+            if (mouseIsPressed) {
+                let b = new Circle(mouseX, mouseY,random(10,50));
+                bodies.push(b);
+            }
+            //显示所有的box
+            for (let i = 0; i < bodies.length; i++) {
+                bodies[i].display();
+            }
+
+            //绘制曲线
+            surface.display();
+
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="cot">
+        <h1>box2D曲线边界</h1>
+        <hr>
+        <p>鼠标点击放置圆</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>
