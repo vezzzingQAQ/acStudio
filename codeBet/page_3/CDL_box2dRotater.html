@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>box2D旋转关节</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script src="../../box2d-html5.js"></script>
+    <script src="../../box2d-helper.js"></script>
+    <script src="../classes/VezzzingP2DClasses.js"></script>
+    <script>
+        let world;
+
+        let boundaries = [];
+        let particles = [];
+        let windmill;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            //创建box2D对象
+            world = createWorld(new box2d.b2Vec2(0, 0));
+
+            boundaries.push(new Boundary(0, 0, 10,height));
+            boundaries.push(new Boundary(width, 0, 10,height));
+            boundaries.push(new Boundary(0, height, width,10));
+
+            windmill = new Windmill(width / 2, height-300);
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+
+        function draw() {
+            background(0);
+
+            //往下走一步
+            let timeStep = 1.0 / 30;
+            world.Step(timeStep, 10, 10);
+
+            if (random(1) < 0.3) {
+                let sz = random(20, 50);
+                particles.push(new Box(random(width / 2 - 100, width / 2 + 100),-20,sz,sz));
+            }
+
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].display();
+                if (particles[i].done()) {
+                    particles.splice(i, 1);
+                }
+            }
+
+
+            //显示所有的boundaries
+            for (let i = 0; i < boundaries.length; i++) {
+                boundaries[i].display();
+            }
+
+            windmill.display();
+
+            let status = "OFF";
+            if (windmill.motorOn()){
+                status = "ON";
+            }
+        }
+        function mousePressed() {
+            windmill.toggleMotor();
+            let status = "OFF";
+            if (windmill.motorOn()){
+                status = "ON";
+            }
+      }
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="cot">
+        <h1>box2D旋转关节</h1>
+        <hr>
+        <p>鼠标左右开关马达</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

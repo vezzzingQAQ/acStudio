@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>box2D距离关节</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script src="../../box2d-html5.js"></script>
+    <script src="../../box2d-helper.js"></script>
+    <script src="../classes/VezzzingP2DClasses.js"></script>
+    <script>
+        let world;
+
+        let pairs = [];
+        let boundaries = [];
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            //创建box2D对象
+            world = createWorld(new box2d.b2Vec2(0, 0));
+
+            boundaries.push(new Boundary(0, height, width,10));
+            boundaries.push(new Boundary(0, 0, 10,height));
+            boundaries.push(new Boundary(width, 0, 10,height));
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+
+        function draw() {
+            background(0);
+
+            //往下走一步
+            let timeStep = 1.0 / 30;
+            world.Step(timeStep, 10, 10);
+
+            //显示所有的pairs
+            for (let i = pairs.length - 1; i >= 0; i--) {
+                pairs[i].display();
+                if (pairs[i].done()) {
+                    pairs.splice(i, 1);
+                }
+            }
+
+            //显示所有的boundaries
+            for (let i = 0; i < boundaries.length; i++) {
+                boundaries[i].display();
+            }
+        }
+        function mousePressed() {
+            let p = new Pair(mouseX, mouseY);
+            pairs.push(p);
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="cot">
+        <h1>box2D连接的物体</h1>
+        <hr>
+        <p>鼠标点击放置物体</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>
