@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>toxiclibs力学体</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script src="../../toxiclibs.js"></script>
+    <script src="../../toxichelper.js"></script>
+    <script src="../classes/VezzzingT2DClasses.js"></script>
+    <script>
+        let physics;
+        let cluster;
+        let showPhysics = true;
+        let showParticles = true;
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+
+            //世界对象
+            physics = new VerletPhysics2D();
+            physics.addBehavior(new GravityBehavior(new Vec2D(0, 0.5)));
+
+            //设置边界
+            physics.setWorldBounds(new Rect(0, 0, width, height));
+            
+            cluster = new Cluster(8, 100, new Vec2D(width / 2, height / 2));
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+
+        function draw() {
+            if(frameCount%200==0){
+                physics.clear();
+                cluster = new Cluster(Math.floor(random(2, 20)), random(90, 170), new Vec2D(width / 2, height / 2));
+            }
+            //更新世界
+            physics.update();
+
+            background(0);
+
+            if (showParticles) {
+                cluster.display();
+            }
+
+            if (showPhysics) {
+                cluster.showConnections();
+            }
+        }   
+        function mousePressed() {
+            
+            chain.contains(mouseX, mouseY);
+        }
+
+        function mouseReleased() {
+            // Release the chain
+            chain.release();
+        } 
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="cot">
+        <h1>T2D静态力学体</h1>
+        <hr>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_4.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

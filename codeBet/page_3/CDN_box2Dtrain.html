@@ -33,6 +33,12 @@
         let pwheel2;
         let surface;
 
+        let jointDistanceObjects = [];
+
+        let car1;
+        let car2;
+
+
         let currentPos=0;
 
         function setup() {
@@ -64,6 +70,15 @@
 
             surface = new Surface(boundariePoints,1,1,0.3);
 
+            car1=new PowerLessCar(-200,height/2);
+            car2=new PowerLessCar(-400,height/2);
+
+            //连接车厢
+            let p = new JointDistanceObject(cbody,car1.cbody,250);
+            jointDistanceObjects.push(p);
+            p = new JointDistanceObject(car1.cbody,car2.cbody,250);
+            jointDistanceObjects.push(p);
+
         }
         function windowResized() {
             resizeCanvas(windowWidth,windowHeight);
@@ -84,6 +99,10 @@
                 //绘制曲线
                 surface.display();
 
+                //显示所有的pairs
+                for (let i = jointDistanceObjects.length - 1; i >= 0; i--) {
+                    jointDistanceObjects[i].display();
+                }
 
                 //绘制小车
                 pwheel1.display();
@@ -94,6 +113,8 @@
                 if (pwheel1.motorOn()){
                     status = "ON";
                 }
+                car1.display();
+                car2.display();
             pop();
         }
         function mousePressed() {
@@ -111,7 +132,7 @@
         
     </main>
     <div class="cot">
-        <h1>box2D小车</h1>
+        <h1>box2D车类</h1>
         <hr>
         <p>鼠标点击开关马达</p>
         <hr>

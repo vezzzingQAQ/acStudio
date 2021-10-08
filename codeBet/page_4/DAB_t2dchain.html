@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>toxiclibs绳子</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script src="../../toxiclibs.js"></script>
+    <script src="../../toxichelper.js"></script>
+    <script src="../classes/VezzzingT2DClasses.js"></script>
+    <script>
+        let physics;
+        let chain;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+
+            //世界对象
+            physics = new VerletPhysics2D();
+            physics.addBehavior(new GravityBehavior(new Vec2D(0, 0.5)));
+
+            //设置边界
+            physics.setWorldBounds(new Rect(0, 0, width, height));
+            
+            chain = new Chain(width/2,height/3,width/3,height-200,180, 200, 16,1);
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+
+        function draw() {
+            //更新世界
+            physics.update();
+
+            background(0,20);
+
+            //更新链条的尾部
+            chain.updateTail(mouseX, mouseY);
+
+            chain.display();
+        }   
+        function mousePressed() {
+            
+            chain.contains(mouseX, mouseY);
+        }
+
+        function mouseReleased() {
+            // Release the chain
+            chain.release();
+        } 
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="cot">
+        <h1>T2D绳子</h1>
+        <hr>
+        <p>鼠标点击圆圈移动粒子</p>
+        <p>Chain(sx,sy,ex,ey,l, n, r, s)</p>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_4.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
-    <title>box2D旋转关节</title>
+    <title>box2D鼠标关节</title>
     <link rel="stylesheet" type="text/css" href="div_cot.css">
     <style>
         body {
@@ -25,9 +25,12 @@
     <script>
         let world;
 
+        //储存所有的box对象
+        let boxes = [];
+        let spring;
+        let box;
         let boundaries = [];
-        let particles = [];
-        let windmill;
+
 
         function setup() {
             createCanvas(windowWidth, windowHeight);
@@ -35,11 +38,21 @@
             //创建box2D对象
             world = createWorld(new box2d.b2Vec2(0, 0));
 
+            boundaries.push(new Boundary(0, height, width,10));
             boundaries.push(new Boundary(0, 0, 10,height));
             boundaries.push(new Boundary(width, 0, 10,height));
-            boundaries.push(new Boundary(0, height, width,10));
 
-            windmill = new Windmill(width / 2, height-300);
+            // Make the box
+            box = new Box(width / 2, height / 2,50,50,1,0.5,0.2,new box2d.b2Vec2(0,0),0,[255,255,0]);
+
+            // Make the spring (it doesn't really get initialized until the mouse is clicked)
+            spring = new Spring();
+
+            for(var i=0;i<300;i++){
+                let b = new Box(random(200,width-200), random(200,height-200),random(10,50),random(10,50));
+                boxes.push(b);
+            }
+
         }
         function windowResized() {
             resizeCanvas(windowWidth,windowHeight);
@@ -52,39 +65,36 @@
             let timeStep = 1.0 / 30;
             world.Step(timeStep, 10, 10);
 
-            if (random(1) < 0.3) {
-                let sz = random(20, 50);
-                particles.push(new Box(random(width / 2 - 100, width / 2 + 100),-20,sz,sz));
+            //显示所有的box
+            for (let i = 0; i < boxes.length; i++) {
+                boxes[i].display();
             }
-
-
-            for (let i = particles.length - 1; i >= 0; i--) {
-                particles[i].display();
-                if (particles[i].done()) {
-                    particles.splice(i, 1);
-                }
-            }
-
 
             //显示所有的boundaries
             for (let i = 0; i < boundaries.length; i++) {
                 boundaries[i].display();
             }
 
-            windmill.display();
+            // Always alert the spring to the new mouse position
+            spring.update(mouseX, mouseY);
+            // Draw the box
+            box.display();
+            // Draw the spring (it only appears when active)
+            spring.display();
 
-            let status = "OFF";
-            if (windmill.motorOn()){
-                status = "ON";
+        }
+        function mouseReleased() {
+            spring.destroy();
+        }
+
+        // When the mouse is pressed we. . .
+        function mousePressed() {
+            // Check to see if the mouse was clicked on the box
+            if (box.contains(mouseX, mouseY)) {
+                // And if so, bind the mouse position to the box with a spring
+                spring.bind(mouseX, mouseY, box);
             }
         }
-        function mousePressed() {
-            windmill.toggleMotor();
-            let status = "OFF";
-            if (windmill.motorOn()){
-                status = "ON";
-            }
-      }
     </script>
     </head>
 
@@ -93,11 +103,11 @@
         
     </main>
     <div class="cot">
-        <h1>box2D旋转关节</h1>
+        <h1>box2D鼠标关节</h1>
         <hr>
-        <p>鼠标点击开关马达</p>
+        <p>鼠标点击移动box</p>
         <hr>
-        <a class="back" href="../../mainPage/mainPage_3.html">退出</a>
+        <a class="back" href="../../mainPage/mainPage_4.html">退出</a>
         <hr>
     </div>
     </body>

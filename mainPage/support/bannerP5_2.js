@@ -6,6 +6,10 @@ function Oscillator(velocityX,velocityY,velocityZ,ampitudeX,ampitudeY,ampitudeZ)
     this.angle=createVector(0,0,0);
     this.velocity=createVector(velocityX,velocityY,velocityZ);
     this.ampitude=createVector(ampitudeX,ampitudeY,ampitudeZ);
+    this.colorR=random(210,255);
+    this.colorG=random(210,255);
+    this.colorB=random(210,255);
+
     this.oscillate=function(){
         this.angle.add(this.velocity);
     }
@@ -13,21 +17,22 @@ function Oscillator(velocityX,velocityY,velocityZ,ampitudeX,ampitudeY,ampitudeZ)
         var x=sin(this.angle.x)*this.ampitude.x;
         var y=sin(this.angle.y)*this.ampitude.y;
         var z=sin(this.angle.z)*this.ampitude.z;
+        this.velocity.limit(3);
         strokeWeight(0.3);
-        stroke(255);
+        stroke(this.colorR,this.colorB,this.colorG);
         noFill();
         //line(0,0,0,x,y,z);
         push();
         translate(x,y,z);
-        sphere(20);
+        sphere(20,10,10);
         pop();
     }
 }
 function setup() {
     createCanvas(windowWidth, windowHeight,WEBGL);
     smooth();
-    for(var i=0;i<11;i++){
-        oscillatorList.push(new Oscillator(random(-0.1,0.1),random(-0.1,0.1),random(-0.1,0.1),random(-300,300),random(-300,300),random(-300,300)));
+    for(var i=0;i<31;i++){
+        oscillatorList.push(new Oscillator(random(-0.03,0.03),random(-0.03,0.03),random(-0.03,0.03),random(-300,300),random(-300,300),random(-300,300)));
     }
 }
 function windowResized() {
@@ -35,9 +40,6 @@ function windowResized() {
 }
 function draw(){
 
-    rotateX(rtx);
-    rotateY(rty);
-    rotateZ(rtz);
     background(0)
     for(var i=0;i<oscillatorList.length;i++){
         oscillatorList[i].oscillate();

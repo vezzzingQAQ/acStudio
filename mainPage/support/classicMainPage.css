@@ -335,3 +335,27 @@ main{
     text-decoration: none;
     color: blueviolet;
 }
+.imgdown{
+    background-image: url("../pictures/public/down.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 50px;
+    height: 60px;
+    position: absolute;
+    left: 50%;
+    top: 65%;
+    opacity: 0.7;
+    animation: wave 2s ease-in-out infinite;
+}
+@keyframes wave{
+    0%{
+        transform: translate(-50%,-50%);
+    }
+    50%{
+        transform: translate(-50%,-10%);
+    }
+    100%{
+        transform: translate(-50%,-50%);
+    }
+}

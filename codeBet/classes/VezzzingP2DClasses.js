@@ -1,7 +1,8 @@
 class Box {
-    constructor(x, y,w,h,density=1.0,friction=0.5,restitution=0.2,linearVelocity=new box2d.b2Vec2(random(-5, 5), random(2, 5)),angularVelocity=(random(-5,5))) {
+    constructor(x, y,w,h,density=1.0,friction=0.5,restitution=0.2,linearVelocity=new box2d.b2Vec2(random(-5, 5), random(2, 5)),angularVelocity=(random(-5,5)),borderColor=[200,200,200]) {
         this.w = w;
         this.h = h;
+        this.borderColor=borderColor;
 
         //定义一个box
         let bd = new box2d.b2BodyDef();
@@ -29,6 +30,7 @@ class Box {
         this.body.SetLinearVelocity(linearVelocity);
         this.body.SetAngularVelocity(angularVelocity);
         
+        this.body.SetUserData(this);
     }
 
     //删除物体
@@ -46,6 +48,17 @@ class Box {
         }
         return false;
     }
+
+    contains(x, y) {
+        let worldPoint = scaleToWorld(x, y);
+        let f = this.body.GetFixtureList();
+        let inside = f.TestPoint(worldPoint);
+        return inside;
+    }
+
+    changeColor(){
+        this.borderColor=[255,255,0];
+    }
     
     display() {
         //获取位置和角度信息
@@ -57,16 +70,17 @@ class Box {
             translate(pos.x, pos.y);
             rotate(a);
             noFill();
-            stroke(200);
+            stroke(this.borderColor[0],this.borderColor[1],this.borderColor[2]);
             strokeWeight(2);
             rect(0, 0, this.w, this.h);
         pop();
     }
 }   
 class Circle {
-    constructor(x, y, r,density=1.0,friction=0.1,restitution=0.3,linearVelocity=new box2d.b2Vec2(random(-5, 5), random(2, 5)),angularVelocity=(random(-5,5))) {
+    constructor(x, y, r,density=1.0,friction=0.1,restitution=0.3,linearVelocity=new box2d.b2Vec2(random(-5, 5), random(2, 5)),angularVelocity=(random(-5,5)),borderColor=[200,200,200]) {
         this.r = r;
-    
+        this.borderColor=borderColor;
+
         let bd = new box2d.b2BodyDef();
         bd.type = box2d.b2BodyType.b2_dynamicBody;
         bd.position = scaleToWorld(x, y);
@@ -85,6 +99,8 @@ class Circle {
         //额外设置
         this.body.SetLinearVelocity(linearVelocity);
         this.body.SetAngularVelocity(angularVelocity);
+
+        this.body.SetUserData(this);
     }
   
     //删除物体
@@ -102,7 +118,18 @@ class Circle {
         }
         return false;
     }
-  
+
+    contains(x, y) {
+        let worldPoint = scaleToWorld(x, y);
+        let f = this.body.GetFixtureList();
+        let inside = f.TestPoint(worldPoint);
+        return inside;
+    }
+
+    changeColor(){
+        this.borderColor=[255,255,0];
+    }
+
     display() {
         let pos = scaleToPixels(this.body.GetPosition());
         let a = this.body.GetAngleRadians();
@@ -112,7 +139,7 @@ class Circle {
             translate(pos.x, pos.y);
             rotate(a);
             noFill();
-            stroke(200);
+            stroke(this.borderColor[0],this.borderColor[1],this.borderColor[2]);
             strokeWeight(2);
             ellipse(0, 0, this.r * 2, this.r * 2);
             line(0, 0, this.r, 0);
@@ -360,9 +387,8 @@ class Windmill {
     }
 }
 class Wheel{
-    constructor(rotatePart,bodyPart,motorSpeed=-PI*2,maxMotorTorque=100,enableMotor=false) {
-        this.len = 32;
-    
+    constructor(rotatePart,bodyPart,motorSpeed=-PI*12,maxMotorTorque=10000,enableMotor=false) {
+            
         this.box1 = rotatePart;
         this.box2 = bodyPart;
     
@@ -386,7 +412,12 @@ class Wheel{
     
         let anchor = scaleToPixels(this.box1.body.GetWorldCenter());
         noFill();
-        stroke(200);
+        if(this.joint.IsMotorEnabled()){
+            stroke(250,250,0);
+            strokeWeight(3);
+        }else{
+            stroke(200);
+        }
         ellipse(anchor.x, anchor.y, 8, 8);
     }
   
@@ -396,6 +427,25 @@ class Wheel{
     }
     motorOn() {
         return this.joint.IsMotorEnabled();
+    }
+}
+class PowerLessCar{
+    //无动力车厢
+    constructor(x,y,len=160,wheelSize=20) {
+        this.len=len;
+        this.wheelSize=wheelSize;
+
+        cwheel1=new Circle(x-this.len/2,y,this.wheelSize,1,0.9,0.3,new box2d.b2Vec2(0,0),0);
+        cwheel2=new Circle(x+this.len/2,y,this.wheelSize,1,0.9,0.3,new box2d.b2Vec2(0,0),0);
+        
+        this.cbody=new Box(x,y-this.wheelSize,this.len,this.wheelSize,1,0.2,0.3,new box2d.b2Vec2(0,0),0);
+        this.pwheel1=new Wheel(cwheel1,this.cbody);
+        this.pwheel2=new Wheel(cwheel2,this.cbody);
+    }
+    display() {
+        this.pwheel1.display();
+        this.pwheel2.display();
+        this.cbody.display();
     }
 }
 class JointDistanceObject {
@@ -435,7 +485,65 @@ class JointDistanceObject {
         this.p2.display();
     }
 }
-
+class Spring {
+    constructor(x, y,frequencyHz = 5.0,dampingRatio = 0.9) {
+        //一开始不显示
+        this.mouseJoint = null;
+        this.frequencyHz=frequencyHz;
+        this.dampingRatio=dampingRatio;
+    }
+  
+    //设置显示和位置
+    update(x, y) {
+        if (this.mouseJoint !== null) {
+            //转换成世界坐标系
+            let mouseWorld = scaleToWorld(x, y);
+            this.mouseJoint.SetTarget(mouseWorld);
+        }
+    }
+  
+    display() {
+      if (this.mouseJoint !== null) {
+    
+            let posA = this.mouseJoint.GetAnchorA();
+            let posB = this.mouseJoint.GetAnchorB();
+    
+            let v1 = scaleToPixels(posA.x, posA.y);
+            let v2 = scaleToPixels(posB.x, posB.y);
+            stroke(200);
+            strokeWeight(2);
+    
+            line(v1.x, v1.y, v2.x, v2.y);
+        }
+    }
+  
+    bind(x, y, box) {
+        //定义关节
+        let md = new box2d.b2MouseJointDef();
+        //鼠标
+        md.bodyA = world.CreateBody(new box2d.b2BodyDef()); //world.GetGroundBody();
+        //物体
+        md.bodyB = box.body;
+        //获取鼠标位置
+        let mp = scaleToWorld(x, y);
+        md.target = mp;    
+        //物理设置
+        md.maxForce = 1000.0 * box.body.m_mass;
+        md.frequencyHz = this.frequencyHz;
+        md.dampingRatio = this.dampingRatio;
+    
+        //创建关节
+        this.mouseJoint = world.CreateJoint(md);
+    }
+  
+    destroy() {
+        //鼠标释放时销毁
+        if (this.mouseJoint !== null) {
+            world.DestroyJoint(this.mouseJoint);
+            this.mouseJoint = null;
+        }
+    }
+}
 class Boundary {
         //x,y,宽,高
         constructor(x, y, w, h,density=1.0,friction=0.5,restitution=0.2) {
@@ -509,3 +617,28 @@ class Surface {
         endShape(CLOSE);
     }
 }
+
+class CustomListener {
+    BeginContact(contact) {
+        let f1 = contact.GetFixtureA();
+        let f2 = contact.GetFixtureB();
+        // Get both bodies
+        let b1 = f1.GetBody();
+        let b2 = f2.GetBody();
+    
+        // Get our objects that reference these bodies
+        let o1 = b1.GetUserData();
+        let o2 = b2.GetUserData();
+    
+        if (o1 instanceof Box && o2 instanceof Box) {
+            o1.changeColor();
+            o2.changeColor();
+        }
+    }
+  
+    EndContact(contact) {};
+  
+    PreSolve(contact, manifold) {};
+  
+    PostSolve(contact, manifold) {};
+  }
