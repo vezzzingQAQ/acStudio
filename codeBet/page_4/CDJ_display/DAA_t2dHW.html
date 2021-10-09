@@ -3,8 +3,8 @@
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
-    <title>toxiclibs HellowWorld</title>
+    <link rel="icon" type="image/x-icon" href="../../ico/ico1.jpg">
+    <title>玩*具</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script>
         document.addEventListener("contextmenu", (e) => {
@@ -25,18 +25,13 @@
         <button id="removeNode">删除节点</button>
         <button id="cancel">取消</button>
     </div>
-    <div id="detailMenu" style="margin: 0;padding: 0; position: absolute; visibility:hidden;z-index: 999;">
-        <ul>
-            <li class="connected"></li>
-            <li class="position"></li>
-            <li class="radius"></li>
-        </ul>
-    </div>
-
     <div class="mainBoard">
         <button id="clearAll">清除痕迹</button>
         <button id="poAll">固定所有点</button>
         <button id="deAll">解锁所有点</button>
+        <button id="addG">添加重力</button>
+        <button id="remG">去除重力</button>
+
         <button id="saveImg">截个图</button>
 
     </div>
@@ -58,6 +53,7 @@
 
         let currentMovingNode=-1;
 
+        let gravity=new GravityBehavior(new Vec2D(0, 0.5));
         function setup() {
             createCanvas(windowWidth, windowHeight);
             smooth();
@@ -88,7 +84,7 @@
             //更新世界
             physics.update();
 
-            background(0,50);
+            background(0);
 
             //绘制节点
             for(var i=0;i<nodesList.length;i++){
@@ -98,16 +94,6 @@
                     nodesList[i].x=mouseX;
                     nodesList[i].y=mouseY;
                     nodesList[i].lock();
-                }
-                //显示详情页
-                if(nodesList[i].checkIn(mouseX,mouseY)){
-                    document.querySelector("#detailMenu").style.visibility="visible";
-                    document.querySelector("#detailMenu").style.left=mouseX+"px";
-                    document.querySelector("#detailMenu").style.top=mouseY+"px";
-
-                    document.querySelector(".position").innerHTML="位置:("+nodesList[i].x+","+nodesList[i].y+")";
-                }else{
-                    document.querySelector("#detailMenu").style.visibility="hidden";
                 }
             }
             for(var i=0;i<springsList.length;i++){
@@ -284,6 +270,12 @@
         }
         document.querySelector("#saveImg").onclick=function(){
             save("VezzzingYYDS"+(Math.random())+".png");
+        }
+        document.querySelector("#addG").onclick=function(){
+            physics.addBehavior(gravity);
+        }
+        document.querySelector("#remG").onclick=function(){
+            physics.removeBehavior(gravity);
         }
     </script>
 
