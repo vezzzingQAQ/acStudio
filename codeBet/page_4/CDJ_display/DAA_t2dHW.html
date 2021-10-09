@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>toxiclibs HellowWorld</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+        document.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+        });
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div id="myMenu" style="margin: 0;padding: 0; position: absolute; visibility:hidden;z-index: 999;">
+        <button id="addDynamic">添加动点</button>
+        <button id="addDraw">添加画笔</button>
+        <button id="addSpring">添加杠杆</button>
+        <button id="addStatic">添加固定点</button>
+        <button id="removeNode">删除节点</button>
+        <button id="cancel">取消</button>
+    </div>
+    <div id="detailMenu" style="margin: 0;padding: 0; position: absolute; visibility:hidden;z-index: 999;">
+        <ul>
+            <li class="connected"></li>
+            <li class="position"></li>
+            <li class="radius"></li>
+        </ul>
+    </div>
+
+    <div class="mainBoard">
+        <button id="clearAll">清除痕迹</button>
+        <button id="poAll">固定所有点</button>
+        <button id="deAll">解锁所有点</button>
+        <button id="saveImg">截个图</button>
+
+    </div>
+
+    <script src="../../../p5.min.js"></script>
+    <script src="toxiclibs.js"></script>
+    <script src="toxichelper.js"></script>
+    <script src="VezzzingT2DClasses.js"></script>
+    <script>
+        let nodesList=[];
+        let springsList=[];
+
+        let currentConnectPoint;
+        let currentPoint;
+
+        let isAddingNode=false;
+
+        let isAddingSpring=false;
+
+        let currentMovingNode=-1;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+
+            //世界对象
+            physics = new VerletPhysics2D();
+
+            //创建两个粒子对象
+            nodesList.push(new StaticNode(new Vec2D(width / 2, height/2),32));
+
+            //把一个锁定作为摆点
+
+            //添加到世界
+            for(var i=0;i<nodesList.length;i++){
+                nodesList[i].isMoving=false;
+                physics.addParticle(nodesList[i]);
+            }
+            for(var i=0;i<springsList.length;i++){
+                physics.addSpring(springsList[i]);
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+
+        function draw() {
+            //更新世界
+            physics.update();
+
+            background(0,50);
+
+            //绘制节点
+            for(var i=0;i<nodesList.length;i++){
+                nodesList[i].display();
+                if(nodesList[i].isMoving){
+                    nodesList[i].unlock();
+                    nodesList[i].x=mouseX;
+                    nodesList[i].y=mouseY;
+                    nodesList[i].lock();
+                }
+                //显示详情页
+                if(nodesList[i].checkIn(mouseX,mouseY)){
+                    document.querySelector("#detailMenu").style.visibility="visible";
+                    document.querySelector("#detailMenu").style.left=mouseX+"px";
+                    document.querySelector("#detailMenu").style.top=mouseY+"px";
+
+                    document.querySelector(".position").innerHTML="位置:("+nodesList[i].x+","+nodesList[i].y+")";
+                }else{
+                    document.querySelector("#detailMenu").style.visibility="hidden";
+                }
+            }
+            for(var i=0;i<springsList.length;i++){
+                springsList[i].display();
+            }
+            
+            if(mouseIsPressed){
+                if(mouseButton == LEFT){
+                    if(currentMovingNode!=-1){
+                        nodesList[currentMovingNode].move(mouseX,mouseY);
+                    }
+                }else if(mouseButton == RIGHT){
+                    if(nodesList.length!=0){
+                        for(var i=0;i<nodesList.length;i++){
+                            if(nodesList[i].checkIn(mouseX,mouseY)){
+                                showMenu();
+                                currentConnectPoint=nodesList[i];
+                                break;
+                            }
+                        }
+                    }else{
+                        showMenu();
+                    }
+                }
+            }
+
+            if(isAddingSpring){
+                stroke(100);
+                strokeWeight(1);
+                line(currentConnectPoint.x,currentConnectPoint.y,mouseX,mouseY);
+            }
+            if(isAddingNode){
+                stroke(100);
+                strokeWeight(1);
+                line(currentConnectPoint.x,currentConnectPoint.y,mouseX,mouseY);
+            }
+        }   
+
+
+        function mousePressed(){
+            if(mouseButton == LEFT){
+                for(var i=0;i<nodesList.length;i++){
+                    if(nodesList[i].checkIn(mouseX,mouseY)){
+                        currentMovingNode=i;
+                        break;
+                    }
+                }
+                var box=document.querySelector("#myMenu");
+                if(!(mouseX<box.offsetLeft+box.offsetWidth && mouseX>box.offsetLeft && mouseY<box.offsetTop+box.offsetHeight && mouseY>box.offsetTop)){
+                    document.querySelector("#myMenu").style.visibility="hidden";
+                }
+                if(isAddingNode){
+                    addNodeSpring(currentPoint,currentConnectPoint,dist(currentPoint.x,currentPoint.y,currentConnectPoint.x,currentConnectPoint.y));
+                    isAddingNode=false;
+                    currentPoint.isMoving=false;
+                }
+                if(isAddingSpring){
+                    for(var i=0;i<nodesList.length;i++){
+                        if(nodesList[i].checkIn(mouseX,mouseY)){
+                            addSpring(nodesList[i],currentConnectPoint);
+                            isAddingSpring=false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        function mouseReleased(){
+            currentMovingNode=-1;
+        }
+
+        function showMenu(){
+            document.querySelector("#myMenu").style.visibility="visible";
+            document.querySelector("#myMenu").style.left=mouseX+"px";
+            document.querySelector("#myMenu").style.top=mouseY+"px";
+        }
+
+        function addNode(x,y,type){
+            let node;
+            if(type=="static"){
+                node=new StaticNode(new Vec2D(x,y),32);
+            }else if(type=="dynamic"){
+                node=new DynamicNode(new Vec2D(x,y),32);
+            }else if(type=="draw"){
+                node=new DrawingNode(new Vec2D(x,y),32);
+            }else{
+                alert("wrong!");
+            }
+            currentPoint=node;
+            nodesList.push(node);
+            physics.addParticle(node);
+        }
+
+        function addSpring(currentConnectPoint,point){
+            let spring;
+            spring=new Spring(currentConnectPoint,point, dist(currentConnectPoint.x,currentConnectPoint.y,point.x,point.y),1);
+            physics.addSpring(spring);
+            springsList.push(spring);
+        }
+
+        function addNodeSpring(connectPoint,currentPoint,len){
+            let currentSpring;
+            currentSpring=new Spring(connectPoint, currentPoint, len, 1);
+            physics.addSpring(currentSpring);
+            springsList.push(currentSpring);
+        }
+
+        function removeNode(){
+            for(var i=0;i<springsList.length;i++){
+                if(springsList[i].p1==currentConnectPoint || springsList[i].p2==currentConnectPoint){
+                    physics.removeSpring(springsList[i]);
+                    springsList.splice(i,1);
+                }
+            }
+            for(var i=0;i<nodesList.length;i++){
+                if(nodesList[i]==currentConnectPoint){
+                    physics.removeParticle(nodesList[i]);
+                    nodesList.splice(i,1);
+                    break;
+                }
+            }
+        }
+         
+        function clearAll(){
+            for(var i=0;i<nodesList.length;i++){
+                if(nodesList[i].pointsList){
+                    nodesList[i].pointsList=[];
+                }
+            }
+        }
+
+        document.querySelector("#addStatic").onclick=function(){
+            document.querySelector("#myMenu").style.visibility="hidden";
+            isAddingNode=true;
+            addNode(mouseX,mouseY,"static");
+        }
+        document.querySelector("#addDynamic").onclick=function(){
+            document.querySelector("#myMenu").style.visibility="hidden";
+            isAddingNode=true;
+            addNode(mouseX,mouseY,"dynamic");
+        }
+        document.querySelector("#addDraw").onclick=function(){
+            document.querySelector("#myMenu").style.visibility="hidden";
+            isAddingNode=true;
+            addNode(mouseX,mouseY,"draw");
+        }
+        document.querySelector("#removeNode").onclick=function(){
+            document.querySelector("#myMenu").style.visibility="hidden";
+            removeNode();
+        }
+        document.querySelector("#cancel").onclick=function(){
+            document.querySelector("#myMenu").style.visibility="hidden";
+        }
+        document.querySelector("#addSpring").onclick=function(){
+            document.querySelector("#myMenu").style.visibility="hidden";
+            isAddingSpring=true;
+        }
+        
+        document.querySelector("#clearAll").onclick=function(){
+            clearAll();
+        }
+        document.querySelector("#poAll").onclick=function(){
+            for(var i=0;i<nodesList.length;i++){
+                nodesList[i].lock();
+            }
+        }
+        document.querySelector("#deAll").onclick=function(){
+            for(var i=0;i<nodesList.length;i++){
+                if(!nodesList[i].isStatic){
+                    nodesList[i].unlock();
+                }
+            }
+        }
+        document.querySelector("#saveImg").onclick=function(){
+            save("VezzzingYYDS"+(Math.random())+".png");
+        }
+    </script>
+
+</body>
+</html>
