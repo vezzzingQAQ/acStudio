@@ -58,6 +58,7 @@ class MoveXNode extends Node {
             }
             strokeWeight(1);
             ellipse(this.x, this.y, this.radius, this.radius);
+            stroke(100);
             line(this.x-10000,this.y,this.x+10000,this.y);
         }else{
             stroke(100);
@@ -93,6 +94,7 @@ class MoveYNode extends Node {
             }
             strokeWeight(1);
             ellipse(this.x, this.y, this.radius, this.radius);
+            stroke(100);
             line(this.x,this.y-10000,this.x,this.y+10000);
         }else{
             stroke(100);
@@ -122,6 +124,7 @@ class DrawingNode extends Node {
     display() {
         if(this.isMoving==false){
             noFill();
+            this.drawPath();
             if(this.checkIn(mouseX,mouseY)){
                 stroke(0,250,0);
             }else{
@@ -129,7 +132,6 @@ class DrawingNode extends Node {
             }
             strokeWeight(1);
             ellipse(this.x, this.y, this.radius, this.radius);
-            this.drawPath();
         }else{
             stroke(100);
             strokeWeight(1);
@@ -193,9 +195,47 @@ class Spring extends VerletSpring2D{
         line(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
     }
 }
+
+class DrawingSpring extends VerletSpring2D{
+    constructor(p1,p2,len,pr1){
+        super(p1,p2,len,pr1);
+        this.p1=p1;
+        this.p2=p2;
+        this.len=len;
+        this.pr1=pr1;
+        this.lines=[];
+    }
+    display(){
+        this.drawPath();
+        stroke(210,10,250);
+        strokeWeight(1);
+        line(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
+    }
+    drawPath(){
+        this.lines.push(new Line(this.p1.x,this.p1.y,this.p2.x,this.p2.y));
+        for(var i=0;i<this.lines.length;i++){
+            this.lines[i].display();
+        }
+    }
+}
+
 class Point{
     constructor(x,y){
         this.x=x;
         this.y=y;
+    }
+}
+class Line{
+    constructor(x1,y1,x2,y2){
+        this.x1=x1;
+        this.x2=x2;
+        this.y1=y1;
+        this.y2=y2;
+    }
+    display(){
+        noFill();
+        stroke(200,100);
+        strokeWeight(0.5);
+        line(this.x1,this.y1,this.x2,this.y2);
     }
 }

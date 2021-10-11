@@ -20,6 +20,8 @@
     <div id="myMenu" style="margin: 0;padding: 0; position: absolute; visibility:hidden;z-index: 999;">
         <button id="addDynamic">添加动点</button>
         <button id="addDraw">添加画笔</button>
+        <button id="addDrawLine">添加画线</button>
+
         <button id="addxd">添加X向滑移点</button>
         <button id="addyd">添加Y向滑移点</button>
 
@@ -33,9 +35,7 @@
         <a href="../../../mainPage/mainPage_4.html" style="color: yellow;text-decoration: none;">退出</a>
         <button id="clearAll">清除痕迹</button>
         <button id="poAll">固定所有点</button>
-        <button id="deAll">解锁所有点</button>
         <button id="addG">添加重力</button>
-        <button id="remG">去除重力</button>
         <button id="hide">隐藏结构</button>
         <button id="speeding">加速</button>
 
@@ -49,21 +49,34 @@
     <script src="toxichelper.js"></script>
     <script src="VezzzingT2DClasses.js"></script>
     <script>
+        //节点列表
         let nodesList=[];
+        //杠杆列表
         let springsList=[];
 
+        //连接的点
         let currentConnectPoint;
+        //当前的点
         let currentPoint;
 
+        //是否正在添加点
         let isAddingNode=false;
 
+        //是否正在添加杠杆
         let isAddingSpring=false;
+        let springType="";
 
+        //正在添加的点的index
         let currentMovingNode=-1;
 
+        //是否处于隐藏模式
         let isHidding=false;
-
-        let isSpeeding=false
+        //是否处于加速模式
+        let isSpeeding=false;
+        //是否处于重力模式
+        let hasG=false;
+        //是否处于锁定模式
+        let isLockAll=false;
 
         let gravity=new GravityBehavior(new Vec2D(0, 0.5));
         function setup() {
@@ -125,9 +138,14 @@
                     }
                 }
             }
-            if(isHidding==false){
-                for(var i=0;i<springsList.length;i++){
+            //绘制杠杆
+            for(var i=0;i<springsList.length;i++){
+                if(isHidding==false){
                     springsList[i].display();
+                }else{
+                    if(springsList[i].constructor.name=="DrawingSpring"){
+                        springsList[i].drawPath();
+                    }
                 }
             }
 
@@ -135,6 +153,31 @@
                 if(mouseButton == LEFT){
                     if(currentMovingNode!=-1){
                         nodesList[currentMovingNode].move(mouseX,mouseY);
+                    }
+                    //**************
+                    for(var i=0;i<nodesList.length;i++){
+                        if(nodesList[i].checkIn(mouseX,mouseY)){
+                            currentMovingNode=i;
+                            break;
+                        }
+                    }
+                    var box=document.querySelector("#myMenu");
+                    if(!(mouseX<box.offsetLeft+box.offsetWidth && mouseX>box.offsetLeft && mouseY<box.offsetTop+box.offsetHeight && mouseY>box.offsetTop)){
+                        document.querySelector("#myMenu").style.visibility="hidden";
+                    }
+                    if(isAddingNode){
+                        addNodeSpring(currentPoint,currentConnectPoint,dist(currentPoint.x,currentPoint.y,currentConnectPoint.x,currentConnectPoint.y));
+                        isAddingNode=false;
+                        currentPoint.isMoving=false;
+                    }
+                    if(isAddingSpring){
+                        for(var i=0;i<nodesList.length;i++){
+                            if(nodesList[i].checkIn(mouseX,mouseY)){
+                                addSpring(nodesList[i],currentConnectPoint,springType);
+                                isAddingSpring=false;
+                                break;
+                            }
+                        }
                     }
                 }else if(mouseButton == RIGHT){
                     if(nodesList.length!=0){
@@ -159,39 +202,12 @@
             if(isAddingNode){
                 stroke(100);
                 strokeWeight(1);
-                line(currentConnectPoint.x,currentConnectPoint.y,mouseX,mouseY);
+                line(mouseX-10000,mouseY,mouseX+10000,mouseY);
+                line(mouseX,mouseY-10000,mouseX,mouseY+10000);
             }
 
         }
 
-        function mousePressed(){
-            if(mouseButton == LEFT){
-                for(var i=0;i<nodesList.length;i++){
-                    if(nodesList[i].checkIn(mouseX,mouseY)){
-                        currentMovingNode=i;
-                        break;
-                    }
-                }
-                var box=document.querySelector("#myMenu");
-                if(!(mouseX<box.offsetLeft+box.offsetWidth && mouseX>box.offsetLeft && mouseY<box.offsetTop+box.offsetHeight && mouseY>box.offsetTop)){
-                    document.querySelector("#myMenu").style.visibility="hidden";
-                }
-                if(isAddingNode){
-                    addNodeSpring(currentPoint,currentConnectPoint,dist(currentPoint.x,currentPoint.y,currentConnectPoint.x,currentConnectPoint.y));
-                    isAddingNode=false;
-                    currentPoint.isMoving=false;
-                }
-                if(isAddingSpring){
-                    for(var i=0;i<nodesList.length;i++){
-                        if(nodesList[i].checkIn(mouseX,mouseY)){
-                            addSpring(nodesList[i],currentConnectPoint);
-                            isAddingSpring=false;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
 
         function mouseReleased(){
             currentMovingNode=-1;
@@ -221,11 +237,16 @@
             currentPoint=node;
             nodesList.push(node);
             physics.addParticle(node);
+            springType="normal";
         }
 
-        function addSpring(currentConnectPoint,point){
+        function addSpring(currentConnectPoint,point,type="normal"){
             let spring;
-            spring=new Spring(currentConnectPoint,point, dist(currentConnectPoint.x,currentConnectPoint.y,point.x,point.y),1);
+            if(type=="normal"){
+                spring=new Spring(currentConnectPoint,point, dist(currentConnectPoint.x,currentConnectPoint.y,point.x,point.y),1);
+            }else if(type=="draw"){
+                spring=new DrawingSpring(currentConnectPoint,point, dist(currentConnectPoint.x,currentConnectPoint.y,point.x,point.y),1);
+            }
             physics.addSpring(spring);
             springsList.push(spring);
         }
@@ -234,6 +255,8 @@
             let currentSpring;
             if(connectPoint.constructor.name=="MoveXNode" || connectPoint.constructor.name=="MoveYNode"){
                 connectPoint.addCs(mouseX,mouseY);
+            }else if(connectPoint.constructor.name=="StaticNode"){
+                //不添加杠杆
             }else{
                 currentSpring=new Spring(connectPoint, currentPoint, len, 1);
                 physics.addSpring(currentSpring);
@@ -263,6 +286,11 @@
                     nodesList[i].pointsList=[];
                 }
             }
+            for(var i=0;i<springsList.length;i++){
+                if(springsList[i].lines){
+                    springsList[i].lines=[];
+                }
+            }
         }
 
         document.querySelector("#addStatic").onclick=function(){
@@ -279,6 +307,10 @@
             document.querySelector("#myMenu").style.visibility="hidden";
             isAddingNode=true;
             addNode(mouseX,mouseY,"draw");
+        }
+        document.querySelector("#addDrawLine").onclick=function(){
+            document.querySelector("#myMenu").style.visibility="hidden";
+            isAddingSpring=true;
         }
         document.querySelector("#addxd").onclick=function(){
             document.querySelector("#myMenu").style.visibility="hidden";
@@ -301,37 +333,60 @@
         document.querySelector("#addSpring").onclick=function(){
             document.querySelector("#myMenu").style.visibility="hidden";
             isAddingSpring=true;
+            springType="normal";
         }
-        
+        document.querySelector("#addDrawLine").onclick=function(){
+            document.querySelector("#myMenu").style.visibility="hidden";
+            isAddingSpring=true;
+            springType="draw";
+        }
         document.querySelector("#clearAll").onclick=function(){
             clearAll();
         }
         document.querySelector("#poAll").onclick=function(){
-            for(var i=0;i<nodesList.length;i++){
-                nodesList[i].lock();
-            }
-        }
-        document.querySelector("#deAll").onclick=function(){
-            for(var i=0;i<nodesList.length;i++){
-                if(!nodesList[i].isStatic){
-                    nodesList[i].unlock();
+            isLockAll=!isLockAll;
+            if(isLockAll){
+                for(var i=0;i<nodesList.length;i++){
+                    nodesList[i].lock();
                 }
+                document.querySelector("#poAll").innerHTML="解锁所有";
+            }else{
+                for(var i=0;i<nodesList.length;i++){
+                    if(!nodesList[i].isStatic){
+                        nodesList[i].unlock();
+                    }
+                }
+                document.querySelector("#poAll").innerHTML="锁定所有";
             }
         }
         document.querySelector("#saveImg").onclick=function(){
             save("VezzzingYYDS"+(Math.random())+".png");
         }
         document.querySelector("#addG").onclick=function(){
-            physics.addBehavior(gravity);
-        }
-        document.querySelector("#remG").onclick=function(){
-            physics.removeBehavior(gravity);
+            hasG=!hasG;
+            if(hasG){
+                physics.addBehavior(gravity);
+                document.querySelector("#addG").innerHTML="移除重力";
+            }else{
+                physics.removeBehavior(gravity);
+                document.querySelector("#addG").innerHTML="添加重力";
+            }
         }
         document.querySelector("#hide").onclick=function(){
             isHidding=!isHidding;
+            if(isHidding){
+                document.querySelector("#hide").innerHTML="取消隐藏";
+            }else{
+                document.querySelector("#hide").innerHTML="隐藏结构";
+            }
         }
         document.querySelector("#speeding").onclick=function(){
             isSpeeding=!isSpeeding;
+            if(isSpeeding){
+                document.querySelector("#speeding").innerHTML="原速";
+            }else{
+                document.querySelector("#speeding").innerHTML="加速"
+            }
         }
     </script>
 
