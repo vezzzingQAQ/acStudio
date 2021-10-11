@@ -42,6 +42,77 @@ class DynamicNode extends Node {
         }
     }
 }
+class MoveXNode extends Node {
+    constructor(position,r) {
+        super(position,r);
+    }
+    // Override the display method
+    display() {
+        if(this.isMoving==false){
+            console.log(this.constraints);
+            noFill();
+            if(this.checkIn(mouseX,mouseY)){
+                stroke(0,250,0);
+            }else{
+                stroke(200);
+            }
+            strokeWeight(1);
+            ellipse(this.x, this.y, this.radius, this.radius);
+            line(this.x-10000,this.y,this.x+10000,this.y);
+        }else{
+            stroke(100);
+            strokeWeight(1);
+            ellipse(this.x, this.y, this.radius, this.radius);
+        }
+    }
+    addCs(x,y){
+        this.addConstraint(new toxi.physics2d.constraints.AxisConstraint(Vec2D.Axis.Y,y));
+    }
+    move(x,y){
+        if(this.isMoving==false){
+            this.lock();
+            this.x = x;
+            this.unlock();
+        }
+    }
+}
+
+class MoveYNode extends Node {
+    constructor(position,r) {
+        super(position,r);
+    }
+    // Override the display method
+    display() {
+        if(this.isMoving==false){
+            console.log(this.constraints);
+            noFill();
+            if(this.checkIn(mouseX,mouseY)){
+                stroke(0,250,0);
+            }else{
+                stroke(200);
+            }
+            strokeWeight(1);
+            ellipse(this.x, this.y, this.radius, this.radius);
+            line(this.x,this.y-10000,this.x,this.y+10000);
+        }else{
+            stroke(100);
+            strokeWeight(1);
+            ellipse(this.x, this.y, this.radius, this.radius);
+        }
+    }
+    addCs(x,y){
+        this.addConstraint(new toxi.physics2d.constraints.AxisConstraint(Vec2D.Axis.X,x));
+    }
+    move(x,y){
+        if(this.isMoving==false){
+            this.lock();
+            this.y = y;
+            this.unlock();
+        }
+    }
+}
+
+
 class DrawingNode extends Node {
     constructor(position,r) {
         super(position,r);
@@ -58,13 +129,7 @@ class DrawingNode extends Node {
             }
             strokeWeight(1);
             ellipse(this.x, this.y, this.radius, this.radius);
-            this.pointsList.push(new Point(this.x,this.y));
-            stroke(255);
-            beginShape();
-                for(var i=0;i<this.pointsList.length;i++){
-                    vertex(this.pointsList[i].x,this.pointsList[i].y);
-                }
-            endShape();
+            this.drawPath();
         }else{
             stroke(100);
             strokeWeight(1);
@@ -78,6 +143,15 @@ class DrawingNode extends Node {
             this.y = y;
             this.unlock();
         }
+    }
+    drawPath(){
+        this.pointsList.push(new Point(this.x,this.y));
+        stroke(255);
+        beginShape();
+            for(var i=0;i<this.pointsList.length;i++){
+                vertex(this.pointsList[i].x,this.pointsList[i].y);
+            }
+        endShape();
     }
 }
 

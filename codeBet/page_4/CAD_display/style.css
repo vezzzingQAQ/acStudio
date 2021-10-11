@@ -16,7 +16,7 @@ body{
 }
 #myMenu{
     display: flex;
-    width: 90px;
+    width: 130px;
     flex-direction: column;
     background-color: rgba(209, 209, 209, 0.13);
     padding: 10px;

@@ -20,6 +20,10 @@
     <div id="myMenu" style="margin: 0;padding: 0; position: absolute; visibility:hidden;z-index: 999;">
         <button id="addDynamic">添加动点</button>
         <button id="addDraw">添加画笔</button>
+        <button id="addxd">添加X向滑移点</button>
+        <button id="addyd">添加Y向滑移点</button>
+
+
         <button id="addSpring">添加杠杆</button>
         <button id="addStatic">添加固定点</button>
         <button id="removeNode">删除节点</button>
@@ -32,8 +36,11 @@
         <button id="deAll">解锁所有点</button>
         <button id="addG">添加重力</button>
         <button id="remG">去除重力</button>
+        <button id="hide">隐藏结构</button>
+        <button id="speeding">加速</button>
 
         <button id="saveImg">截个图</button>
+
 
     </div>
 
@@ -53,6 +60,10 @@
         let isAddingSpring=false;
 
         let currentMovingNode=-1;
+
+        let isHidding=false;
+
+        let isSpeeding=false
 
         let gravity=new GravityBehavior(new Vec2D(0, 0.5));
         function setup() {
@@ -82,6 +93,17 @@
         }
 
         function draw() {
+            if(isSpeeding==false){
+                single();
+            }else{
+                for(var i=0;i<10;i++){
+                    single();
+                }
+            }
+        }   
+
+
+        function single(){
             //更新世界
             physics.update();
 
@@ -89,18 +111,26 @@
 
             //绘制节点
             for(var i=0;i<nodesList.length;i++){
-                nodesList[i].display();
-                if(nodesList[i].isMoving){
-                    nodesList[i].unlock();
-                    nodesList[i].x=mouseX;
-                    nodesList[i].y=mouseY;
-                    nodesList[i].lock();
+                if(isHidding==false){
+                    nodesList[i].display();
+                    if(nodesList[i].isMoving){
+                        nodesList[i].unlock();
+                        nodesList[i].x=mouseX;
+                        nodesList[i].y=mouseY;
+                        nodesList[i].lock();
+                    }
+                }else{
+                    if(nodesList[i].constructor.name=="DrawingNode"){
+                        nodesList[i].drawPath();
+                    }
                 }
             }
-            for(var i=0;i<springsList.length;i++){
-                springsList[i].display();
+            if(isHidding==false){
+                for(var i=0;i<springsList.length;i++){
+                    springsList[i].display();
+                }
             }
-            
+
             if(mouseIsPressed){
                 if(mouseButton == LEFT){
                     if(currentMovingNode!=-1){
@@ -131,8 +161,8 @@
                 strokeWeight(1);
                 line(currentConnectPoint.x,currentConnectPoint.y,mouseX,mouseY);
             }
-        }   
 
+        }
 
         function mousePressed(){
             if(mouseButton == LEFT){
@@ -181,6 +211,10 @@
                 node=new DynamicNode(new Vec2D(x,y),32);
             }else if(type=="draw"){
                 node=new DrawingNode(new Vec2D(x,y),32);
+            }else if(type=="xdynamic"){
+                node=new MoveXNode(new Vec2D(x,y),32);
+            }else if(type=="ydynamic"){
+                node=new MoveYNode(new Vec2D(x,y),32);
             }else{
                 alert("wrong!");
             }
@@ -198,9 +232,13 @@
 
         function addNodeSpring(connectPoint,currentPoint,len){
             let currentSpring;
-            currentSpring=new Spring(connectPoint, currentPoint, len, 1);
-            physics.addSpring(currentSpring);
-            springsList.push(currentSpring);
+            if(connectPoint.constructor.name=="MoveXNode" || connectPoint.constructor.name=="MoveYNode"){
+                connectPoint.addCs(mouseX,mouseY);
+            }else{
+                currentSpring=new Spring(connectPoint, currentPoint, len, 1);
+                physics.addSpring(currentSpring);
+                springsList.push(currentSpring);
+            }
         }
 
         function removeNode(){
@@ -242,6 +280,17 @@
             isAddingNode=true;
             addNode(mouseX,mouseY,"draw");
         }
+        document.querySelector("#addxd").onclick=function(){
+            document.querySelector("#myMenu").style.visibility="hidden";
+            isAddingNode=true;
+            addNode(mouseX,mouseY,"xdynamic");
+        }
+        document.querySelector("#addyd").onclick=function(){
+            document.querySelector("#myMenu").style.visibility="hidden";
+            isAddingNode=true;
+            addNode(mouseX,mouseY,"ydynamic");
+        }
+        //删除节点【有bug慎用】
         document.querySelector("#removeNode").onclick=function(){
             document.querySelector("#myMenu").style.visibility="hidden";
             removeNode();
@@ -277,6 +326,12 @@
         }
         document.querySelector("#remG").onclick=function(){
             physics.removeBehavior(gravity);
+        }
+        document.querySelector("#hide").onclick=function(){
+            isHidding=!isHidding;
+        }
+        document.querySelector("#speeding").onclick=function(){
+            isSpeeding=!isSpeeding;
         }
     </script>
 
