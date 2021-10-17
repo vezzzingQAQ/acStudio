@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>模拟力：相互作用</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        class Mover {
+            constructor(x, y, m) {
+                this.mass = m;
+                this.position = createVector(x, y);
+                this.velocity = createVector(0, 0);
+                this.acceleration = createVector(0, 0);
+            }
+        
+            applyForce(force) {
+                let f = p5.Vector.div(force, this.mass);
+                this.acceleration.add(f);
+            }
+        
+            update() {
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+        
+            display() {
+                noStroke();
+                fill(240,100);
+                ellipse(this.position.x, this.position.y, this.mass*80);
+            }
+        
+            attract(other) {
+                let force = p5.Vector.sub(this.position, other.position);
+                let distance = force.mag();
+                distance = constrain(distance, 5.0, 25.0);//距离限制
+                let strength = (G * this.mass * other.mass) / (distance * distance);
+                force.setMag(strength);
+                return force;
+            }
+        }
+
+        let G = 1;
+        
+        let movers = [];
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            for (let i = 0; i < 260; i++) {
+                movers[i] = new Mover(random(300,width-300), random(200,height-200), random(0.01, 0.02));
+            }
+        }
+
+        function draw() {
+            background(0,10);
+
+            for (let i = 0; i < movers.length; i++) {
+                for (let j = 0; j < movers.length; j++) {
+                    if (i !== j) {
+                        let force = movers[j].attract(movers[i]);
+                        movers[i].applyForce(force);
+                    }
+                }
+
+                movers[i].update();
+                movers[i].display();
+            }
+        }    
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>万有引力</h1>
+        <hr>
+        <p>相互作用</p>
+        <a class="back" href="../../mainPage/mainPage_4.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

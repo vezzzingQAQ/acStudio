@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>CA2</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script src="../../toxiclibs.js"></script>
+    <script src="../../toxichelper.js"></script>
+    <script src="../classes/VezzzingT2DClasses.js"></script>
+    <script>
+        function GOL() {
+
+            this.w = 7;
+            this.columns = int(width/this.w)+1;
+            this.rows = int(height/this.w)+1;
+
+            this.board = new Array(this.columns);
+            for (var i = 0; i < this.columns; i++) {
+                this.board[i] = new Array(this.rows);
+            }
+
+            this.init = function() {
+                for (var i = 0; i < this.columns; i++) {
+                    for (var j = 0; j < this.rows; j++) {
+                        this.board[i][j] = new Cell(i*this.w, j*this.w, this.w);
+                    }
+                }
+            };
+            this.init();
+
+            this.generate = function() {
+                for ( var i = 0; i < this.columns;i++) {
+                    for ( var j = 0; j < this.rows;j++) {
+                    this.board[i][j].savePrevious();
+                    }
+                }
+
+                for (var x = 0; x < this.columns; x++) {
+                    for (var y = 0; y < this.rows; y++) {
+                        var neighbors = 0;
+                        for (var i = -1; i <= 1; i++) {
+                            for (var j = -1; j <= 1; j++) {
+                                neighbors += this.board[(x+i+this.columns)%this.columns][(y+j+this.rows)%this.rows].previous;
+                            }
+                        }
+                        neighbors -= this.board[x][y].previous;
+                        if ((this.board[x][y].state == 1) && (neighbors <  2)){
+                            this.board[x][y].newState(0);
+                        }else if ((this.board[x][y].state == 1) && (neighbors >  3)){
+                            this.board[x][y].newState(0);
+                        }else if ((this.board[x][y].state === 0) && (neighbors == 3)){
+                            this.board[x][y].newState(1);
+                        }
+                    }
+                }
+            };
+
+            this.display = function() {
+                for ( var i = 0; i < this.columns;i++) {
+                    for ( var j = 0; j < this.rows;j++) {
+                    this.board[i][j].display();
+                    }
+                }
+            };
+        }
+        function Cell(x_, y_, w_) {
+            this.x = x_;
+            this.y = y_;
+            this.w = w_;
+            this.wd=random(1,5);
+
+            this.state = Math.floor(random(2));
+            this.previous = this.state;
+
+            this.savePrevious = function() {
+                this.previous = this.state;
+            };
+
+            this.newState = function(s) {
+                this.state = s;
+            };
+
+            this.display = function() {
+                strokeWeight(random(1,5));
+                if (this.previous === 0 && this.state == 1) stroke(55,100);
+                else if (this.state == 1) stroke(255,random(0,255),random(0,255),100);
+                else if (this.previous == 1 && this.state === 0) stroke(155,100);
+                else stroke(0,100);
+                noFill();
+                rect(this.x, this.y, this.w, this.w);
+            };
+        }
+
+        var gol;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+
+            gol = new GOL();
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+
+        function draw() {
+            background(0);
+            gol.generate();
+            gol.display();
+        }   
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="cot">
+        <h1>CAimproved</h1>
+        <hr>
+        <hr>
+        <a class="back" href="../../mainPage/mainPage_4.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>

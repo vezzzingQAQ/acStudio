@@ -1,0 +1,60 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+.cet{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+body{
+    background-color: rgb(226, 226, 226);    
+}
+::-webkit-scrollbar{
+    display: none;
+}
+#myMenu{
+    display: flex;
+    width: 130px;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.363);
+    padding: 10px;
+    border-radius: 3px;
+}
+.mainBoard{
+    position: fixed;
+    left: 10px;
+    top: 10px;
+}
+button{
+    color: rgb(0, 0, 0);
+    border: none;
+    outline: none;
+    background-color: rgba(204, 204, 204, 0.178);
+    border-radius: 3px;
+    padding: 3px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 3px;
+    margin-right: 3px;
+    transition: 0.2s ease-in-out;
+    cursor: pointer;
+}
+button:hover{
+    color: rgb(116, 4, 0);
+    letter-spacing: 2px;
+}
+
+
+
+
+
+
+
+
+
+.output{
+    background-color: rgb(240,240,240);
+    width: 100vh;
+    z-index: 9999;
+}

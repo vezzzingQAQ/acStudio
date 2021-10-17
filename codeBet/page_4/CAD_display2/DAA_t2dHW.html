@@ -31,15 +31,15 @@
         <button id="cancel">取消</button>
     </div>
     <div class="mainBoard">
-        <a href="../../../mainPage/mainPage_4.html" style="color: yellow;text-decoration: none;">退出</a>
         <button id="clearAll">清除痕迹</button>
         <button id="poAll">固定所有点</button>
         <button id="addG">添加重力</button>
         <button id="hide">隐藏结构</button>
         <button id="speeding">加速</button>
-
+        <button id="op">output</button>
         <button id="saveImg">截个图</button>
-
+    </div>
+    <div class="output">
 
     </div>
 
@@ -85,11 +85,8 @@
             //世界对象
             physics = new VerletPhysics2D();
 
-            //创建两个粒子对象
+            //创建对象
             nodesList.push(new StaticNode(new Vec2D(width / 2, height/2),32));
-
-            //把一个锁定作为摆点
-
             //添加到世界
             for(var i=0;i<nodesList.length;i++){
                 nodesList[i].isMoving=false;
@@ -119,7 +116,7 @@
             //更新世界
             physics.update();
 
-            background(0);
+            background(250);
 
             //绘制节点
             for(var i=0;i<nodesList.length;i++){
@@ -386,6 +383,39 @@
             }else{
                 document.querySelector("#speeding").innerHTML="加速"
             }
+        }
+        document.querySelector("#op").onclick=function(){
+            var textTemp="";
+            for(var i=0;i<nodesList.length;i++){
+                if(nodesList[i].constructor.name!="MoveYNode" && nodesList[i].constructor.name!="MoveXNode"){
+                    textTemp+=`nodesList.push(new ${nodesList[i].constructor.name}(new Vec2D(${nodesList[i].x}, ${nodesList[i].y}),32));<br>`
+                }else{
+                    textTemp+=`var cp=new ${nodesList[i].constructor.name}(new Vec2D(${nodesList[i].x}, ${nodesList[i].y}),32);<br>`
+                    textTemp+=`cp.addCs(${nodesList[i].x}, ${nodesList[i].y});<br>`
+                    textTemp+=`nodesList.push(cp);<br>`
+                }
+            }
+
+            for(var i=0;i<springsList.length;i++){
+                let p1Index;
+                let p2Index;
+                for(var j=0;j<nodesList.length;j++){
+                    if(springsList[i].p1.x==nodesList[j].x && springsList[i].p1.y==nodesList[j].y){
+                        p1Index=j;
+                        break;
+                    }
+                }
+                for(var j=0;j<nodesList.length;j++){
+                    if(springsList[i].p2.x==nodesList[j].x && springsList[i].p2.y==nodesList[j].y){
+                        p2Index=j;
+                        break;
+                    }
+                }
+                textTemp+=`springsList.push(new ${springsList[i].constructor.name}(nodesList[${p1Index}],nodesList[${p2Index}],${springsList[i].len},1));<br>`
+            }
+            textTemp+=`for(var i=0;i<springsList.length;i++){physics.addSpring(springsList[i])};<br>`
+            textTemp+=`for(var i=0;i<nodesList.length;i++){physics.addParticle(nodesList[i]);};<br>`
+            document.querySelector(".output").innerHTML=textTemp;
         }
     </script>
 

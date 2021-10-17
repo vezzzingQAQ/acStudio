@@ -21,9 +21,9 @@ class DynamicNode extends Node {
         if(this.isMoving==false){
             noFill();
             if(this.checkIn(mouseX,mouseY)){
-                stroke(0,250,0);
+                stroke(0,200,0);
             }else{
-                stroke(200);
+                stroke(122);
             }
             strokeWeight(1);
             ellipse(this.x, this.y, this.radius, this.radius);
@@ -49,12 +49,11 @@ class MoveXNode extends Node {
     // Override the display method
     display() {
         if(this.isMoving==false){
-            console.log(this.constraints);
             noFill();
             if(this.checkIn(mouseX,mouseY)){
-                stroke(0,250,0);
+                stroke(0,200,0);
             }else{
-                stroke(200);
+                stroke(122);
             }
             strokeWeight(1);
             ellipse(this.x, this.y, this.radius, this.radius);
@@ -85,12 +84,11 @@ class MoveYNode extends Node {
     // Override the display method
     display() {
         if(this.isMoving==false){
-            console.log(this.constraints);
             noFill();
             if(this.checkIn(mouseX,mouseY)){
-                stroke(0,250,0);
+                stroke(0,200,0);
             }else{
-                stroke(200);
+                stroke(122);
             }
             strokeWeight(1);
             ellipse(this.x, this.y, this.radius, this.radius);
@@ -126,13 +124,13 @@ class DrawingNode extends Node {
             noFill();
             this.drawPath();
             if(this.checkIn(mouseX,mouseY)){
-                stroke(0,250,0);
+                stroke(0,200,0);
             }else{
-                stroke(210,110,250);
+                stroke(110,10,150);
             }
             strokeWeight(1);
             ellipse(this.x, this.y, this.radius, this.radius);
-            stroke(160,200);
+            stroke(60,100);
             line(this.x,this.y-this.radius,this.x,this.y+this.radius);
             line(this.x-this.radius,this.y,this.x+this.radius,this.y);
         }else{
@@ -151,7 +149,7 @@ class DrawingNode extends Node {
     }
     drawPath(){
         this.pointsList.push(new Point(this.x,this.y));
-        stroke(255);
+        stroke(100);
         beginShape();
             for(var i=0;i<this.pointsList.length;i++){
                 vertex(this.pointsList[i].x,this.pointsList[i].y);
@@ -193,7 +191,7 @@ class Spring extends VerletSpring2D{
         this.pr1=pr1;
     }
     display(){
-        stroke(200);
+        stroke(100);
         strokeWeight(1);
         line(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
     }
@@ -210,7 +208,7 @@ class DrawingSpring extends VerletSpring2D{
     }
     display(){
         this.drawPath();
-        stroke(210,10,250);
+        stroke(110,10,250);
         strokeWeight(1);
         line(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
     }
@@ -237,7 +235,7 @@ class Line{
     }
     display(){
         noFill();
-        stroke(200,100);
+        stroke(100,100);
         strokeWeight(0.5);
         line(this.x1,this.y1,this.x2,this.y2);
     }
