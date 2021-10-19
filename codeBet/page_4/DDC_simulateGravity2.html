@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>模拟力：相互作用</title>
+    <link rel="stylesheet" type="text/css" href="div_cot.css">
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        class Mover {
+            constructor(x, y, vx,vy,m) {
+                this.mass = m;
+                this.position = createVector(x, y);
+                this.velocity = createVector(vx, vy);
+                this.acceleration = createVector(0, 0);
+            }
+        
+            applyForce(force) {
+                let f = p5.Vector.div(force, this.mass);
+                this.acceleration.add(f);
+            }
+        
+            update() {
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+        
+            display() {
+                noStroke();
+                fill(250,150);
+                ellipse(this.position.x, this.position.y, this.mass*18);
+            }
+        
+            attract(other) {
+                let force = p5.Vector.sub(this.position, other.position);
+                let distance = force.mag();
+                distance = constrain(distance, 5.0, 25.0);//距离限制
+                let strength = (G * this.mass * other.mass) / (distance * distance);
+                force.setMag(strength);
+                return force;
+            }
+        }
+
+
+        class Follower {
+            constructor(x, y, vx,vy) {
+                this.mass = 0.0001;
+                this.position = createVector(x, y);
+                this.velocity = createVector(vx, vy);
+                this.acceleration = createVector(0, 0);
+            }
+        
+            applyForce(force) {
+                let f = p5.Vector.div(force, this.mass);
+                this.acceleration.add(f);
+            }
+        
+            update() {
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+        
+            display() {
+                noStroke();
+                fill(250,20);
+                ellipse(this.position.x, this.position.y, 1);
+            }
+        
+            attract(other) {
+                let force = p5.Vector.sub(this.position, other.position);
+                let distance = force.mag();
+                distance = constrain(distance, 5.0, 25.0);//距离限制
+                let strength = (G * this.mass * other.mass) / (distance * distance);
+                force.setMag(-strength);
+                return force;
+            }
+        }
+
+
+        let G = 1;
+        
+        let movers = [];
+        let followers=[];
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            movers.push(new Mover(width/2,height/2,-1,0,5));
+            movers.push(new Mover(width/2,height/2+100,1,0,5));
+            for(var i=0;i<width;i+=120){
+                for(var j=0;j<height;j+=120){
+                    followers.push(new Follower(i,j,0,0))
+                }
+            }
+        }
+
+        function draw() {
+            //background(0,20);
+
+            for (let i = 0; i < movers.length; i++) {
+                for (let j = 0; j < movers.length; j++) {
+                    if (i !== j) {
+                        let force = movers[j].attract(movers[i]);
+                        movers[i].applyForce(force);
+                    }
+                }
+
+                movers[i].update();
+                //movers[i].display();
+            }
+            for (let i = 0; i < followers.length; i++) {
+                for (let j = 0; j < movers.length; j++) {
+                    let force = followers[i].attract(movers[j]);
+                    followers[i].applyForce(force);
+                }
+                followers[i].update();
+                followers[i].display();
+            }
+        }    
+    </script>
+    </head>
+
+    <body>
+    <main>
+    </main>
+    <div class="cot">
+        <h1>万有引力</h1>
+        <hr>
+        <p>相互作用</p>
+        <a class="back" href="../../mainPage/mainPage_4.html">退出</a>
+        <hr>
+    </div>
+    </body>
+</html>
