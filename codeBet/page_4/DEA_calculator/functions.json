@@ -1,0 +1,5 @@
+{
+    "name":"test",
+    "iFunction":"sin(x*y)",
+    "cFunction":"fill(255)"
+}

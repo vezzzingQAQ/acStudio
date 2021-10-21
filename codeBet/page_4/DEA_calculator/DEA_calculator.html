@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../../ico/ico1.jpg">
+    <title>CAU</title>
+    <link rel="stylesheet" type="text/css" href="../div_cot.css">
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        body {
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .cet{
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+        textarea{
+            position: fixed;
+            border-radius: 0;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            outline: none;
+            border: none;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: none;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .inputFunction{
+            left: 0;
+            top: 5vh;
+            width: 20vw;
+            height: 45vh;
+        }
+        .displayMode{
+            left: 0;
+            top: 55vh;
+            width: 20vw;
+            height: 45vh;
+        }
+        .infoP{
+            position: fixed;
+            width: 20vw;
+            height: 5vh;
+            line-height: 5vh;
+            text-align: center;
+            left: 0;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        #ip1{
+            top: 0;
+        }
+        #ip2{
+            top: 50vh;
+        }
+        main{
+            position: fixed;
+            left: 20vw;
+            top: 0;
+        }
+    </style>
+    <script>
+        window.onload=function(){
+            function openFunction(){
+                var url = "functions.json"
+                var request = new XMLHttpRequest();
+                request.open("get", url);/*设置请求方法与路径*/
+                request.send(null);/*不发送数据到服务器*/
+                request.onload = function () {/*XHR对象获取到返回信息后执行*/
+                    if (request.status == 200) {/*返回状态为200，即为数据获取成功*/
+                        var json = JSON.parse(request.responseText);
+                        for(var i=0;i<json.length;i++){
+                            console.log(json[i].name);
+                        }
+                        console.log(json);
+                    }
+                }
+            }
+            openFunction();
+        }
+    </script>
+    <script src="../../../p5.min.js"></script>
+    <script>
+        function setup() {
+            createCanvas(windowWidth*0.8, windowHeight);
+            smooth();
+
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth*0.8,windowHeight);
+        }
+
+        function draw() {
+            translate(width/2,height/2);
+            background(0);
+            rectMode=CENTER;
+            noStroke();
+            let zFunction=document.querySelector(".inputFunction").value;
+            let cFunction=document.querySelector(".displayMode").value;
+            try{
+                for(var x=-300;x<300;x+=10){
+                    for(var y=-300;y<300;y+=10){
+                        var z=eval(zFunction)*10;
+                        eval(cFunction);
+                    }
+                }
+            }catch{
+                text("error",0,0);
+            }
+        }   
+    </script>
+    </head>
+
+    <body>
+<div class="panl">
+<p class="infoP" id="ip1">inputFunction</p>
+<textarea class="inputFunction" spellcheck="false">
+sin(x*y*3+frameCount/20);
+</textarea>
+<p class="infoP" id="ip2">inputColorMode</p>
+<textarea class="displayMode" spellcheck="false">
+noFill();
+stroke(255,x,y);
+strokeWeight(z/10);
+circle(x,y,z);
+</textarea>
+</div>
+    <main>
+        
+    </main>
+    </body>
+</html>
