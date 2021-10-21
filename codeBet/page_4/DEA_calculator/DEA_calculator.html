@@ -5,26 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../../ico/ico1.jpg">
     <title>CAU</title>
-    <link rel="stylesheet" type="text/css" href="../div_cot.css">
     <style>
         *{
             padding: 0;
             margin: 0;
+            background-color: black;    
         }
         body {
             padding: 0;
             margin: 0;
-            overflow-x: hidden;
+            overflow: hidden;
         }
-        .cet{
-            position: absolute;
-            left: 10px;
-            top: 10px;
-        }
-        textarea{
+
+
+        .panl{
             position: fixed;
+            width: 20vw;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .panl .normalDetails{
+            transition: 0.4s ease-in-out;
+        }
+        .panl .normalDetails summary{
+            width: 100%;
+            height: 5vh;
+            text-align: center;
+            line-height: 5vh;
+            color: white;
+        }
+        .panl .normalDetails textarea{
             border-radius: 0;
-            background-color: rgba(255,255,255,0.2);
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.068);
             color: white;
             outline: none;
             border: none;
@@ -33,66 +47,77 @@
             resize: none;
             font-family: 'Courier New', Courier, monospace;
         }
-        .inputFunction{
-            left: 0;
-            top: 5vh;
-            width: 20vw;
-            height: 45vh;
+                
+        details .container {
+            height: 0;
+            transition: 0.5s;
         }
-        .displayMode{
-            left: 0;
-            top: 55vh;
-            width: 20vw;
-            height: 45vh;
+        details[open] .container {
+            height: 30vh;
         }
-        .infoP{
-            position: fixed;
-            width: 20vw;
-            height: 5vh;
-            line-height: 5vh;
-            text-align: center;
-            left: 0;
-            background-color: rgba(255,255,255,0.1);
+
+        #btnContainer{
+            overflow-y: scroll;
+        }
+        #btnContainer::-webkit-scrollbar{
+            display: none;
+        }
+
+        .normalButton{
+            width: 100%;
+            box-sizing: border-box;
+            margin: 8px 0;
+            border-radius: 0;
+            padding: 3px;
+            border: none;
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.068);
             color: white;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.2s ease-in-out;
         }
-        #ip1{
-            top: 0;
+        .normalButton:hover{
+            color: yellow;
+
         }
-        #ip2{
-            top: 50vh;
-        }
+
         main{
             position: fixed;
             left: 20vw;
             top: 0;
         }
+
     </style>
+    <script src="../../../p5.min.js"></script>
+    <script src="functions.js"></script>
     <script>
-        window.onload=function(){
-            function openFunction(){
-                var url = "functions.json"
-                var request = new XMLHttpRequest();
-                request.open("get", url);/*设置请求方法与路径*/
-                request.send(null);/*不发送数据到服务器*/
-                request.onload = function () {/*XHR对象获取到返回信息后执行*/
-                    if (request.status == 200) {/*返回状态为200，即为数据获取成功*/
-                        var json = JSON.parse(request.responseText);
-                        for(var i=0;i<json.length;i++){
-                            console.log(json[i].name);
-                        }
-                        console.log(json);
-                    }
+
+        function displayFunction(name){
+            for(var i=0;i<functions.length;i++){
+                if(functions[i].name==name){
+                    document.querySelector(".inputFunction").value=functions[i].ifunction;
+                    document.querySelector(".displayMode").value=functions[i].cfunction;
+                    break;
                 }
             }
-            openFunction();
         }
-    </script>
-    <script src="../../../p5.min.js"></script>
-    <script>
+
+        function loadFunction(){
+            for(var i=0;i<functions.length;i++){
+                let objTemp=(functions[i]);
+                console.log(functions[i]);
+                document.querySelector("#btnContainer").innerHTML+=`
+                <button class="normalButton" onclick="displayFunction(this.innerHTML);">${objTemp.name}</button>
+                `
+            }
+        }
+
+
         function setup() {
             createCanvas(windowWidth*0.8, windowHeight);
             smooth();
-
+            loadFunction();
         }
 
         function windowResized() {
@@ -109,11 +134,12 @@
             try{
                 for(var x=-300;x<300;x+=10){
                     for(var y=-300;y<300;y+=10){
-                        var z=eval(zFunction)*10;
+                        var z=eval(zFunction);
                         eval(cFunction);
                     }
                 }
             }catch{
+                fill(255);
                 text("error",0,0);
             }
         }   
@@ -121,19 +147,40 @@
     </head>
 
     <body>
-<div class="panl">
-<p class="infoP" id="ip1">inputFunction</p>
-<textarea class="inputFunction" spellcheck="false">
+    <div class="panl">
+        <details class="normalDetails" open>
+            <summary>
+                inputFunction
+            </summary>
+            <div class="container">
+            <textarea class="inputFunction" spellcheck="false">
 sin(x*y*3+frameCount/20);
-</textarea>
-<p class="infoP" id="ip2">inputColorMode</p>
-<textarea class="displayMode" spellcheck="false">
+            </textarea>        
+            </div>
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                inputColorMode
+            </summary>
+            <div class="container">
+            <textarea class="displayMode" spellcheck="false">
 noFill();
 stroke(255,x,y);
-strokeWeight(z/10);
-circle(x,y,z);
-</textarea>
-</div>
+strokeWeight(z);
+circle(x,y,z*10);
+            </textarea>   
+            </div>     
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                examplesList
+            </summary>
+            <div class="container" id="btnContainer">
+
+            </div>
+        </details>
+
+    </div>
     <main>
         
     </main>
