@@ -53,7 +53,7 @@
             transition: 0.5s;
         }
         details[open] .container {
-            height: 30vh;
+            height: 28.3vh;
         }
 
         #btnContainer{
@@ -88,12 +88,30 @@
             top: 0;
         }
 
+        .quitBox{
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            width:50px;
+            height:50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.068);
+            cursor: pointer;
+            text-align: center;
+            line-height: 50px;
+        }
+        .quitBox a{
+            color: white;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
     </style>
     <script src="../../../p5.min.js"></script>
     <script src="functions.js"></script>
     <script>
 
         function displayFunction(name){
+            loop();
             for(var i=0;i<functions.length;i++){
                 if(functions[i].name==name){
                     document.querySelector(".inputFunction").value=functions[i].ifunction;
@@ -106,10 +124,9 @@
         function loadFunction(){
             for(var i=0;i<functions.length;i++){
                 let objTemp=(functions[i]);
-                console.log(functions[i]);
                 document.querySelector("#btnContainer").innerHTML+=`
                 <button class="normalButton" onclick="displayFunction(this.innerHTML);">${objTemp.name}</button>
-                `
+                `;
             }
         }
 
@@ -127,8 +144,8 @@
         function draw() {
             translate(width/2,height/2);
             background(0);
-            rectMode=CENTER;
             noStroke();
+            rectMode(CENTER);
             let zFunction=document.querySelector(".inputFunction").value;
             let cFunction=document.querySelector(".displayMode").value;
             try{
@@ -184,5 +201,8 @@ circle(x,y,z*10);
     <main>
         
     </main>
+    <div class="quitBox">
+        <a href="../../../mainPage/mainPage_4.html">退出</a>
+    </div>
     </body>
 </html>
