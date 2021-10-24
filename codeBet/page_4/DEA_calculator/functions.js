@@ -125,8 +125,8 @@ noStroke();
 fill(111,z*100+100,map(x,-300,300,0,255));
 rect(x/3,y/3,z);
 `
-},
-    
+},    
+
 
 {
 name:"动态-if语句",
@@ -141,7 +141,20 @@ stroke(map(z,-1,1,0,255));
 strokeWeight(z);
 circle(x,y,z*10);
 `},
-    
+
+
+
+{
+name:"动态-RGB色域",
+ifunction:`
+1
+`,
+cfunction:`
+fill(map(x,-300,300,0,255),map(y,-300,300,0,255),map(sin(frameCount/30),-1,1,0,255));
+noStroke();
+rect(x,y,11);
+`},
+     
 
 
 {
@@ -196,12 +209,85 @@ ifunction:`
 cfunction:`
 noStroke();
 fill(map(x,-300,300,0,255),211,z*100+100);
-rect(sin(x)*z*20,cos(x)*z*20,z*3);
+circle(sin(x)*z*20,cos(x)*z*20,z*3);
+`
+},
+    
+
+
+{
+name:"动态-非应5-伪3D",
+ifunction:`
+(sin(frameCount/20)*20*x+y)/100
+`,
+cfunction:`
+noStroke();
+fill(map(y,-300,300,0,255),map(z,-1,1,0,255),map(x,-300,300,0,255));
+rect(sin(x)*z*5,cos(x)*z*5,z);
+`
+},
+
+
+
+{
+name:"动态-非常规对应6",
+ifunction:`
+(sin(frameCount/20)*20*x+cos(frameCount/20)*20*y)/100
+`,
+cfunction:`
+noFill();
+strokeWeight(z/10)
+stroke(map(x,-300,300,0,255),255-map(x,-300,300,0,255),map(y,-300,300,255,0));
+rect(sin(x)*z*2,cos(x)*z*2,z);
 `
 },
     
     
+    
+{
+name:"动态-非常规对应7",
+ifunction:`
+sin(x*y/10000-(frameCount/100))
+`,
+cfunction:`
+noStroke();
+fill(250,map(x,-300,300,255,0),map(y,-300,300,255,0));
+circle(sin(z)*x,cos(z)*y,z*5);
+`
+},
 
+
+
+
+{
+name:"动态-非应8-软体动物1",
+ifunction:`
+sin(x/90+frameCount/60)+cos(y/90-frameCount/30)
+`,
+cfunction:`
+noStroke();
+fill(map(sin(frameCount/20),-1,1,0,255),map(x,-300,300,255,0),map(y,-300,300,255,0),10);
+rect(sin(z)*x,cos(z)*y,50);
+`
+},
+    
+
+
+{
+name:"动态-非应8-软体动物2",
+ifunction:`
+sin(x/90+frameCount/60+cos(y/90-frameCount/30))
+`,
+cfunction:`
+noStroke();
+fill(map(x,-300,300,255,0),map(sin(frameCount/20),-1,1,0,255),map(y,-300,300,255,0));
+rect(sin(z)*x,cos(z)*y,z*5);
+`
+},
+    
+
+
+    
 {
 name:"动态-字符串输出1",
 ifunction:`
@@ -214,19 +300,35 @@ textSize(z*30);
 text(abs(int(z*9)),x*2.3,y*2.3); 
 `
 },
-
+    
 
 
 {
 name:"动态-字符串输出2",
 ifunction:`
-sin(x+x*y+(x && y)+random()+frameCount/10);
+sin(sqrt(x*x+y*y)/2-frameCount/30);
 `,
 cfunction:`
-fill(map(z,-1,1,0,255),222,y);
+fill(255,map(z,-1,1,0,255),252);
 noStroke();
 textSize(z*10);
-text(abs(int(z*9)),x*2.3,y*1.8); 
+text(abs(int(z*9)),x*1.1,y*1.1); 
+`
+},
+
+
+
+{
+name:"动态-字符串输出3",
+ifunction:`
+sin(x*y/1000+cos(x+y)+sin(frameCount/20)*5);
+`,
+cfunction:`
+fill(0,252,y);
+noStroke();
+textSize(z*10);
+var textTemp="ㄅㄈㄋㄎㄑㄔㄒㄌㄍㄓㄖㄜあㄠㄣㄦㄤㄡㄞぃぅうげさじせぞだどぬはひふぶめまァオキ」コザスタ";
+text(textTemp[int(random(0,textTemp.length))],x*2.3+random(2),y*1.8)+random(2);
 `
 },
 
@@ -248,8 +350,7 @@ line(x-z*10,y,x,y);
 {
 name:"动态-摩尔纹干涉1",
 ifunction:`
-var b1=sqrt((x)*(x)+(y)*(y));
-sin(b1-frameCount/10);
+sin(sqrt((x)*(x)+(y)*(y))-frameCount/20);
 `,
 cfunction:`
 noFill();
@@ -258,7 +359,21 @@ stroke(255-map(z,-1,1,0,255),map(z,-1,1,0,255),map(z,-1,1,0,255));
 rect(x+random(-1,1),y+random(-1,1),z*10);
 `
 },    
-    
+   
+
+
+{
+name:"动态-摩尔纹干涉2",
+ifunction:`
+sin(sqrt(x*x+y*y)/20-frameCount/50);
+`,
+cfunction:`
+noFill();
+strokeWeight(z*2);
+stroke(sin(z*20)*120+120,sin(z*21)*120+120,sin(z*22)*120+120);
+rect(x,y,10); 
+`
+},
     
     
 {
@@ -273,19 +388,30 @@ map(mouseY,0,height,0,255),
 z*120+120,50);
 
 noStroke();
-rect(x,y,z*20);  
+rect(x+random(2),y+random(2),z*20);
 `
 },
  
 
 
 {
+name:"交互-鼠标交互2-非应",
+ifunction:`
+(x*map(mouseX,0,width,-2,2)+y*map(mouseY,0,height,-2,2))/100
+`,
+cfunction:`
+noStroke();
+fill(220,map(x,-300,300,255,0),map(y,-300,300,255,0));
+rect(sin(z)*x,cos(z)*y,z);
+`
+},
+    
+
+
+{
 name:"交互-鼠标跟随",
 ifunction:`
-var ex=map(mouseX,0,width,300,-300);
-var ey=map(mouseY,0,height,300,-300);
-var b1=sqrt((x+ex)*(x+ex)+(y+ey)*(y+ey))/30;
-sin(b1-frameCount/10);
+sin(sqrt((x+map(mouseX,0,width,300,-300))*(x+map(mouseX,0,width,300,-300))+(y+map(mouseY,0,height,300,-300))*(y+map(mouseY,0,height,300,-300)))/30-frameCount/10);
 `,
 cfunction:`
 noStroke();

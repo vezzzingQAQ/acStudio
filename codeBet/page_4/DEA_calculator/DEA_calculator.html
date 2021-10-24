@@ -4,118 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../../ico/ico1.jpg">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>CAU</title>
-    <style>
-        *{
-            padding: 0;
-            margin: 0;
-            background-color: black;    
-        }
-        body {
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
-        }
-
-
-        .panl{
-            position: fixed;
-            width: 20vw;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        .panl .normalDetails{
-            transition: 0.4s ease-in-out;
-        }
-        .panl .normalDetails summary{
-            width: 100%;
-            height: 5vh;
-            text-align: center;
-            line-height: 5vh;
-            color: white;
-        }
-        .panl .normalDetails textarea{
-            border-radius: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.068);
-            color: white;
-            outline: none;
-            border: none;
-            padding: 10px;
-            box-sizing: border-box;
-            resize: none;
-            font-family: 'Courier New', Courier, monospace;
-        }
-                
-        details .container {
-            height: 0;
-            transition: 0.5s;
-        }
-        details[open] .container {
-            height: 28.3vh;
-        }
-
-        #btnContainer{
-            overflow-y: scroll;
-        }
-        #btnContainer::-webkit-scrollbar{
-            display: none;
-        }
-
-        .normalButton{
-            width: 100%;
-            box-sizing: border-box;
-            margin: 8px 0;
-            border-radius: 0;
-            padding: 3px;
-            border: none;
-            outline: none;
-            background-color: rgba(255, 255, 255, 0.068);
-            color: white;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: 0.2s ease-in-out;
-        }
-        .normalButton:hover{
-            color: yellow;
-
-        }
-
-        main{
-            position: fixed;
-            left: 20vw;
-            top: 0;
-        }
-
-        .quitBox{
-            position: fixed;
-            right: 20px;
-            top: 20px;
-            width:50px;
-            height:50px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.068);
-            cursor: pointer;
-            text-align: center;
-            line-height: 50px;
-        }
-        .quitBox a{
-            color: white;
-            text-decoration: none;
-            letter-spacing: 1px;
-        }
-    </style>
     <script src="../../../p5.min.js"></script>
     <script src="functions.js"></script>
+    <script src="outputText.js"></script>
     <script>
-
         function displayFunction(name){
             loop();
             for(var i=0;i<functions.length;i++){
                 if(functions[i].name==name){
                     document.querySelector(".inputFunction").value=functions[i].ifunction;
                     document.querySelector(".displayMode").value=functions[i].cfunction;
+                    outputFunction();
                     break;
                 }
             }
@@ -130,6 +31,11 @@
             }
         }
 
+        function outputFunction(){
+            var ifunction=document.querySelector(".inputFunction").value;
+            var cfunction=document.querySelector(".displayMode").value;
+            document.querySelector("#outputArea").innerHTML=output(ifunction,cfunction);
+        }
 
         function setup() {
             createCanvas(windowWidth*0.8, windowHeight);
@@ -160,6 +66,12 @@
                 text("error",0,0);
             }
         }   
+
+        function keyPressed(){
+            if(keyCode==RETURN){
+                save("iveOnline"+(Math.random())+".png");
+            }
+        }
     </script>
     </head>
 
@@ -167,20 +79,20 @@
     <div class="panl">
         <details class="normalDetails" open>
             <summary>
-                inputFunction
+                inputFunction:
             </summary>
-            <div class="container">
-            <textarea class="inputFunction" spellcheck="false">
+            <div class="container icontainer">
+            <textarea class="inputFunction" onkeyup="outputFunction();" spellcheck="false">
 sin(x*y*3+frameCount/20);
             </textarea>        
             </div>
         </details>
         <details class="normalDetails" open>
             <summary>
-                inputColorMode
+                inputColorMode:
             </summary>
-            <div class="container">
-            <textarea class="displayMode" spellcheck="false">
+            <div class="container ccontainer">
+            <textarea class="displayMode" onkeyup="outputFunction();" spellcheck="false">
 noFill();
 stroke(255,x,y);
 strokeWeight(z);
@@ -192,7 +104,7 @@ circle(x,y,z*10);
             <summary>
                 examplesList
             </summary>
-            <div class="container" id="btnContainer">
+            <div class="container bcontainer" id="btnContainer">
 
             </div>
         </details>
@@ -203,6 +115,24 @@ circle(x,y,z*10);
     </main>
     <div class="quitBox">
         <a href="../../../mainPage/mainPage_4.html">退出</a>
+    </div>
+    <div class="output">
+        <details class="bottomDetails" open>
+            <summary>
+                H5output
+            </summary>
+            <div class="outputContainer" id="outputArea">
+
+            </div>
+        </details>
+        <details class="bottomDetails">
+            <summary>
+                About
+            </summary>
+            <div class="outputContainer">
+234234234234234
+            </div>
+        </details>
     </div>
     </body>
 </html>
