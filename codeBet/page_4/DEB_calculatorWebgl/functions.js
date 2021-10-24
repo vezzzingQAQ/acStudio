@@ -9,55 +9,30 @@ sin(x*y/1000);
 //除以1000后相当于-0.3,0.3
 `,
 cfunction:`
-noFill();
-strokeWeight(1);
-stroke(255,z*100+100,map(x,-300,300,0,255));
-rect(x,y,z*20);  
-//程序默认的x,y循环范围是-300,300 
-`
-},
-
-
-
-{
-name:"静态-像素化",
-ifunction:`
-sin(x*y/1000);
-`,
-cfunction:`
-fill(0,z*100+100,map(x,-300,300,0,255));
 noStroke();
-rect(x,y,10);  
-//程序默认的x,y循环范围是-300,300 
+fill(255,z*100+100,map(x,-300,300,0,255));
+push();
+translate(x,y,z*30);
+box(10);
+pop();
 `
-},
-
-
-
-{
-name:"静态-字符串输出2",
-ifunction:`
-sin(x*y/1000);
-`,
-cfunction:`
-fill(y,x,map(z,-1,1,0,255),100);
-noStroke();
-text("vezzzingqaqyyds",x,y);  
-`
-},
-    
+},    
 
 
 {
 name:"动态-frameCount函参1",
 ifunction:`
-sin(x*y/3000+T);
+sin(x*y/1000-T);
 `,
 cfunction:`
 noStroke();
-fill(255,z*100+100,map(x,-300,300,0,255));
-circle(x,y,z*10);  
-//程序默认的x,y循环范围是-300,300 `
+fill(map(z,-1,1,0,255),map(y,-150,150,0,255),map(x,-150,150,0,255));
+//x,y从-150循环到150
+push();
+translate(x,y,z*10);
+box(10,10,20);
+pop();
+`
 },
 
 
@@ -65,13 +40,16 @@ circle(x,y,z*10);
 {
 name:"动态-frameCount函参2",
 ifunction:`
-sin(x*y+cos(x*y)-T*2);
+sin((x*x+y*y)/1000-T);
 `,
 cfunction:`
-stroke(z*100+100);
-strokeWeight(z*3);
-noFill();
-circle(x*1.5,y*1.5,z*12);  
+fill(z*100+100);
+noStroke();
+push();
+translate(x,y,z*10);
+rotate(T);
+sphere(5,5,5);
+pop();
 `
 },
     
@@ -80,19 +58,16 @@ circle(x*1.5,y*1.5,z*12);
 {
 name:"动态-frameCount函参3",
 ifunction:`
-sin(x*y*3+T);
+sin((x+y)/50-T);
 `,
 cfunction:`
-noFill();
-stroke(255,x,y);
-strokeWeight(z);
-if(z>0.5)
-{
-rect(x*2.3,y*2.3,18)
-}else
-{
-circle(x*2.3,y*2.3,z*23);
-}
+noStroke();
+fill(map(z,1,-1,245,10));
+//x,y从-150循环到150
+push();
+translate(x,y,z*10);
+box(10,10,10);
+pop();
 `
 },
 
@@ -101,7 +76,7 @@ circle(x*2.3,y*2.3,z*23);
 {
 name:"动态-frameCount函参4",
 ifunction:`
-sin(x*y/1000-T*2);
+sin(x*y/1000-frameCount/10);
 //除以1000后相当于-0.3,0.3
 `,
 cfunction:`
@@ -118,7 +93,7 @@ rect(x,y,z*20);
 {
 name:"动态-frameCount函参5",
 ifunction:`
-(x+y)/100-sin(T)*10
+(x+y)/100-sin(frameCount/20)*10
 `,
 cfunction:`
 noStroke();
@@ -132,7 +107,7 @@ rect(x/3,y/3,z);
 name:"动态-if语句",
 ifunction:`
 if(sqrt(x*x+y*y)<300){
-sin(sqrt(x*x+y*y)/50-T*2)
+sin(sqrt(x*x+y*y)/50-frameCount/10)
 }
 `,
 cfunction:`
@@ -150,7 +125,7 @@ ifunction:`
 1
 `,
 cfunction:`
-fill(map(x,-300,300,0,255),map(y,-300,300,0,255),map(sin(T),-1,1,0,255));
+fill(map(x,-300,300,0,255),map(y,-300,300,0,255),map(sin(frameCount/30),-1,1,0,255));
 noStroke();
 rect(x,y,11);
 `},
@@ -160,7 +135,7 @@ rect(x,y,11);
 {
 name:"动态-非常规对应1",
 ifunction:`
-sin(x+y/3000+T/5);
+sin(x+y/3000+frameCount/100);
 `,
 cfunction:`
 noFill();
@@ -176,7 +151,7 @@ rect(sin(x+z)*300*z,sin(y+z)*300*z,z*20);
 {
 name:"动态-非常规对应2",
 ifunction:`
-(x+y)/100-sin(T)*10
+(x+y)/100-sin(frameCount/20)*10
 `,
 cfunction:`
 noStroke();
@@ -190,7 +165,7 @@ rect(sin(x)*z*10,cos(x)*z*10,z);
 {
 name:"动态-非常规对应3",
 ifunction:`
-(x+y)/100-sin(T)*10
+(x+y)/100-sin(frameCount/20)*10
 `,
 cfunction:`
 noStroke();
@@ -204,7 +179,7 @@ circle(sin(z)*z*10,cos(z)*z*10,z);
 {
 name:"动态-非常规对应4",
 ifunction:`
-(x)/100-sin(T)*10
+(x)/100-sin(frameCount/20)*10
 `,
 cfunction:`
 noStroke();
@@ -218,7 +193,7 @@ circle(sin(x)*z*20,cos(x)*z*20,z*3);
 {
 name:"动态-非应5-伪3D",
 ifunction:`
-(sin(T)*20*x+y)/100
+(sin(frameCount/20)*20*x+y)/100
 `,
 cfunction:`
 noStroke();
@@ -232,7 +207,7 @@ rect(sin(x)*z*5,cos(x)*z*5,z);
 {
 name:"动态-非常规对应6",
 ifunction:`
-(sin(T)*20*x+cos(T)*20*y)/100
+(sin(frameCount/20)*20*x+cos(frameCount/20)*20*y)/100
 `,
 cfunction:`
 noFill();
@@ -247,7 +222,7 @@ rect(sin(x)*z*2,cos(x)*z*2,z);
 {
 name:"动态-非常规对应7",
 ifunction:`
-sin(x*y/10000-(T/5))
+sin(x*y/10000-(frameCount/100))
 `,
 cfunction:`
 noStroke();
@@ -262,11 +237,11 @@ circle(sin(z)*x,cos(z)*y,z*5);
 {
 name:"动态-非应8-软体动物1",
 ifunction:`
-sin(x/90+T/3)+cos(y/90-T/1.5)
+sin(x/90+frameCount/60)+cos(y/90-frameCount/30)
 `,
 cfunction:`
 noStroke();
-fill(map(sin(T),-1,1,0,255),map(x,-300,300,255,0),map(y,-300,300,255,0),10);
+fill(map(sin(frameCount/20),-1,1,0,255),map(x,-300,300,255,0),map(y,-300,300,255,0),10);
 rect(sin(z)*x,cos(z)*y,50);
 `
 },
@@ -276,11 +251,11 @@ rect(sin(z)*x,cos(z)*y,50);
 {
 name:"动态-非应8-软体动物2",
 ifunction:`
-sin(x/90+T/3+cos(y/90-T/1.5))
+sin(x/90+frameCount/60+cos(y/90-frameCount/30))
 `,
 cfunction:`
 noStroke();
-fill(map(x,-300,300,255,0),map(sin(T),-1,1,0,255),map(y,-300,300,255,0));
+fill(map(x,-300,300,255,0),map(sin(frameCount/20),-1,1,0,255),map(y,-300,300,255,0));
 rect(sin(z)*x,cos(z)*y,z*5);
 `
 },
@@ -291,7 +266,7 @@ rect(sin(z)*x,cos(z)*y,z*5);
 {
 name:"动态-非应9-软体动物3",
 ifunction:`
-sin((x+y)/100-(T/2.5))
+sin((x+y)/100-(frameCount/50))
 `,
 cfunction:`
 noStroke();
@@ -305,7 +280,7 @@ rect(sin(z+x)*y,cos(z+x)*x,z*5,10);
 {
 name:"动态-非应10-软体动物4",
 ifunction:`
-sin((x+y)/100-(T/2.5))
+sin((x+y)/100-(frameCount/50))
 `,
 cfunction:`
 noStroke();
@@ -319,7 +294,7 @@ rect(sin(z)*y,cos(z)*x,z*5,10);
 {
 name:"动态-非应11-软体动物5",
 ifunction:`
-sin(x/100-T/2)+cos(y/100+T/5)
+sin(x/100-frameCount/40)+cos(y/100+frameCount/100)
 `,
 cfunction:`
 noStroke();
@@ -333,7 +308,7 @@ rect(sin(z)*y,cos(z)*x,z*5);
 {
 name:"动态-非应12-旗帜",
 ifunction:`
-sin((sin(x/100-T*2)+cos(y/100+T*2))/10-202)
+sin((sin(x/100-frameCount/6)+cos(y/100+frameCount/6))/10-202)
 `,
 cfunction:`
 noStroke();
@@ -345,7 +320,7 @@ rect(sin(z)*y,cos(z)*x,z*5);
 {
 name:"动态-字符串输出1",
 ifunction:`
-sin(x*y/1000+cos(x+y)+sin(T)*5);
+sin(x*y/1000+cos(x+y)+sin(frameCount/20)*5);
 `,
 cfunction:`
 fill(map(z,-1,1,0,255),x,y);
@@ -360,7 +335,7 @@ text(abs(int(z*9)),x*2.3,y*2.3);
 {
 name:"动态-字符串输出2",
 ifunction:`
-sin(sqrt(x*x+y*y)/2-T/1.5);
+sin(sqrt(x*x+y*y)/2-frameCount/30);
 `,
 cfunction:`
 fill(255,map(z,-1,1,0,255),252);
@@ -375,7 +350,7 @@ text(abs(int(z*9)),x*1.1,y*1.1);
 {
 name:"动态-字符串输出3",
 ifunction:`
-sin(x*y/1000+cos(x+y)+sin(T)*5);
+sin(x*y/1000+cos(x+y)+sin(frameCount/20)*5);
 `,
 cfunction:`
 fill(0,252,y);
@@ -391,7 +366,7 @@ text(textTemp[int(random(0,textTemp.length))],x*2.3+random(2),y*1.8)+random(2);
 {
 name:"动态-连线1",
 ifunction:`
-sin(x*y/1000+cos(x+y/10-T*2));
+sin(x*y/1000+cos(x+y/10-frameCount/10));
 `,
 cfunction:`
 stroke(map(x,-300,300,0,255),50,z*100+100);
@@ -404,7 +379,7 @@ line(x-z*10,y,x,y);
 {
 name:"动态-摩尔纹干涉1",
 ifunction:`
-sin(sqrt((x)*(x)+(y)*(y))-T);
+sin(sqrt((x)*(x)+(y)*(y))-frameCount/20);
 `,
 cfunction:`
 noFill();
@@ -419,7 +394,7 @@ rect(x+random(-1,1),y+random(-1,1),z*10);
 {
 name:"动态-摩尔纹干涉2",
 ifunction:`
-sin(sqrt(x*x+y*y)/20-T/2.5);
+sin(sqrt(x*x+y*y)/20-frameCount/50);
 `,
 cfunction:`
 noFill();
@@ -465,7 +440,7 @@ rect(sin(z)*x,cos(z)*y,z);
 {
 name:"交互-鼠标跟随",
 ifunction:`
-sin(sqrt((x+map(mouseX,0,width,300,-300))*(x+map(mouseX,0,width,300,-300))+(y+map(mouseY,0,height,300,-300))*(y+map(mouseY,0,height,300,-300)))/30-T*2);
+sin(sqrt((x+map(mouseX,0,width,300,-300))*(x+map(mouseX,0,width,300,-300))+(y+map(mouseY,0,height,300,-300))*(y+map(mouseY,0,height,300,-300)))/30-frameCount/10);
 `,
 cfunction:`
 noStroke();

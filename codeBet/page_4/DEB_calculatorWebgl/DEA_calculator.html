@@ -5,13 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="ico.JPG">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <title>动植物分类所-canvas</title>
+    <title>动植物分类所-webgl</title>
     <script src="../../../p5.min.js"></script>
     <script src="functions.js"></script>
     <script src="outputText.js"></script>
     <script>
         var sc=1;
+
+        var rtx=0;
+        var rty=0;
+        var rtz=0;
+
+        var sx=0;
+        var sy=0;
+
         var T=0;
+
+        var isDown=false;
 
         function displayFunction(name){
             loop();
@@ -51,27 +61,32 @@
         }
 
         function setup() {
-            createCanvas(windowWidth*0.8, windowHeight);
+            createCanvas(windowWidth*0.8, windowHeight,WEBGL);
             smooth();
             loadFunction();
         }
 
         function windowResized() {
-            resizeCanvas(windowWidth*0.8,windowHeight);
+            resizeCanvas(windowWidth*0.8,windowHeight,WEBGL);
         }
 
         function draw() {
             T=frameCount/20;
-            translate(width/2,height/2);
+
+            rotateX(rtx);
+            rotateY(rty);
+            rotateZ(rtz);
+
             scale(sc);
+
             background(0);
             noStroke();
             rectMode(CENTER);
             let zFunction=document.querySelector(".inputFunction").value;
             let cFunction=document.querySelector(".displayMode").value;
             try{
-                for(var x=-300;x<300;x+=10){
-                    for(var y=-300;y<300;y+=10){
+                for(var x=-150;x<150;x+=10){
+                    for(var y=-150;y<150;y+=10){
                         var z=eval(zFunction);
                         eval(cFunction);
                     }
@@ -88,12 +103,30 @@
                 }
             }
         }   
+
+        function mousePressed(){
+            if(mouseX>0){
+                sx=mouseX;
+                sy=mouseY;
+            }
+        }
+
+        function mouseDragged(){
+            if(mouseX>0){
+                rty=map(mouseX-sx,500,-500,-2*PI,0);
+                rotateY(rty);
+                rtx=map(mouseY-sy,500,-500,-2*PI,0);
+                rotateY(rtx);
+                return(false);
+            }
+        }
+
     </script>
     </head>
 
     <body>
     <div class="panl">
-        <details class="normalDetails">
+        <details class="normalDetails" open>
             <summary>
                 inputFunction:
             </summary>
@@ -134,9 +167,8 @@ circle(x,y,z*10);
     </div>
     <button class="abutton" onclick="addSc()" id="add">+</button>
     <button class="abutton" onclick="subSc()" id="sub">-</button>
-
     <div class="output">
-        <details class="bottomDetails" open>
+        <details class="bottomDetails">
             <summary>
                 H5output
             </summary>
