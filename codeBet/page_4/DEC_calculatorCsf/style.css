@@ -45,8 +45,11 @@ body::-webkit-scrollbar{
     display: none;
 }
         
-.icontainer{
-    height: 15vh;
+.ixcontainer{
+    height: 10vh;
+}
+.iycontainer{
+    height: 10vh;
 }
 .ccontainer{
     height: 35vh;

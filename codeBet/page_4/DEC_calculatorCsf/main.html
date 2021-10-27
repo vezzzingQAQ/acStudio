@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="ico.JPG">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>动植物分类所-参数方程</title>
+    <script src="../../../p5.min.js"></script>
+    <script src="functions.js"></script>
+    <script src="outputText.js"></script>
+    <script>
+        var sc=1;
+        var T=0;
+
+        function displayFunction(name){
+            loop();
+            for(var i=0;i<functions.length;i++){
+                if(functions[i].name==name){
+                    document.querySelector(".ixcontainer .inputFunction").value=functions[i].ixfunction;
+                    document.querySelector(".iycontainer .inputFunction").value=functions[i].iyfunction;
+                    document.querySelector(".displayMode").value=functions[i].cfunction;
+                    outputFunction();
+                    break;
+                }
+            }
+        }
+
+        function loadFunction(){
+            for(var i=0;i<functions.length;i++){
+                let objTemp=(functions[i]);
+                document.querySelector("#btnContainer").innerHTML+=`
+                <button class="normalButton" onclick="displayFunction(this.innerHTML);">${objTemp.name}</button>
+                `;
+            }
+        }
+
+        function addSc(){
+            sc*=2;
+        }
+
+        function subSc(){
+            if(sc>0.125){
+                sc/=2;
+            }
+        }
+
+        function scrShot(){
+            save("acstudio"+(Math.random())+str(frameCount)+".png");
+        }
+
+        function setup() {
+            createCanvas(windowWidth*0.8, windowHeight);
+            smooth();
+            loadFunction();
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth*0.8,windowHeight);
+        }
+
+        function draw() {
+            T=frameCount/20;
+            translate(width/2,height/2);
+            scale(sc);
+            background(0);
+            noStroke();
+            rectMode(CENTER);
+            let xzFunction=document.querySelector(".ixcontainer .inputFunction").value;
+            let yzFunction=document.querySelector(".iycontainer .inputFunction").value;
+
+            let cFunction=document.querySelector(".displayMode").value;
+            try{
+                var px=eval(xzFunction);
+                var py=eval(yzFunction);
+                for(var o=-30;o<30;o+=0.04){
+                    var x=eval(xzFunction);
+                    var y=eval(yzFunction);
+                    eval(cFunction);
+                    px=x;
+                    py=y;
+                }
+            }catch{
+                fill(255);
+                text("error",0,0);
+            }
+            if(keyIsPressed && mouseX>0){
+                if(keyCode==LEFT_ARROW){
+                    sc=sc*1.05;
+                }else if(keyCode==RIGHT_ARROW){
+                    sc=sc*0.95;
+                }
+            }
+        }   
+    </script>
+    </head>
+
+    <body>
+    <div class="panl">
+        <details class="normalDetails" open>
+            <summary>
+                inputFunctionX:
+            </summary>
+            <div class="container ixcontainer">
+            <textarea class="inputFunction" spellcheck="false">
+sin(o)*200;
+            </textarea>        
+            </div>
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                inputFunctionY:
+            </summary>
+            <div class="container iycontainer">
+            <textarea class="inputFunction" spellcheck="false">
+cos(2.2*o+T/3)*200;
+            </textarea>        
+            </div>
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                inputColorMode:
+            </summary>
+            <div class="container ccontainer">
+            <textarea class="displayMode" spellcheck="false">
+noFill();
+strokeWeight(1);
+stroke(map(x,-100,100,0,255),map(o,-30,30,0,255),map(y,-100,100,0,255));
+line(x,y,px,py);
+            </textarea>   
+            </div>     
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                examplesList
+            </summary>
+            <div class="container bcontainer" id="btnContainer">
+
+            </div>
+        </details>
+
+    </div>
+    <main>
+        
+    </main>
+    <div class="quitBox">
+        <a href="../../../mainPage/mainPage_4.html">退出</a>
+    </div>
+    <button class="abutton" onclick="scrShot()" id="scs">s</button>
+    <button class="abutton" onclick="addSc()" id="add">+</button>
+    <button class="abutton" onclick="subSc()" id="sub">-</button>
+
+    <div class="output">
+        <details class="bottomDetails" open>
+            <summary>
+                H5output
+            </summary>
+            <div class="outputContainer" id="outputArea">
+
+            </div>
+        </details>
+        <details class="bottomDetails">
+            <summary>
+                About
+            </summary>
+            <div class="outputContainer">
+                <h3>动植物分类所-canvas</h3>
+                <br>
+                <p>by VezzzingQAQ</p>
+            </div>
+        </details>
+    </div>
+    </body>
+</html>

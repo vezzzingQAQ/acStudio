@@ -5,13 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="ico.JPG">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <title>动植物分类所-canvas</title>
+    <title>动植物分类所-webgl</title>
     <script src="../../../p5.min.js"></script>
     <script src="functions.js"></script>
     <script src="outputText.js"></script>
     <script>
         var sc=1;
+
+        var rtx=0;
+        var rty=0;
+        var rtz=0;
+
         var T=0;
+
+        var isDown=false;
+
+        var dx=0;
+        var dy=0;
 
         function displayFunction(name){
             loop();
@@ -34,12 +44,6 @@
             }
         }
 
-        function outputFunction(){
-            var ifunction=document.querySelector(".inputFunction").value;
-            var cfunction=document.querySelector(".displayMode").value;
-            document.querySelector("#outputArea").innerHTML=output(ifunction,cfunction);
-        }
-
         function addSc(){
             sc*=2;
         }
@@ -50,28 +54,37 @@
             }
         }
 
+        function scrShot(){
+            save("iveOnline"+(Math.random())+str(frameCount)+".png");
+        }
+
         function setup() {
-            createCanvas(windowWidth*0.8, windowHeight);
+            createCanvas(windowWidth*0.8, windowHeight,WEBGL);
             smooth();
             loadFunction();
         }
 
         function windowResized() {
-            resizeCanvas(windowWidth*0.8,windowHeight);
+            resizeCanvas(windowWidth*0.8,windowHeight,WEBGL);
         }
 
         function draw() {
             T=frameCount/20;
-            translate(width/2,height/2);
+
+            rotateX(rtx);
+            rotateY(rty);
+            rotateZ(rtz);
+
             scale(sc);
+
             background(0);
             noStroke();
             rectMode(CENTER);
             let zFunction=document.querySelector(".inputFunction").value;
             let cFunction=document.querySelector(".displayMode").value;
             try{
-                for(var x=-300;x<300;x+=10){
-                    for(var y=-300;y<300;y+=10){
+                for(var x=-150;x<150;x+=10){
+                    for(var y=-150;y<150;y+=10){
                         var z=eval(zFunction);
                         eval(cFunction);
                     }
@@ -88,18 +101,29 @@
                 }
             }
         }   
+
+        function mouseDragged(){
+            if(mouseX>0){
+                rty=map(mouseX-dx,500,-500,-2*PI,0);
+                rotateY(rty);
+                rtx=map(mouseY-dy,500,-500,-2*PI,0);
+                rotateY(rtx);
+                return(false);
+            }
+        }
+
     </script>
     </head>
 
     <body>
     <div class="panl">
-        <details class="normalDetails">
+        <details class="normalDetails" open>
             <summary>
                 inputFunction:
             </summary>
             <div class="container icontainer">
-            <textarea class="inputFunction" onkeyup="outputFunction();" spellcheck="false">
-sin(x*y*3+frameCount/20);
+            <textarea class="inputFunction" spellcheck="false">
+sin((x+y)/50-T)
             </textarea>        
             </div>
         </details>
@@ -108,11 +132,16 @@ sin(x*y*3+frameCount/20);
                 inputColorMode:
             </summary>
             <div class="container ccontainer">
-            <textarea class="displayMode" onkeyup="outputFunction();" spellcheck="false">
-noFill();
-stroke(255,x,y);
-strokeWeight(z);
-circle(x,y,z*10);
+            <textarea class="displayMode" spellcheck="false">
+noStroke();
+fill(map(x,-150,150,255,0),map(sin(z*1.2),-1,1,0,250),map(y,-150,150,255,0),200);
+push();
+rotateX(z);
+rotateY(y)
+translate(x*2,y*1.1,0);
+rotateX(z)
+box(z*15);
+pop(); 
             </textarea>   
             </div>     
         </details>
@@ -132,11 +161,11 @@ circle(x,y,z*10);
     <div class="quitBox">
         <a href="../../../mainPage/mainPage_4.html">退出</a>
     </div>
+    <button class="abutton" onclick="scrShot()" id="scs">s</button>
     <button class="abutton" onclick="addSc()" id="add">+</button>
     <button class="abutton" onclick="subSc()" id="sub">-</button>
-
     <div class="output">
-        <details class="bottomDetails" open>
+        <details class="bottomDetails">
             <summary>
                 H5output
             </summary>
@@ -149,7 +178,7 @@ circle(x,y,z*10);
                 About
             </summary>
             <div class="outputContainer">
-                <h3>动植物分类所-canvas</h3>
+                <h3>动植物分类所-WEBGL</h3>
                 <br>
                 <p>by VezzzingQAQ</p>
             </div>
