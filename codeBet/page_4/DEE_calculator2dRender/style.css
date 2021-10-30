@@ -45,17 +45,14 @@ body::-webkit-scrollbar{
     display: none;
 }
         
-.ixcontainer{
-    height: 10vh;
-}
-.iycontainer{
-    height: 10vh;
+.icontainer{
+    height: 15vh;
 }
 .ccontainer{
     height: 35vh;
 }
 .bcontainer{
-    height: 25vh;
+    height: 35vh;
 }
 
 #btnContainer{
@@ -164,11 +161,8 @@ main{
 }
 
 #scs{
-    bottom: 160px;
+    bottom:90px;
 }
-#add{
-    bottom: 90px;
-}
-#sub{
+#stt{
     bottom: 20px;
 }

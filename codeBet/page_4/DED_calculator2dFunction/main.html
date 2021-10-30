@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="ico.JPG">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>动植物分类所-canvas</title>
+    <script src="../../../p5.min.js"></script>
+    <script src="functions.js"></script>
+    <script src="outputText.js"></script>
+    <script>
+        var sc=1;
+        //左右界
+        let leftBoundary=-10;
+        let rightBoundary=10;
+        //缩放比例
+        let scaleSize=0;
+
+        //定义数学量
+        let x;
+        let y;
+        let py;
+        let px;
+        let k=0;
+        let pk;
+        var T=0;
+        
+        let zFunction;
+        let cFunction;
+
+        function displayFunction(name){
+            loop();
+            for(var i=0;i<functions.length;i++){
+                if(functions[i].name==name){
+                    document.querySelector(".ocontainer .inputFunction").value=functions[i].preload;
+                    document.querySelector(".icontainer .inputFunction").value=functions[i].ifunction;
+                    document.querySelector(".displayMode").value=functions[i].cfunction;
+                    outputFunction();
+                    break;
+                }
+            }
+        }
+
+        function loadFunction(){
+            for(var i=0;i<functions.length;i++){
+                let objTemp=(functions[i]);
+                document.querySelector("#btnContainer").innerHTML+=`
+                <button class="normalButton" onclick="displayFunction(this.innerHTML);">${objTemp.name}</button>
+                `;
+            }
+        }
+
+
+        function addSc(){
+            sc*=2;
+        }
+
+        function subSc(){
+            if(sc>0.125){
+                sc/=2;
+            }
+        }
+
+        function scrShot(){
+            save("acstudio"+(Math.random())+str(frameCount)+".png");
+        }
+
+        function setup() {
+            createCanvas(windowWidth*0.8, windowHeight);
+            smooth();
+            loadFunction();
+            scaleSize=width/(rightBoundary-leftBoundary);
+            sc=scaleSize
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth*0.8,windowHeight);
+        }
+
+        //drawAxis(r,g,b);
+        function drawAxis(r=100,g=100,b=100){
+            for(var i=-10;i<10;i++){
+                strokeWeight(0.01);
+                stroke(r,g,b);
+                line(i,-30,i,30);
+                line(-30,i,30,i);
+            }
+            stroke(255,0,0);
+            line(-30,0,30,0);
+            stroke(0,255,0);
+            line(0,-30,0,30);
+        }
+
+        //drawFunction()
+        function drawFunction(){
+            noFill();
+            stroke(255);
+            strokeWeight(0.02);
+            line(x,y,px,py);
+        }
+        
+        //drawKFunction
+        function drawKFunction(){
+            noFill();
+            stroke(255,255,0);
+            strokeWeight(0.02);
+            line(x,k,px,pk);
+        }
+
+        //drawMousePoint
+        function drawMousePoint(drawText=true,drawLine=false,drawDt=false){
+            let x=map(mouseX,0,width,10,-10);
+            let y=eval(zFunction);
+            push();
+                fill(255,255,0);
+                noStroke();
+                translate(x,y);
+                rotate(PI);
+                circle(0,0,0.1);
+                if(drawText){
+                    textSize(0.3);
+                    text("("+round(x,2)+","+round(y,2)+")",-textWidth("("+round(x,2)+","+round(y,2)+")")/2,-0.3);
+                }
+            pop();
+            if(drawLine){
+                strokeWeight(0.02);
+                stroke(255,155,0,200);
+                line(x,y,0,y);
+                line(x,y,x,0);
+                fill(255,255,0);
+                noStroke();
+                circle(x,0,0.1);
+                circle(0,y,0.1);
+            }
+            if(drawDt){
+                strokeWeight(0.02);
+                stroke(100,255,10,150);
+                let px=x-0.1;
+                x=x-0.1;
+                let py=eval(zFunction);
+                x=x+0.1;
+                let k=(y-py)/(x-px);
+                var b=y-k*x;
+                var x1=-15;
+                var y1=k*x1+b;
+                var x2=15;
+                var y2=k*x2+b;
+                line(x1,y1,x2,y2);
+            }
+        }
+
+        function draw() {
+            T=frameCount/20;
+            applyCood();
+            noStroke();
+            rectMode(CENTER);
+            zFunction=document.querySelector(".icontainer .inputFunction").value;
+            cFunction=document.querySelector(".ccontainer .displayMode").value;
+            try{
+                eval(document.querySelector(".ocontainer .inputFunction").value);
+                px=-15;
+                x=-15;
+                py=zFunction;
+                for(x=-15;x<15;x+=0.1){
+                    y=eval(zFunction);
+                    k=(y-py)/(x-px);
+                    eval(cFunction);
+                    py=y;
+                    px=x;
+                    pk=k;
+                }
+            }catch{
+                textSize(0.5);
+                rotate(PI);
+                fill(255);
+                text("error",0,0);
+            }
+            if(keyIsPressed && mouseX>0){
+                if(keyCode==LEFT_ARROW){
+                    sc=sc*1.05;
+                }else if(keyCode==RIGHT_ARROW){
+                    sc=sc*0.95;
+                }
+            }
+        }   
+
+        //转置坐标系
+        function applyCood(){
+            translate(width/2,height/2);
+            rotate(PI);
+            scale(sc);
+        }
+    </script>
+    </head>
+
+    <body>
+    <div class="panl">
+        <details class="normalDetails" open>
+            <summary>
+                全局操作
+            </summary>
+            <div class="container ocontainer">
+            <textarea class="inputFunction" spellcheck="false">
+background(0);
+drawAxis();
+drawMousePoint(drawText=true,drawLine=true,drawDt=true);
+            </textarea>        
+            </div>
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                y=f(x)=?
+            </summary>
+            <div class="container icontainer">
+            <textarea class="inputFunction" spellcheck="false">
+sin(x+cos(x+T));
+            </textarea>        
+            </div>
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                对每个(x,y)点的操作:
+            </summary>
+            <div class="container ccontainer">
+            <textarea class="displayMode" spellcheck="false">
+drawFunction();
+drawKFunction();
+            </textarea>   
+            </div>     
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                范例列表:
+            </summary>
+            <div class="container bcontainer" id="btnContainer">
+
+            </div>
+        </details>
+
+    </div>
+    <main>
+        
+    </main>
+    <div class="quitBox">
+        <a href="../../../mainPage/mainPage_4.html">退出</a>
+    </div>
+    <button class="abutton" onclick="scrShot()" id="scs">s</button>
+    <button class="abutton" onclick="addSc()" id="add">+</button>
+    <button class="abutton" onclick="subSc()" id="sub">-</button>
+
+    <div class="output">
+        <details class="bottomDetails" open>
+            <summary>
+                H5output
+            </summary>
+            <div class="outputContainer" id="outputArea">
+
+            </div>
+        </details>
+        <details class="bottomDetails">
+            <summary>
+                About
+            </summary>
+            <div class="outputContainer">
+                <h3>动植物分类所-canvas</h3>
+                <br>
+                <p>by VezzzingQAQ</p>
+            </div>
+        </details>
+    </div>
+    </body>
+</html>

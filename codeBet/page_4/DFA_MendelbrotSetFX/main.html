@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>MDBonlineDisplay</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="../../../p5.min.js"></script>
+    <script>
+        var currentScreenX=0;
+        var currentScreenY=0;
+
+        let outputPlace;
+
+        let sentence;
+        let jd;
+        let capturePictures=false;
+        function Complex(real,imaginary){
+            this.real=real;
+            this.imaginary=imaginary;
+            this.add=function(complex){
+                return(new Complex(complex.real+this.real,complex.imaginary+this.imaginary));
+            }
+            this.mult=function(complex){
+                return(new Complex(this.real*complex.real-this.imaginary*complex.imaginary,this.imaginary*complex.real+this.real*complex.imaginary));
+            }
+            this.div=function(complex){
+                return(new Complex((this.real*complex.real+this.imaginary*complex.imaginary)/(complex.real*complex.real+complex.imaginary*complex.imaginary),
+                    (this.imaginary*complex.real-this.real*complex.imaginary)/(complex.real*complex.real+complex.imaginary*complex.imaginary)))
+            }
+            this.len=function(){
+                return(sqrt(this.real*this.real+this.imaginary*this.imaginary));
+            }
+            this.printOut=function(){
+                if(this.imaginary>=0){
+                    return(this.real+"+"+this.imaginary+"i");
+                }else{
+                    return(this.real+""+this.imaginary+"i");
+                }
+            }
+        }
+        function iterate(a,c){
+            return(eval(sentence));
+        }
+        function calculateSquence(x,y){
+            var codHeight=1;
+            var codWidth=(width/height)*codHeight;
+            var cx=map(x,0,width,-codWidth,codWidth);
+            var cy=map(y,0,height,codHeight,-codHeight);
+            var c=new Complex(cx,cy);//tow start parameters
+            var z=new Complex(0,0);
+            rectMode(CENTER);
+            let i;
+            for(i=0;i<230;i++){
+                z=iterate(z,c);
+                let currentX=map(z.real,-codWidth,codWidth,0,width);
+                let currentY=map(z.imaginary,codHeight,-codHeight,0,height);
+                //if(z.len()>2){
+                    //break;
+                //}
+                fill(map(i,0,230,0,255),map(i,0,180,0,255),map(i,0,30,0,255),100);
+                rect(currentX,currentY,1);
+            }
+            if(i==130){
+                fill(255);
+                rect(x,y,1);
+            }
+        }
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            background(0);
+            frameRate(10);
+            outputPlace=document.querySelector("#outputP");
+            sentence=document.querySelector(".container #exp").value;
+            jd=float(document.querySelector(".container #jd").value);
+            if(document.querySelector("#capture").checked){
+                capturePictures=true;
+            }
+        }
+        function draw(){
+            try{
+                currentScreenX+=jd;
+                noStroke();
+                for(var currentScreenY=0;currentScreenY<height;currentScreenY+=jd){
+                    calculateSquence(currentScreenX,currentScreenY);
+                }
+                if(currentScreenX>width){
+                    noLoop();
+                }
+                outputPlace.innerHTML=("进度:"+currentScreenX+"/"+width);
+                if(capturePictures){
+                    save("iveOnline"+frameCount+".jpg");
+                }
+            }catch{
+                fill(255);
+                textSize(10);
+                text("error( ´･･)ﾉ(._.`)",width/2,height/2);
+            }
+        }
+
+
+        function render(){
+            sentence=document.querySelector(".container #exp").value;
+            jd=float(document.querySelector(".container #jd").value);
+            currentScreenX=0;
+            if(document.querySelector("#capture").checked){
+                capturePictures=true;
+            }else{
+                capturePictures=false;
+            }
+            background(0);
+            loop();
+
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="panLeftUp">
+        <div class="container" id="con1">
+            <p><p class="showP">表达式：<input type="text" id="exp" placeholder="输入表达式" value="(a.mult(a)).add(c)" spellcheck="false"></p></p>
+            <p><p class="showP">精度：<input type="text" id="jd" placeholder="精度" value="10" spellcheck="false"></p></p>
+            <p><p class="showP"><input type="checkbox" id="capture">输出逐帧图像</p></p>
+
+        </div>
+        <div class="container" id="con2">
+            <button class="normalButton" onclick="render();" spellcheck="false" id="doCalculate">渲染!!</button>
+        </div>
+        <div class="container" id="con3">
+            <p id="outputP"></p>
+        </div>
+    </div>
+    <a href="../../mainPage/mainPage_3.html">返回</a>
+    </body>
+</html>

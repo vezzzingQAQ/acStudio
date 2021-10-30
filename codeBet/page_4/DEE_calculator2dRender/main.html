@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="ico.JPG">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>动植物分类所-canvas</title>
+    <script src="../../../p5.min.js"></script>
+    <script src="functions.js"></script>
+    <script src="outputText.js"></script>
+    <script>
+        var sc=1;
+        var T=0;
+        var x;
+
+        function displayFunction(name){
+            x=-width/2;
+            loop();
+            background(0);
+            for(var i=0;i<functions.length;i++){
+                if(functions[i].name==name){
+                    document.querySelector(".inputFunction").value=functions[i].ifunction;
+                    document.querySelector(".displayMode").value=functions[i].cfunction;
+                    outputFunction();
+                    break;
+                }
+            }
+        }
+
+        function loadFunction(){
+            for(var i=0;i<functions.length;i++){
+                let objTemp=(functions[i]);
+                document.querySelector("#btnContainer").innerHTML+=`
+                <button class="normalButton" onclick="displayFunction(this.innerHTML);">${objTemp.name}</button>
+                `;
+            }
+        }
+
+
+        function scrShot(){
+            save("acstudio"+(Math.random())+str(frameCount)+".png");
+        }
+
+        function start(){
+            x=-width/2;
+            loop();
+            background(0);
+        }
+
+        function setup() {
+            createCanvas(windowWidth*0.8, windowHeight);
+            smooth();
+            loadFunction();
+            x=-width/2;
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth*0.8,windowHeight);
+        }
+
+        function draw() {
+            T=frameCount/20;
+            translate(width/2,height/2);
+            scale(sc);
+            noStroke();
+            rectMode(CENTER);
+            let zFunction=document.querySelector(".inputFunction").value;
+            let cFunction=document.querySelector(".displayMode").value;
+            try{
+                if(x<width/2){
+                    for(var y=-height/2;y<height/2;y+=1){
+                        var z=eval(zFunction);
+                        eval(cFunction);
+                    }
+                    x+=1;
+                }
+            }catch{
+                
+            }
+        }   
+    </script>
+    </head>
+
+    <body>
+    <div class="panl">
+        <details class="normalDetails" open>
+            <summary>
+                z=f(x,y)=?
+            </summary>
+            <div class="container icontainer">
+            <textarea class="inputFunction" spellcheck="false">
+sin(x*y);
+            </textarea>
+            </div>
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                对每个(x,y,z)点的操作:
+            </summary>
+            <div class="container ccontainer">
+            <textarea class="displayMode" spellcheck="false">
+fill(map(z,-1,1,0,255),0,255-z*120);
+noStroke();
+rect(x,y,map(z,-1,1,0,1));
+            </textarea>   
+            </div>     
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                范例列表:
+            </summary>
+            <div class="container bcontainer" id="btnContainer">
+
+            </div>
+        </details>
+
+    </div>
+    <main>
+        
+    </main>
+    <div class="quitBox">
+        <a href="../../../mainPage/mainPage_4.html">退出</a>
+    </div>
+    <button class="abutton" onclick="start()" id="stt">p</button>
+    <button class="abutton" onclick="scrShot()" id="scs">s</button>
+
+    <div class="output">
+        <details class="bottomDetails" open>
+            <summary>
+                H5output
+            </summary>
+            <div class="outputContainer" id="outputArea">
+
+            </div>
+        </details>
+        <details class="bottomDetails">
+            <summary>
+                About
+            </summary>
+            <div class="outputContainer">
+                <h3>动植物分类所-canvas</h3>
+                <br>
+                <p>by VezzzingQAQ</p>
+            </div>
+        </details>
+    </div>
+    </body>
+</html>
