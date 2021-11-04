@@ -9,6 +9,7 @@
     <script src="../../../p5.min.js"></script>
     <script src="functions.js"></script>
     <script src="outputText.js"></script>
+    <script src="vezzzingMathObjects.js"></script>
     <script>
         var sc=1;
         //左右界
@@ -25,6 +26,11 @@
         let k=0;
         let pk;
         var T=0;
+        let dx=0.05;
+        let dy=0;
+
+        let mx;
+        let my;
         
         let zFunction;
         let cFunction;
@@ -109,7 +115,7 @@
         }
 
         //drawMousePoint
-        function drawMousePoint(drawText=true,drawLine=false,drawDt=false){
+        function drawMouseFPoint(drawText=true,drawLine=false,drawDt=false){
             let x=map(mouseX,0,width,10,-10);
             let y=eval(zFunction);
             push();
@@ -150,6 +156,27 @@
             }
         }
 
+        function getFMousePoint(){
+            let x=map(mouseX,0,width,10,-10);
+            let y=eval(zFunction);
+            return([x,y]);
+        }
+
+        function castToX(x){
+            return(map(x,0,width,10,-10));
+        }
+
+        function f(x){
+            return(eval(zFunction));
+        }
+
+        function fk(x){
+            var y1=eval(zFunction);
+            var x=x-dx;
+            var y2=eval(zFunction);
+            return((y2-y1)/dx);
+        }
+
         function draw() {
             T=frameCount/20;
             applyCood();
@@ -161,14 +188,21 @@
                 eval(document.querySelector(".ocontainer .inputFunction").value);
                 px=-15;
                 x=-15;
+                //鼠标映射
+                mx=map(mouseX,0,width,10,-10);
+                x=eval(cFunction);
+                my=eval(cFunction);
+                //
                 py=zFunction;
-                for(x=-15;x<15;x+=0.1){
+                for(x=-15;x<15;x+=dx){
                     y=eval(zFunction);
                     k=(y-py)/(x-px);
                     eval(cFunction);
                     py=y;
                     px=x;
                     pk=k;
+
+                    dy=y-py;
                 }
             }catch{
                 textSize(0.5);
@@ -189,6 +223,7 @@
         function applyCood(){
             translate(width/2,height/2);
             rotate(PI);
+            
             scale(sc);
         }
     </script>
@@ -204,7 +239,7 @@
             <textarea class="inputFunction" spellcheck="false">
 background(0);
 drawAxis();
-drawMousePoint(drawText=true,drawLine=true,drawDt=true);
+drawMouseFPoint(drawText=true,drawLine=true,drawDt=true);
             </textarea>        
             </div>
         </details>
