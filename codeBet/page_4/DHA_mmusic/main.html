@@ -4,29 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        *{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body{
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
-    </style>
-    <script src="../../p5.min.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="support/all_style.css">
+    <script src="../../../p5.min.js"></script>
+    <script src="support/p5sound.js"></script>
     <script>
         let cam;
         let img;
+        let notes=[];
         function setup() {
             createCanvas(windowWidth, windowHeight);
             smooth();
             cam=createCapture(VIDEO);
             cam.size(windowWidth, windowHeight);
             cam.hide();
+            {/*预加载音源*/
+                //let firstCharSet=["A","Ab","B","Bb","C","D","Db","E","Eb","F","G","Gb"];
+                let firstCharSet=["C","E","G","Bb"];
+                for(var i=1;i<=7;i++){
+                    for(var j=0;j<firstCharSet.length;j++){
+                        let firstChar=firstCharSet[j];
+                        let note=loadSound(`support/piano/${firstChar}${i}.mp3`);
+                        notes.push(note);
+                    }
+                }
+            }
         }
         function windowResized() {
             resizeCanvas(windowWidth,windowHeight);
@@ -35,29 +36,41 @@
             return width-x-30;
         }
         function draw() {
-            background(255);
+            //background(255);
             noStroke();
-            if(frameCount%1==0){
+            if(frameCount%20==0){
                 //image(cam, 0, 0, width, width * cam.height / cam.width);
                 var cImage=cam;
                 cImage.loadPixels();
                 console.log(cImage.width,cImage.height);
                 console.log(cImage.width*cImage.height);
                 console.log(cImage.pixels.length);
-                var xNum=30;
+                var xNum=5;
                 var yNum=xNum*(height/width);
                 var xWidth=Math.floor(cImage.width/xNum);
                 var yWidth=Math.floor(cImage.height/yNum);
+                {/*停止上一个演奏的和弦*/
+                    for(var i=0;i<notes.length;i++){
+                        if(notes[i].isPlaying()){
+                            notes[i].stop();
+                        }
+                    }
+                }
                 for(var x=0;x<cImage.width;x+=xWidth){
                     for(var y=0;y<cImage.height;y+=yWidth){
                         var currentIndex=y*4*cImage.width+x*4+4;//当前r的索引
                         var argColor=(cImage.pixels[currentIndex]+cImage.pixels[currentIndex+1]+cImage.pixels[currentIndex+2])/3;//当前亮度
                         {/*图形绘制*/
-                            fill(cImage.pixels[currentIndex],cImage.pixels[currentIndex+1],cImage.pixels[currentIndex+2],100);
+                            fill(cImage.pixels[currentIndex],cImage.pixels[currentIndex+1],cImage.pixels[currentIndex+2]);
                             rect(matrixTranslate(x,width),y,xWidth,yWidth);
                             textAlign(CENTER);
                             fill(0);
                             text(Math.floor(argColor),matrixTranslate(x-xWidth/2,width),y+yWidth/2+5);
+                        }
+                        {/*音符输出*/
+                            var currentNote=Math.floor(map(argColor,0,255,0,notes.length-1));
+                            console.log(currentNote,notes.length);
+                            notes[currentNote].play();
                         }
                     }
                 }
