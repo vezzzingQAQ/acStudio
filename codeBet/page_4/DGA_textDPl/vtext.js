@@ -24,38 +24,62 @@ function draw(f){
     },20);
 }
 class VText{
-    constructor(word,left,top,width,height,id,style){
+    constructor(word/*显示的字*/,left,top,width,height,addedStyle/*添加的样式*/){
         this.x=left;
         this.y=top;
         this.w=width;
         this.h=height;
+
+        this.rotate=0;
+        this.tx=0;
+        this.ty=0;
+        
         this.str=word;
-        this.id=`v${id}`;
-        this.addedStyle=style;
-        document.querySelector(".vCanvas").innerHTML+=`<span class="vSpan" id="${this.id}" style="
+        
+        this.id=`v${Math.floor(Math.random()*10000000)}`;
+        
+        this.style=`
             left:${this.x}px;
             top:${this.y}px;
             width:${this.w}px;
             height:${this.h}px;
-            transform:scaleX(1);
             font-size:${Math.max(this.w,this.h)}px;
             line-height:${this.h}px;
+        `
+        this.addedStyle=addedStyle;
+        
+        document.querySelector(".vCanvas").innerHTML+=`<span class="vSpan" id="${this.id}" style="
+            ${this.style};
             ${this.addedStyle}
         ">${this.str}</span>`
     }
-    scaleX(f){
+    vscaleX(f){
         this.w=f();
-        this._scaleXY();
+        this._transform();
     }
-    scaleY(f){
+    vscaleY(f){
         this.h=f();
-        this._scaleXY();
+        this._transform();
     }
-    _scaleXY(){
-        document.querySelector(`#${this.id}`).style.transform=`scaleX(${this.w}) scaleY(${this.h})`;
+    vrotate(f){
+        this.rotate=f();
+        this._transform();
+    }
+    vtransformX(f){
+        this.tx=f();
+        this._transform();
+    }
+    vtransformY(f){
+        this.ty=f();
+        this._transform();
+    }
+    _transform(){
+        document.querySelector(`#${this.id}`).style.transform=`
+        scaleX(${this.w}) scaleY(${this.h}) rotate(${this.rotate}deg) translateX(${this.tx}) translateY(${this.ty})
+        `;
     }
 }
 window.onresize=function(){
-    var width=window.innerWidth;
-    var height=window.innerHeight;
+    width=window.innerWidth;
+    height=window.innerHeight;
 }

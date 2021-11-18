@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+
+    <script>
+        let cam;
+        let img;
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+            cam=createCapture(VIDEO);
+            cam.size(windowWidth, windowHeight);
+            cam.hide();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function matrixTranslate(x,width){
+            return width-x-30;
+        }
+        function draw() {
+            background(255);
+            noStroke();
+            if(frameCount%1==0){
+                //image(cam, 0, 0, width, width * cam.height / cam.width);
+                var cImage=cam;
+                cImage.loadPixels();
+                console.log(cImage.width,cImage.height);
+                console.log(cImage.width*cImage.height);
+                console.log(cImage.pixels.length);
+                var xNum=30;
+                var yNum=xNum*(height/width);
+                var xWidth=Math.floor(cImage.width/xNum);
+                var yWidth=Math.floor(cImage.height/yNum);
+                for(var x=0;x<cImage.width;x+=xWidth){
+                    for(var y=0;y<cImage.height;y+=yWidth){
+                        var currentIndex=y*4*cImage.width+x*4+4;//当前r的索引
+                        var argColor=(cImage.pixels[currentIndex]+cImage.pixels[currentIndex+1]+cImage.pixels[currentIndex+2])/3;//当前亮度
+                        {/*图形绘制*/
+                            fill(cImage.pixels[currentIndex],cImage.pixels[currentIndex+1],cImage.pixels[currentIndex+2],100);
+                            rect(matrixTranslate(x,width),y,xWidth,yWidth);
+                            textAlign(CENTER);
+                            fill(0);
+                            text(Math.floor(argColor),matrixTranslate(x-xWidth/2,width),y+yWidth/2+5);
+                        }
+                    }
+                }
+            }
+        }   
+    </script>
+    <title>mmusic</title>
+</head>
+<body>
+    
+</body>
+</html>
