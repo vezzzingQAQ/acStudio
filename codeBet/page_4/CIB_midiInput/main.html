@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../../ico/ico1.jpg">
+    <title>midiInput</title>
+    <script src="../../../p5.min.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    
+</body>
+<script>
+    var notesList=[];
+    navigator.requestMIDIAccess()
+        .then(onMIDISuccess, onMIDIFailure);
+    
+    function onMIDISuccess(midiAccess) {
+        //console.log(midiAccess);
+    
+        var inputs = midiAccess.inputs;
+        var outputs = midiAccess.outputs;
+    }
+
+    function getMIDIMessage(message) {
+        var command = message.data[0];
+        var note = message.data[1];
+        //var velocity = (message.data.length > 2) ? message.data[2] : 0; // 在 noteoff 命令中，不一定会包含 velocity 值
+        console.log(note);
+        notesList.push(new NoteDisplay(note));
+    }
+    
+    function onMIDIFailure() {
+        console.log('无法访问你的 MIDI 设备。');
+    }
+
+    class NoteDisplay{
+        constructor(note){
+            this.note=note;
+            this.x=width/88*this.note;
+            this.y=height;
+        }
+        display(){
+            fill(0,100);
+            noStroke();
+            rect(this.x,this.y,width/88,30);
+        }
+        run(){
+            this.y-=5;
+            this.display();
+        }
+    }
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
+    }
+
+    function draw() {
+        background(255);
+        for(var i=0;i<notesList.length;i++){
+            notesList[i].run();
+            if(notesList[i].y<-200){
+                notesList.splice(i,1);
+            }
+            
+        }
+    }
+</script>
+</html>
