@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <title>MDBonline</title>
+    <style>
+        body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        }
+        .parat{
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            z-index: 10000;
+        }
+        .parat p{
+            display: inline;
+        }
+        .parat p b{
+            display: inline;
+            background-color: rgba(255,255,255,0.5);
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
+        }
+        .pa{
+            color: cyan;
+            padding: 3px;
+            border-radius: 3px;
+            z-index: 10001;
+        }
+        .btn{
+            position: absolute;
+            left: 20px;
+            bottom: 60px;
+            z-index: 10000;
+        }
+        .btn .btnSave{
+            background-color: rgba(11, 47, 248, 0.7);
+            color: #fff;
+            padding: 3px;
+            border-radius: 3px;
+        }
+        a{
+            background-color: rgba(255,255,255,0.5);
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
+            text-decoration: none;
+            color: yellow;
+        }
+    </style>
+    <script src="../../p5.min.js"></script>
+    <script>
+        var currentScreenX=0;
+        var currentScreenY=0;
+        var ita=10;
+        function Complex(real,imaginary){
+            this.real=real;
+            this.imaginary=imaginary;
+            this.add=function(complex){
+                return(new Complex(complex.real+this.real,complex.imaginary+this.imaginary));
+            }
+            this.mult=function(complex){
+                return(new Complex(this.real*complex.real-this.imaginary*complex.imaginary,this.imaginary*complex.real+this.real*complex.imaginary));
+            }
+            this.div=function(complex){
+                return(new Complex((this.real*complex.real+this.imaginary*complex.imaginary)/(complex.real*complex.real+complex.imaginary*complex.imaginary),
+                    (this.imaginary*complex.real-this.real*complex.imaginary)/(complex.real*complex.real+complex.imaginary*complex.imaginary)))
+            }
+            this.len=function(){
+                return(Math.sqrt(this.real*this.real+this.imaginary*this.imaginary));
+            }
+            this.printOut=function(){
+                if(this.imaginary>=0){
+                    return(this.real+"+"+this.imaginary+"i");
+                }else{
+                    return(this.real+""+this.imaginary+"i");
+                }
+            }
+        }
+        function iterate(complex,c){
+            return((complex.mult(complex)).add(c));
+        }
+        function calculateSquence(x,y,constx,consty){
+            let codHeight=1;
+            let codWidth=(width/height)*codHeight;
+            let cx=map(x,0,width,-codWidth,codWidth);
+            let cy=map(y,0,height,codHeight,-codHeight);
+            let c=new Complex(constx,consty);
+            let z=new Complex(cx,cy);
+            rectMode(CENTER);
+            for(var i=0;i<100;i++){
+                z=iterate(z,c);
+            }
+            noStroke();
+            if(z.len()<Number.MAX_VALUE){
+                fill(255-Math.sin(Math.log(z.len()))*120,255-Math.sin(Math.log(z.len())*1.1)*120,255-Math.sin(Math.log(z.len())*1.2)*120);
+                circle(x+random(-1,1),y+random(-1,1),ita-random(0.5,1.5));
+            }
+        }
+        function setup(){
+            createCanvas(windowWidth, windowHeight);
+            smooth();
+        }
+        function windowResized() {
+            resizeCanvas(windowWidth,windowHeight);
+        }
+        function draw(){
+            background(0);
+            for(var currentScreenX=0;currentScreenX<width;currentScreenX+=ita){
+                for(var currentScreenY=0;currentScreenY<height;currentScreenY+=ita){
+                    calculateSquence(currentScreenX,currentScreenY,map(mouseX,0,width,-1,1),map(mouseY,0,height,-1,1));
+                }
+            }
+        }
+        function keyPressed(){
+            if(keyCode==RETURN){
+                save("iveOnline"+(Math.random())+".png");
+            }
+        }
+    </script>
+    </head>
+
+    <body>
+    <main>
+        
+    </main>
+    <div class="parat">
+        <a href="../../mainPage/mainPage_4.html">返回</a>
+    </div>
+    
+    </body>
+</html>
