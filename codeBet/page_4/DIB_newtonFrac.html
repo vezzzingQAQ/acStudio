@@ -4,35 +4,58 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
-    <title>MDBonline</title>
+    <title>牛顿分型</title>
     <style>
         body {
             padding: 0;
             margin: 0;
             overflow: hidden;
         }
-        .upperBox{
+        .parat{
             position: absolute;
-            left: 10px;
-            top: 10px;
-            padding: 10px;
-            background-color: rgba(0,0,0,0.2);
-            backdrop-filter: blur(2px);
+            left: 20px;
+            top: 20px;
+            z-index: 10000;
         }
-        .upperBox a{
+        .parat p{
+            display: inline;
+        }
+        .parat p b{
+            display: inline;
+            background-color: rgba(255,255,255,0.5);
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
+        }
+        .pa{
+            color: cyan;
+            padding: 3px;
+            border-radius: 3px;
+            z-index: 10001;
+        }
+        .btn{
+            position: absolute;
+            left: 20px;
+            bottom: 60px;
+            z-index: 10000;
+        }
+        .btn .btnSave{
+            background-color: rgba(11, 47, 248, 0.7);
+            color: #fff;
+            padding: 3px;
+            border-radius: 3px;
+        }
+        a{
+            background-color: rgba(255,255,255,0.5);
+            z-index: 10001;
+            border-radius: 3px;
+            padding: 2px;
             text-decoration: none;
-            color: rgb(35, 0, 68);
-            letter-spacing: 2px;
-        }
-        .upperBox p{
-            letter-spacing: 2px;
+            color: yellow;
         }
     </style>
     <script src="../../p5.min.js"></script>
     <script>
-        var currentScreenX=0;
-        var currentScreenY=0;
-        var ita=5;
         function Complex(real,imaginary){
             this.real=real;
             this.imaginary=imaginary;
@@ -57,37 +80,6 @@
                 }
             }
         }
-        function iterate(complex,c){
-            return((complex.mult(complex)).add(c));
-        }
-        function calculateSquence(x,y,constx,consty){
-            let codHeight=1;
-            let codWidth=(width/height)*codHeight;
-            let cx=map(x,0,width,-codWidth,codWidth);
-            let cy=map(y,0,height,codHeight,-codHeight);
-            let c=new Complex(constx,consty);
-            let z=new Complex(cx,cy);
-            rectMode(CENTER);
-            noStroke();
-            let i=0;//迭代次数
-            for(;i<100;i++){
-                z=iterate(z,c);
-                if(z.len()>2){
-                    break;
-                }
-            }
-            if(i==100){
-                fill(0);
-            }else{
-                fill(sin(i)*120+120,sin(i*1.1)*120+120,sin(i*1.2)*120+120);
-            }
-            rect(x,y,ita+1,ita+1);
-        }
-        function getMousePosition(){
-            let cx=map(mouseX,0,width,-1,1);
-            let cy=map(mouseY,0,height,-1,1);
-            return({x:cx,y:cy});
-        }
         function setup(){
             createCanvas(windowWidth, windowHeight);
             smooth();
@@ -96,15 +88,7 @@
             resizeCanvas(windowWidth,windowHeight);
         }
         function draw(){
-            if(mouseIsPressed && mouseButton==RIGHT){
-                background(0);
-                for(var currentScreenX=0;currentScreenX<width;currentScreenX+=ita){
-                    for(var currentScreenY=0;currentScreenY<height;currentScreenY+=ita){
-                        calculateSquence(currentScreenX,currentScreenY,map(mouseX,0,width,-1,1),map(mouseY,0,height,-1,1));
-                    }
-                }
-                document.querySelector(".upperBox p").innerHTML="X="+getMousePosition().x+";Y="+getMousePosition().y;
-            }
+            
         }
         function keyPressed(){
             if(keyCode==RETURN){
@@ -118,9 +102,8 @@
     <main>
         
     </main>
-    <div class="upperBox">
+    <div class="parat">
         <a href="../../mainPage/mainPage_4.html">返回</a>
-        <p class="op"></p>
     </div>
     
     </body>

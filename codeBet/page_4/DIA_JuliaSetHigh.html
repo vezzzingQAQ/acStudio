@@ -32,7 +32,9 @@
     <script>
         var currentScreenX=0;
         var currentScreenY=0;
-        var ita=5;
+        var ita=1;
+        var cax=-0.803125;
+        var cay=0.1455108359133126;
         function Complex(real,imaginary){
             this.real=real;
             this.imaginary=imaginary;
@@ -70,23 +72,18 @@
             rectMode(CENTER);
             noStroke();
             let i=0;//迭代次数
-            for(;i<100;i++){
+            for(;i<300;i++){
                 z=iterate(z,c);
                 if(z.len()>2){
                     break;
                 }
             }
-            if(i==100){
+            if(i==300){
                 fill(0);
             }else{
                 fill(sin(i)*120+120,sin(i*1.1)*120+120,sin(i*1.2)*120+120);
             }
-            rect(x,y,ita+1,ita+1);
-        }
-        function getMousePosition(){
-            let cx=map(mouseX,0,width,-1,1);
-            let cy=map(mouseY,0,height,-1,1);
-            return({x:cx,y:cy});
+            rect(x,y,ita+0.5,ita+0.5);
         }
         function setup(){
             createCanvas(windowWidth, windowHeight);
@@ -96,14 +93,15 @@
             resizeCanvas(windowWidth,windowHeight);
         }
         function draw(){
-            if(mouseIsPressed && mouseButton==RIGHT){
-                background(0);
-                for(var currentScreenX=0;currentScreenX<width;currentScreenX+=ita){
-                    for(var currentScreenY=0;currentScreenY<height;currentScreenY+=ita){
-                        calculateSquence(currentScreenX,currentScreenY,map(mouseX,0,width,-1,1),map(mouseY,0,height,-1,1));
-                    }
-                }
-                document.querySelector(".upperBox p").innerHTML="X="+getMousePosition().x+";Y="+getMousePosition().y;
+            if(currentScreenX<width){
+                currentScreenX+=ita;
+            }else{
+                noLoop();
+                cax=document.querySelector(".ix input").value;
+                cay=document.querySelector(".iy input").value;
+            }
+            for(var currentScreenY=0;currentScreenY<height;currentScreenY+=ita){
+                calculateSquence(currentScreenX,currentScreenY,cax,cay);
             }
         }
         function keyPressed(){
@@ -120,7 +118,8 @@
     </main>
     <div class="upperBox">
         <a href="../../mainPage/mainPage_4.html">返回</a>
-        <p class="op"></p>
+        <p class="ix"><input type="number" value="0.18437499999999996"></p>
+        <p class="iy"><input type="number" value="-0.651186790505676"></p>
     </div>
     
     </body>
