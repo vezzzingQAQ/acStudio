@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="ico.JPG">
+    <link rel="stylesheet" type="text/css" href="styleb.css">
+    <title>动植物分类所-webgl</title>
+    <script src="../../../p5.min.js"></script>
+    <script src="functions.js"></script>
+    <script src="outputText.js"></script>
+    <script>
+        var sc=1;
+
+        var rtx=0;
+        var rty=0;
+        var rtz=0;
+
+        var T=0;
+
+        var isDown=false;
+
+        var dx=0;
+        var dy=0;
+
+        function displayFunction(name){
+            loop();
+            for(var i=0;i<functions.length;i++){
+                if(functions[i].name==name){
+                    document.querySelector(".inputFunction").value=functions[i].ifunction;
+                    document.querySelector(".displayMode").value=functions[i].cfunction;
+                    outputFunction();
+                    break;
+                }
+            }
+        }
+
+        function loadFunction(){
+            for(var i=0;i<functions.length;i++){
+                let objTemp=(functions[i]);
+                document.querySelector("#btnContainer").innerHTML+=`
+                <button class="normalButton" onclick="displayFunction(this.innerHTML);">${objTemp.name}</button>
+                `;
+            }
+        }
+
+        function addSc(){
+            sc*=2;
+        }
+
+        function subSc(){
+            if(sc>0.125){
+                sc/=2;
+            }
+        }
+
+        function scrShot(){
+            save("iveOnline"+(Math.random())+str(frameCount)+".png");
+        }
+
+        function setup() {
+            createCanvas(windowWidth*0.8, windowHeight,WEBGL);
+            smooth();
+            loadFunction();
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth*0.8,windowHeight,WEBGL);
+        }
+
+        function draw() {
+            T=frameCount/20;
+
+            rotateX(rtx);
+            rotateY(rty);
+            rotateZ(rtz);
+
+            scale(sc);
+
+            background(255);
+            noStroke();
+            rectMode(CENTER);
+            let zFunction=document.querySelector(".inputFunction").value;
+            let cFunction=document.querySelector(".displayMode").value;
+            try{
+                for(var x=-150;x<150;x+=10){
+                    for(var y=-150;y<150;y+=10){
+                        var z=eval(zFunction);
+                        eval(cFunction);
+                    }
+                }
+            }catch{
+                fill(255);
+                text("error",0,0);
+            }
+            if(keyIsPressed && mouseX>0){
+                if(keyCode==LEFT_ARROW){
+                    sc=sc*1.05;
+                }else if(keyCode==RIGHT_ARROW){
+                    sc=sc*0.95;
+                }
+            }
+        }   
+
+        function mouseDragged(){
+            if(mouseX>0){
+                rty=map(mouseX-dx,500,-500,-2*PI,0);
+                rotateY(rty);
+                rtx=map(mouseY-dy,500,-500,-2*PI,0);
+                rotateY(rtx);
+                return(false);
+            }
+        }
+
+    </script>
+    </head>
+
+    <body>
+    <div class="panl">
+        <details class="normalDetails" open>
+            <summary>
+                z=f(x,y)=?
+            </summary>
+            <div class="container icontainer">
+            <textarea class="inputFunction" spellcheck="false">
+sin((x+y)/50-T)
+            </textarea>        
+            </div>
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                对每个(x,y,z)点的操作:
+            </summary>
+            <div class="container ccontainer">
+            <textarea class="displayMode" spellcheck="false">
+noStroke();
+fill(map(x,-150,150,255,0),map(sin(z*1.2),-1,1,0,250),map(y,-150,150,255,0),200);
+push();
+rotateX(z);
+rotateY(y)
+translate(x*2,y*1.1,0);
+rotateX(z)
+box(z*15);
+pop(); 
+            </textarea>   
+            </div>     
+        </details>
+        <details class="normalDetails" open>
+            <summary>
+                范例列表:
+            </summary>
+            <div class="container bcontainer" id="btnContainer">
+
+            </div>
+        </details>
+
+    </div>
+    <main>
+        
+    </main>
+    <div class="quitBox">
+        <a href="../../../mainPage/mainPage_4.html">退出</a>
+    </div>
+    <button class="abutton" onclick="scrShot()" id="scs">s</button>
+    <button class="abutton" onclick="addSc()" id="add">+</button>
+    <button class="abutton" onclick="subSc()" id="sub">-</button>
+    <div class="output">
+        <details class="bottomDetails">
+            <summary>
+                H5output
+            </summary>
+            <div class="outputContainer" id="outputArea">
+
+            </div>
+        </details>
+        <details class="bottomDetails">
+            <summary>
+                About
+            </summary>
+            <div class="outputContainer">
+                <h3>动植物分类所-WEBGL</h3>
+                <br>
+                <p>by VezzzingQAQ</p>
+            </div>
+        </details>
+    </div>
+    </body>
+</html>
