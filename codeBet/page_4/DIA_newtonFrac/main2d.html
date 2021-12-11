@@ -3,7 +3,7 @@
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="../ico/ico1.jpg">
+    <link rel="icon" type="image/x-icon" href="../../ico/ico1.jpg">
     <title>牛顿分型</title>
     <style>
         body {
@@ -54,31 +54,20 @@
             color: yellow;
         }
     </style>
-    <script src="../../p5.min.js"></script>
+    <script src="../../../p5.min.js"></script>
     <script>
-        function Complex(real,imaginary){
-            this.real=real;
-            this.imaginary=imaginary;
-            this.add=function(complex){
-                return(new Complex(complex.real+this.real,complex.imaginary+this.imaginary));
-            }
-            this.mult=function(complex){
-                return(new Complex(this.real*complex.real-this.imaginary*complex.imaginary,this.imaginary*complex.real+this.real*complex.imaginary));
-            }
-            this.div=function(complex){
-                return(new Complex((this.real*complex.real+this.imaginary*complex.imaginary)/(complex.real*complex.real+complex.imaginary*complex.imaginary),
-                    (this.imaginary*complex.real-this.real*complex.imaginary)/(complex.real*complex.real+complex.imaginary*complex.imaginary)))
-            }
-            this.len=function(){
-                return(Math.sqrt(this.real*this.real+this.imaginary*this.imaginary));
-            }
-            this.printOut=function(){
-                if(this.imaginary>=0){
-                    return(this.real+"+"+this.imaginary+"i");
-                }else{
-                    return(this.real+""+this.imaginary+"i");
-                }
-            }
+        var currentIta=0;
+        let currentX=0;
+        var ita=10;
+        var scaleSize=50;
+        var fx=function(x){
+            return(sin(cos(x)+sin(x)));
+        };
+
+        function derivation(f,x,dx){
+            let fx1=f(x);
+            let fx2=f(x+dx);
+            return((fx2-fx1)/dx);
         }
         function setup(){
             createCanvas(windowWidth, windowHeight);
@@ -87,8 +76,29 @@
         function windowResized() {
             resizeCanvas(windowWidth,windowHeight);
         }
+
+        function iterate(x,f){
+            return(x-f(x)/derivation(f,x,0.001));
+        }
+
         function draw(){
-            
+            if(currentX<width/scaleSize){
+                background(255,5);
+                push();
+                    scale(scaleSize);
+                    noFill();
+                    stroke(100);
+                    strokeWeight(1/scaleSize);
+                    let prevPoint;
+                    let point=currentX;
+                    for(let i=0;i<ita;i++){
+                        prevPoint=point;
+                        point=iterate(point,fx);
+                        line(point,map(i+1,0,ita,0,height/scaleSize),prevPoint,map(i,0,ita,0,height/scaleSize));
+                    }
+                    currentX+=1/scaleSize;
+                pop();
+            }
         }
         function keyPressed(){
             if(keyCode==RETURN){
